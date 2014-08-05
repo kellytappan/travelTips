@@ -1,0 +1,18 @@
+#!/usr/bin/env python
+
+import os
+import pexpect
+
+dev = "/dev"
+ttys = [s for s in os.listdir(dev) if "ttyUSB" in s]
+
+for tty in ttys:
+    print "trying", tty
+    p = pexpect.spawn("python -m serial.tools/miniterm -b115200 " + os.path.join(dev,tty))
+    p.sendline("")
+    p.expect(">")
+    p.sendline("adpcol dis")
+    p.expect(">")
+    p.sendline("fan speed 1 0xfff")
+    p.expect(">")
+    p.close()
