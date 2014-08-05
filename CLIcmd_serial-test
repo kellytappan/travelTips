@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+
+from CLIcmd_serial import *
+
+cli = clicmd_serial("/dev/ttyUSB1")
+
+page0 = cli.sendcmd("ses rcv 0")
+print 'vvvvvvvvvv page 0'
+print page0
+print '^^^^^^^^^^ page 0'
+
+page2 = cli.sendcmd("ses rcv 2")
+print 'vvvvvvvvvv page 2'
+print page2
+print '^^^^^^^^^^ page 2'
+
