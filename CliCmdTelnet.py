@@ -1,4 +1,4 @@
-from CLIcmd import *
+from CliCmd import CliCmd
 
-class clicmd_telnet(clicmd):
-    None
+class CliCmdTelnet(CliCmd):
+    pass

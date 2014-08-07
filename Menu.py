@@ -1,7 +1,7 @@
 import types
 import collections
 
-class Menu:
+class Menu(object):
     
     stop = -1
     
@@ -37,7 +37,7 @@ class Menu:
                 inp = int(raw_input())
             except:
                 inp = -1
-            if 0 > inp or inp >= len(self.data):
+            if not 0 <= inp < len(self.data):
                 print "bad item number"
                 continue
             self.data[inp][1]()

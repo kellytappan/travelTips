@@ -1,8 +1,8 @@
-from CLIcmd import *
+from CliCmd import CliCmd
 
 import pexpect
 
-class clicmd_serial(clicmd):
+class CliCmdSerial(CliCmd):
     
     timeout= .4   # seconds  # .3 works for 424 bytes
     
@@ -10,9 +10,9 @@ class clicmd_serial(clicmd):
         self.tty  = tty
         self.baud = baud
         self.logfile = open("/tmp/serial-log", "w")
-        self.proc = pexpect.spawn("python -m serial.tools/miniterm -b" + str(baud) + " " + self.tty, timeout=clicmd_serial.timeout, logfile=self.logfile)
+        self.proc = pexpect.spawn("python -m serial.tools/miniterm -b" + str(baud) + " " + self.tty, timeout=CliCmdSerial.timeout, logfile=self.logfile)
         # Turn off echo, if it's on.
-        self.flush()
+        self._flush()
         self.proc.sendline("garbage")   # should print "unknown_cmd"
         match = self.proc.expect(["garbage", "unknown_cmd"])
         if match == 0:
@@ -22,7 +22,7 @@ class clicmd_serial(clicmd):
         else:
             self.echo_toggled = False
         # Turn off prompt, if it's on.
-        self.flush()
+        self._flush()
         self.proc.sendline("")   # Print a prompt, if prompt is on.
         self.proc.expect([">", pexpect.TIMEOUT])
         if match == 0:
@@ -32,23 +32,23 @@ class clicmd_serial(clicmd):
         else:
             self.prompt_toggled = False
         
-        self.flush()
+        self._flush()
         
     def __del__(self):
         # Restore "echo" and "prompt" to previous values.
         if self.echo_toggled  : self.proc.sendline("echo")
         if self.prompt_toggled: self.proc.sendline("prompt")
-        self.flush()
+        self._flush()
         self.proc.close()
         
-    def sendcmd(self, cmd):
+    def execute(self, cmd):
         self.proc.sendline(cmd)
         self.proc.expect(pexpect.TIMEOUT)
         retval = self.proc.before
-        self.flush()
+        self._flush()
         return retval
     
-    def flush(self):
+    def _flush(self):
         try:
             while True:
                 self.proc.read_nonblocking()

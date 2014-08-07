@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
-from CLIcmd_serial import *
+from CliCmdSerial import CliCmdSerial
 
-cli = clicmd_serial("/dev/ttyUSB1")
+cli = CliCmdSerial("/dev/ttyUSB0")
 
-page0 = cli.sendcmd("ses rcv 0")
+page0 = cli.execute("ses rcv 0")
 print 'vvvvvvvvvv page 0'
 print page0
 print '^^^^^^^^^^ page 0'
 
-page2 = cli.sendcmd("ses rcv 2")
+page2 = cli.execute("ses rcv 2")
 print 'vvvvvvvvvv page 2'
 print page2
 print '^^^^^^^^^^ page 2'
