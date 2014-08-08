@@ -36,10 +36,10 @@ class SesPage(object):
     def parse_01(self, data):
         configuration_diagnostic = \
         (
-         ( 0, 8, "int", "pc",          "page code"),
-         ( 1, 8, "int", "secondaries", "number of secondary subenclosures"),
-         ( 2,16, "int", "length",      "pagelength"),
-         ( 4,32, "int", "gen",         "generation code"),
+         (  0   , 1*8, "int", "pc",          "page code"),
+         (  1   , 1*8, "int", "secondaries", "number of secondary subenclosures"),
+         (  2   , 2*8, "int", "length",      "pagelength"),
+         (  4   , 4*8, "int", "gen",         "generation code"),
          )
         enclosure_descriptor = \
         (
@@ -56,15 +56,15 @@ class SesPage(object):
          )
         type_descriptor_header = \
         (
-         ( 0, 8, "int", "type",     "element type"),
-         ( 1, 8, "int", "possible", "number of possible elements"),
-         ( 2, 8, "int", "subid",    "subenclosure identifier"),
-         ( 3, 8, "int", "desclen",  "type descriptor text length"),
+         (  0   , 1*8, "int", "type",     "element type"),
+         (  1   , 1*8, "int", "possible", "number of possible elements"),
+         (  2   , 1*8, "int", "subid",    "subenclosure identifier"),
+         (  3   , 1*8, "int", "desclen",  "type descriptor text length"),
          )
         # This must be lists instead of tuples so we can modify the length.
         type_descriptor_text = \
         [
-         [ 0, 0*8, "str", "text", "type descriptor text"],
+         [  0   , 0*8, "str", "text", "type descriptor text"],
          ]
         bo = 0   # byte offset
         head = Cmd.extract(data[bo:], configuration_diagnostic, bo)
@@ -73,7 +73,7 @@ class SesPage(object):
         encnumtypes = []
         numenclosures = 1+Cmd.extracttodict(head)["secondaries"][0]
         for encnum in range(numenclosures):
-            print "encnum =", encnum
+            #print "encnum =", encnum
             enclist = Cmd.extract(data[bo:], enclosure_descriptor, bo)
             encdict = Cmd.extracttodict(enclist)
             enclosures.append(enclist)
@@ -89,7 +89,7 @@ class SesPage(object):
             for typenum in range(encnumtypes[encnum]):
                 thislen = enclosures[encnum][-1][typenum][3][0]
                 type_descriptor_text[0][1] = thislen*8  # ugly
-                enclosures[encnum][-1][typenum][3] = Cmd.extract(data[bo:], type_descriptor_text, bo)
+                enclosures[encnum][-1][typenum][3] = Cmd.extract(data[bo:], type_descriptor_text, bo)[0]
                 bo += thislen
         return enclosures
     
@@ -124,7 +124,7 @@ class SesPage(object):
          }
     
     #@staticmethod
-    def interpret(self, data):
+    def parse(self, data):
         """
         Parse the string, data, and return a structure with all the information.
         """

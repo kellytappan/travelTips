@@ -1,0 +1,137 @@
+#!/usr/bin/env python
+
+"""
+Wolf Creek Debug Utility
+"""
+
+from Menu import Menu
+from SesPageSas  import SesPageSas
+from SesPageFile import SesPageFile
+from Cmd import Cmd
+
+# Set up communication path.
+#sp = SesPageSas("/dev/sg3")
+sp = SesPageFile()
+
+
+# items in Platform menu
+def reset(): pass
+smbus_menu     = Menu("SMBUS"    , [['Exit', Menu.stop]])
+pci_menu       = Menu("PCI"      , [['Exit', Menu.stop]])
+hdd_menu       = Menu("HDD"      , [['Exit', Menu.stop]])
+bpm_menu       = Menu("BPM"      , [['Exit', Menu.stop]])
+ethernet_menu  = Menu("Ethernet" , [['Exit', Menu.stop]])
+gpio_menu      = Menu("GPIO"     , [['Exit', Menu.stop]])
+processor_menu = Menu("Processor", [['Exit', Menu.stop]])
+memory_menu    = Menu("Memory"   , [['Exit', Menu.stop]])
+tpm_menu       = Menu("TPM"      , [['Exit', Menu.stop]])
+usb_menu       = Menu("USB"      , [['Exit', Menu.stop]])
+
+platform_menu = \
+    Menu("Platform",
+         [
+          ['Exit'            , Menu.stop          ],
+          ['Reset the System', reset              ],
+          ['SMBUS Menu'      , smbus_menu    .run ],
+          ['PCI Menu'        , pci_menu      .run ],
+          ['HDD Menu'        , hdd_menu      .run ],
+          ['BPM Menu'        , bpm_menu      .run ],
+          ['Ethernet Menu'   , ethernet_menu .run ],
+          ['GPIO Menu'       , gpio_menu     .run ],
+          ['Processor Menu'  , processor_menu.run ],
+          ['Memory Menu'     , memory_menu   .run ],
+          ['TPM Menu'        , tpm_menu      .run ],
+          ['USB Menu'        , usb_menu      .run ],
+          ])
+
+bmc_menu = Menu("BMC", [['Exit', Menu.stop]])
+
+# items in SAS menu
+def enclosure_status     (): pass
+powersupply_menu = Menu("Power Supply"  , [['Exit', Menu.stop]])
+cpld_menu        = Menu("CPLD"          , [['Exit', Menu.stop]])
+def flash_expander_image (): pass
+def rebootreset_expander (): pass
+def drive_status         (): pass
+log_menu         = Menu("Log"           , [['Exit', Menu.stop]])
+led_menu         = Menu("LED"           , [['Exit', Menu.stop]])
+fan_menu         = Menu("Fan"           , [['Exit', Menu.stop]])
+twi_menu         = Menu("TWI"           , [['Exit', Menu.stop]])
+phy_menu         = Menu("PHY"           , [['Exit', Menu.stop]])
+vpd_menu         = Menu("VPD"           , [['Exit', Menu.stop]])
+sensor_menu      = Menu("Sensor"        , [['Exit', Menu.stop]])
+lcd_menu         = Menu("LCD"           , [['Exit', Menu.stop]])
+
+def sespage00():
+    page00 = sp.parse(sp.readpage(0x00))
+    print page00["pagedesc"] + ":"
+    for p in page00["data"]:
+        print "%.2X" % p,
+    print
+    print "press enter",
+    raw_input()
+    
+
+def sespage01():
+    print
+    page01 = sp.parse(sp.readpage(0x01))
+    #print page01
+    for enclist in page01["data"]:
+        #print enclist
+        encdict = Cmd.extracttodict(enclist[:-1])
+        #print
+        #print encdict
+        print "Enclosure #" + str(encdict["subid"][0])
+        print "    %-31s:" % encdict["logid"   ][2], "%X" % encdict["logid"   ][0]
+        print "    %-31s:" % encdict["vendor"  ][2], encdict["vendor"  ][0]
+        print "    %-31s:" % encdict["product" ][2], encdict["product" ][0]
+        print "    %-31s:" % encdict["revision"][2], encdict["revision"][0]
+        print "    Type Descriptors:"
+        print "        type possible text"
+        for tdlist in enclist[-1]:
+            tddict = Cmd.extracttodict(tdlist)
+            print "        %.2X   %3d      %-s" % (tddict["type"][0], tddict["possible"][0], tddict["text"][0])
+    print
+    print "press enter",
+    raw_input()
+
+ses_menu = \
+    Menu("SES Page Dump",
+         [
+          ['Exit', Menu.stop],
+          ['Page 0x00: Supported Diagnostic Pages', sespage00],
+          ['Page 0x01', sespage01],
+          ])
+
+sas_menu = \
+    Menu("SAS",
+         [
+          ['Exit'                 , Menu.stop            ],
+          ['Enclosure Status'     , enclosure_status     ],
+          ['Power Supply Menu'    , powersupply_menu.run ],
+          [        'CPLD Menu'    ,        cpld_menu.run ],
+          ['Flash Expander Image' , flash_expander_image ],
+          ['Reboot/Reset Expander', rebootreset_expander ],
+          ['Drive Status'         , drive_status         ],
+          [         'LOG Menu'    ,         log_menu.run ],
+          ['SES Page Dump'        ,         ses_menu.run ],
+          [         'LED Menu'    ,         led_menu.run ],
+          [         'FAN Menu'    ,         fan_menu.run ],
+          [         'TWI Menu'    ,         twi_menu.run ],
+          [         'PHY Menu'    ,         phy_menu.run ],
+          [         'VPD Menu'    ,         vpd_menu.run ],
+          [      'Sensor Menu'    ,      sensor_menu.run ],
+          [         'LCD Menu'    ,         lcd_menu.run ],
+          ])
+
+utility_menu = \
+    Menu("Debug Utility",
+         [
+          ['Exit'          , Menu.stop         ],
+          ['Platform Menu' , platform_menu.run ],
+          ['BMC Menu'      , bmc_menu     .run ],
+          ['SAS Menu'      , sas_menu     .run ],
+          ])
+
+utility_menu.run()
+

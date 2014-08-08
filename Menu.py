@@ -1,5 +1,6 @@
 import types
 import collections
+import sys
 
 class Menu(object):
     
@@ -25,22 +26,43 @@ class Menu(object):
                 raise #Exception("data must be a list")
         
     def run(self):
+        # Find width of menu numbers.
+        pot = 1
+        width = 0
+        while len(self.data) > pot:
+            pot *= 10
+            width += 1
+        form = '%' + str(width) + 'd:'
+        # menu
         self.running = True
         while self.running:
             print '-' * 20
             print self.title
             print '-' * 20
             for idx in range(len(self.data)):
-                print str(idx)+': ', self.data[idx][0]
+                print form % idx, self.data[idx][0]
             print 'choose:',
             try:
-                inp = int(raw_input())
+                rawinp = raw_input()
+            except KeyboardInterrupt:
+                print
+                sys.exit()
+            except EOFError:
+                print
+                self.stopfunc()
+                continue
+            try:
+                inp = int(rawinp)
             except:
                 inp = -1
             if not 0 <= inp < len(self.data):
                 print "bad item number"
                 continue
-            self.data[inp][1]()
+            try:
+                self.data[inp][1]()
+            except KeyboardInterrupt:
+                print
+                sys.exit()
 
     def stopfunc(self):
         self.running = False

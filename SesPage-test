@@ -5,5 +5,5 @@ from SesPageFile import SesPageFile
 
 sp = SesPageFile()
 
-print sp.interpret(sp.readpage(0x00))
-print sp.interpret(sp.readpage(0x01))
+print sp.parse(sp.readpage(0x00))
+print sp.parse(sp.readpage(0x01))
