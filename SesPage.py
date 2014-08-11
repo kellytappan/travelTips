@@ -34,7 +34,7 @@ class SesPage(object):
     
     #@staticmethod
     def parse_01(self, data):
-        configuration_diagnostic = \
+        configuration = \
         (
          (  0   , 1*8, "int", "pc",          "page code"),
          (  1   , 1*8, "int", "secondaries", "number of secondary subenclosures"),
@@ -67,7 +67,7 @@ class SesPage(object):
          [  0   , 0*8, "str", "text", "type descriptor text"],
          ]
         bo = 0   # byte offset
-        head = Cmd.extract(data[bo:], configuration_diagnostic, bo)
+        head = Cmd.extract(data[bo:], configuration, bo)
         bo += 8
         enclosures = []
         encnumtypes = []
@@ -91,11 +91,37 @@ class SesPage(object):
                 type_descriptor_text[0][1] = thislen*8  # ugly
                 enclosures[encnum][-1][typenum][3] = Cmd.extract(data[bo:], type_descriptor_text, bo)[0]
                 bo += thislen
+        self.page01 = enclosures
         return enclosures
     
     #@staticmethod
     def parse_02(self, data):
+        enclosure_status = \
+        (
+         (  0   , 1*8, "int", "pc"      , "page code"),
+         (( 1,4), 1  , "int", "invop"   , "invop"),
+         (( 1,3), 1  , "int", "info"    , "info"),
+         (( 1,2), 1  , "int", "non_crit", "non-crit"),
+         (( 1,1), 1  , "int", "crit"    , "crit"),
+         (( 1,0), 1  , "int", "unrecov" , "unrecov"),
+         (  2   , 2*8, "int", "length"  , "pagelength"),
+         (  4   , 4*8, "int", "gen"     , "generation code"),
+         )
+        status_element = \
+        (
+         (( 0,6), 1  , "int", "prdfail" , "prdfail"),
+         (( 0,5), 1  , "int", "disabled", "disabled"),
+         (( 0,4), 1  , "int", "swap"    , "swap"),
+         (( 0,3), 4  , "int", "elstat"  , "element status code"),
+         (  1   , 3*8, "int", "status"  , "element type specific status information"),
+         )
+        bo = 0  # byte offset
+        head = Cmd.extract(data[bo:], enclosure_status)
+        bo += 8
+        
+        
         pass
+
     #@staticmethod
     def parse_04(self, data):
         pass

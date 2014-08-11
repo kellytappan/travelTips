@@ -27,15 +27,16 @@ class Menu(object):
         
     def run(self):
         # Find width of menu numbers.
-        pot = 1
+        powerOfTen = 1
         width = 0
-        while len(self.data) > pot:
-            pot *= 10
+        while len(self.data) > powerOfTen:
+            powerOfTen *= 10
             width += 1
         form = '%' + str(width) + 'd:'
         # menu
         self.running = True
         while self.running:
+            sys.stdout.write("\033[H\033[J")
             print '-' * 20
             print self.title
             print '-' * 20

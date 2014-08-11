@@ -4,6 +4,8 @@
 Wolf Creek Debug Utility
 """
 
+import sys
+
 from Menu import Menu
 from SesPageSas  import SesPageSas
 from SesPageFile import SesPageFile
@@ -73,7 +75,7 @@ def sespage00():
     
 
 def sespage01():
-    print
+    sys.stdout.write("\033[H\033[J")
     page01 = sp.parse(sp.readpage(0x01))
     #print page01
     for enclist in page01["data"]:
@@ -94,13 +96,22 @@ def sespage01():
     print
     print "press enter",
     raw_input()
+    
+def sespage02():
+    sys.stdout.write("\033[H\033[J")
+    page02 = sp.parse(sp.readpage(0x02))
+    
+    print
+    print "press enter",
+    raw_input()
 
 ses_menu = \
     Menu("SES Page Dump",
          [
           ['Exit', Menu.stop],
           ['Page 0x00: Supported Diagnostic Pages', sespage00],
-          ['Page 0x01', sespage01],
+          ['Page 0x01: Configuration'             , sespage01],
+          ['Page 0x02: Enclosure Status'          , sespage02],
           ])
 
 sas_menu = \
