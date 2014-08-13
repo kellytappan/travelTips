@@ -1,5 +1,5 @@
-import sys
-sys.path.append('/home/larry/git/ih/python-scsi-pt')
+#import sys
+#sys.path.append('/home/larry/git/ih/python-scsi-pt')
 
 import abc
 
@@ -45,6 +45,7 @@ class SesPage(object):
          (  1   , 1*8, "int", "secondaries", "number of secondary subenclosures"),
          (  2   , 2*8, "int", "length",      "pagelength"),
          (  4   , 4*8, "int", "gen",         "generation code"),
+         (  8   , 0  , "str", None,          ""),
          )
         enclosure_descriptor = \
         (
@@ -76,14 +77,12 @@ class SesPage(object):
         bo += 8
         enclosures = []
         encnumtypes = []
-        numenclosures = 1+Cmd.extracttodict(head)["secondaries"].val
+        numenclosures = 1+head.secondaries.val
         for encnum in range(numenclosures):
-            #print "encnum =", encnum
             enclist = Cmd.extract(data[bo:], enclosure_descriptor, bo)
-            encdict = Cmd.extracttodict(enclist)
             enclosures.append(enclist)
-            encnumtypes.append(encdict["number"].val)
-            bo += 4+encdict["length"].val
+            encnumtypes.append(enclist.number.val)
+            bo += 4+enclist.length.val
         for encnum in range(numenclosures):
             typeheaders = []
             for typenum in range(encnumtypes[encnum]):
@@ -141,19 +140,17 @@ class SesPage(object):
         for enclist01 in self.page01:
             typelist02 = []
             for typedef01 in enclist01[-1]:
-                typedict01 = Cmd.extracttodict(typedef01)
-                #print typedict01["type"].val, typedict01["possible"].val
                 ellist02 = []
-                for elnum in range(1+typedict01["possible"].val):
+                for elnum in range(1+typedef01.possible.val):
                     ellist02.append(Cmd.extract(data[bo:], status_element, bo))
                     bo += 4
                 typelist02.append({
-                                   "type":typedict01["type"].val,
-                                   "text":typedict01["text"].val,
+                                   "type":typedef01.type.val,
+                                   "text":typedef01.desclen.val,  # Really is "text" field, not desclen.
                                    "elements":ellist02,
                                    })
             enclosures02.append(typelist02)
-        head.append(Cmd.Field(enclosures02, 8, "enclosures", "list of enclosures"))
+        head.append(Cmd.Field(enclosures02, 8, "enclosures", "list of enclosures"), "enclosures")
         return head
 
     #@staticmethod
