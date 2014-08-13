@@ -35,9 +35,9 @@ class SesPage(object):
     #@staticmethod
     def parse_01(self, data):
         """
-        return a list of enclosures
-        an enclosure is a list of fields and type descriptor list
-        a type descriptor is a list of fields, including text instead of desclen
+        return a ListDict of Fields, including "enclosures": list of enclosures
+        an enclosure is a ListDict of Fields, including "typedesc": list of type descriptors
+        a type descriptor is a ListDict of Fields, including "text": type descriptor text
         """
         configuration = \
         (
@@ -45,7 +45,7 @@ class SesPage(object):
          (  1   , 1*8, "int", "secondaries", "number of secondary subenclosures"),
          (  2   , 2*8, "int", "length",      "pagelength"),
          (  4   , 4*8, "int", "gen",         "generation code"),
-         (  8   , 0  , "str", None,          ""),
+         (  8   , 0  , "str", "enclosures" , "enclosure descriptor list"),
          )
         enclosure_descriptor = \
         (
@@ -59,6 +59,7 @@ class SesPage(object):
          ( 20   ,16*8, "str", "product", "product identification"),
          ( 36   , 4*8, "str", "revision","product revision level"),
          ( 40   , 0  , "str", None,      "vendor specific enclosure information"),
+         (  0   , 0  , "str", "typedesc", "list of type descriptor"),  # placeholder
          )
         type_descriptor_header = \
         (
@@ -66,6 +67,7 @@ class SesPage(object):
          (  1   , 1*8, "int", "possible", "number of possible elements"),
          (  2   , 1*8, "int", "subid",    "subenclosure identifier"),
          (  3   , 1*8, "int", "desclen",  "type descriptor text length"),
+         (  0   , 0  , "str", "text"    , "type descriptor text"),  # placeholder
          )
         # This must be lists instead of tuples so we can modify the length.
         type_descriptor_text = \
@@ -76,47 +78,58 @@ class SesPage(object):
         head = Cmd.extract(data[bo:], configuration, bo)
         bo += 8
         enclosures = []
-        encnumtypes = []
-        numenclosures = 1+head.secondaries.val
-        for encnum in range(numenclosures):
-            enclist = Cmd.extract(data[bo:], enclosure_descriptor, bo)
-            enclosures.append(enclist)
-            encnumtypes.append(enclist.number.val)
-            bo += 4+enclist.length.val
-        for encnum in range(numenclosures):
+        enctypecounts = []   # number of types for each enclosure
+        numenclosures = 1+head.secondaries.val  # total number of enclosures
+        # Loop through the enclosures, retrieving headers.
+        for encidx in range(numenclosures):
+            # An enclosure is a ListDict of Fields.
+            enclosure = Cmd.extract(data[bo:], enclosure_descriptor, bo)
+            enclosures.append(enclosure)
+            enctypecounts.append(enclosure.number.val)
+            bo += 4+enclosure.length.val
+        # Loop again through enclosures, retrieving lists of type descriptors.
+        for encidx in range(numenclosures):
             typeheaders = []
-            for typenum in range(encnumtypes[encnum]):
+            typedescbo  = bo
+            for typenum in range(enctypecounts[encidx]):
+                # A typeheader is a ListDict of Fields.
+                # typeheaders is a list of them.
                 typeheaders.append(Cmd.extract(data[bo:], type_descriptor_header, bo))
                 bo += 4
-            enclosures[encnum].append(typeheaders)
-        for encnum in range(numenclosures):
-            for typenum in range(encnumtypes[encnum]):
-                thislen = enclosures[encnum][-1][typenum][3].val
+            # Replace the placeholder for the list of type descriptors.
+            enclosures[encidx].typedesc.val = typeheaders
+            enclosures[encidx].typedesc.bo  = typedescbo
+        # Loop yet again through enclosures, retrieving type descriptor texts.
+        for encidx in range(numenclosures):
+            for typenum in range(enctypecounts[encidx]):
+                thislen = enclosures[encidx].typedesc.val[typenum].desclen.val
                 type_descriptor_text[0][1] = thislen*8  # ugly, set the number of bits to extract
-                enclosures[encnum][-1][typenum][3] = Cmd.extract(data[bo:], type_descriptor_text, bo)[0]
+                # Replace the placeholder for the type descriptor text.
+                enclosures[encidx].typedesc.val[typenum].text = Cmd.extract(data[bo:], type_descriptor_text, bo).text
                 bo += thislen
-        self.page01 = enclosures
-        return enclosures
+        head.enclosures.val = enclosures
+        self.page01 = head
+        return head
     
     #@staticmethod
     def parse_02(self, data):
         """
-        return a list of header Fields plus "enclosures": list of enclosures
+        return a ListDict of Fields, including "enclosures": list of enclosures
         an enclosure is a dictionary with "subid": enclosure number and "types": list of types
         a type is a dictionary with "type": element type and "elements": list of status elements, starting with the overall status element
         a status element is a list of Fields
         """
         enclosure_status = \
         (
-         (  0   , 1*8, "int", "pc"      , "page code"),
-         (( 1,4), 1  , "int", "invop"   , "invop"),
-         (( 1,3), 1  , "int", "info"    , "info"),
-         (( 1,2), 1  , "int", "non_crit", "non-crit"),
-         (( 1,1), 1  , "int", "crit"    , "crit"),
-         (( 1,0), 1  , "int", "unrecov" , "unrecov"),
-         (  2   , 2*8, "int", "length"  , "pagelength"),
-         (  4   , 4*8, "int", "gen"     , "generation code"),
-         (  8   , 0  , "str", "status"  , "status descriptor list"),
+         (  0   , 1*8, "int", "pc"        , "page code"),
+         (( 1,4), 1  , "int", "invop"     , "invop"),
+         (( 1,3), 1  , "int", "info"      , "info"),
+         (( 1,2), 1  , "int", "non_crit"  , "non-crit"),
+         (( 1,1), 1  , "int", "crit"      , "crit"),
+         (( 1,0), 1  , "int", "unrecov"   , "unrecov"),
+         (  2   , 2*8, "int", "length"    , "pagelength"),
+         (  4   , 4*8, "int", "gen"       , "generation code"),
+         (  8   , 0  , "str", "enclosures", "enclosure descriptor list"),
          )
         status_element = \
         (
@@ -137,28 +150,77 @@ class SesPage(object):
         bo += 8
         
         enclosures02 = []
-        for enclist01 in self.page01:
+        for enclosure01 in self.page01.enclosures.val:
             typelist02 = []
-            for typedef01 in enclist01[-1]:
+            for typedef01 in enclosure01.typedesc.val:
                 ellist02 = []
                 for elnum in range(1+typedef01.possible.val):
                     ellist02.append(Cmd.extract(data[bo:], status_element, bo))
                     bo += 4
                 typelist02.append({
                                    "type":typedef01.type.val,
-                                   "text":typedef01.desclen.val,  # Really is "text" field, not desclen.
+                                   "text":typedef01.text.val,
                                    "elements":ellist02,
                                    })
             enclosures02.append(typelist02)
-        head.append(Cmd.Field(enclosures02, 8, "enclosures", "list of enclosures"), "enclosures")
+        head.enclosures = Cmd.Field(enclosures02, 8, "enclosures", "list of enclosures")
+        #head.append(Cmd.Field(enclosures02, 8, "enclosures", "list of enclosures"), "enclosures")
         return head
 
     #@staticmethod
     def parse_04(self, data):
         pass
+
     #@staticmethod
     def parse_05(self, data):
-        pass
+        """
+        return a ListDict of Fields, including "enclosures": list of enclosures
+        an enclosure is a dictionary with "subid": enclosure number and "types": list of types
+        a type is a dictionary with "type": element type and "elements": list of status elements, starting with the overall status element
+        a status element is a list of Fields
+        """
+        threshold_in = \
+        (
+         (  0   , 1*8, "int", "pc"        , "page code"),
+         (( 1,4), 1  , "int", "invop"     , "invalid operation requested"),
+         (  2   , 2*8, "int", "length"    , "pagelength"),
+         (  4   , 4*8, "int", "gen"       , "generation code"),
+         (  8   , 0  , "str", "enclosures", "enclosure descriptor list"),
+         )
+        threshold_descriptor = \
+        (
+         (  0   , 1*8, "int", "hicrit", "high critical threshold"),
+         (  1   , 1*8, "int", "hiwarn", "high warning threshold"),
+         (  2   , 1*8, "int", "lowarn", "low warning threshold"),
+         (  3   , 1*8, "int", "locrit", "low critical threshold"),
+         )
+        
+        if not self.page01:
+            # We need the information from SES page 0x01 before we can
+            # parse page 0x04.
+            return None
+        
+        bo = 0  # byte offset
+        head = Cmd.extract(data[bo:], threshold_in, bo)
+        bo += 8
+        
+        enclosures05 = []
+        for enclosure01 in self.page01.enclosures.val:
+            typelist05 = []
+            for typedef01 in enclosure01.typedesc.val:
+                ellist05 = []
+                for elnum in range(1+typedef01.possible.val):
+                    ellist05.append(Cmd.extract(data[bo:], threshold_descriptor, bo))
+                    bo += 4
+                typelist05.append({
+                                   "type":typedef01.type.val,
+                                   "text":typedef01.text.val,
+                                   "elements":ellist05,
+                                   })
+            enclosures05.append(typelist05)
+        head.enclosures = Cmd.Field(enclosures05, 8, "enclosures", "list of enclosures")
+        return head
+
     #@staticmethod
     def parse_07(self, data):
         pass

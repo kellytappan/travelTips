@@ -78,7 +78,7 @@ def sespage01():
     sys.stdout.write("\033[H\033[J")
     page01 = sp.parse(sp.readpage(0x01))
     #print page01
-    for enclist in page01["data"]:
+    for enclist in page01["data"].enclosures.val:
         #print enclist
         #print
         #print enclist
@@ -89,12 +89,12 @@ def sespage01():
         print "    %-31s:" % enclist.revision.desc, enclist.revision.val
         print "    Type Descriptors:"
         print "        type possible text"
-        for tdlist in enclist[-1]:
-            print "        %.2X   %3d      %-s" % (tdlist.type.val, tdlist.possible.val, tdlist.desclen.val)
+        for tdlist in enclist.typedesc.val:
+            print "        %.2X   %3d      %-s" % (tdlist.type.val, tdlist.possible.val, tdlist.text.val)
     print
     print "press enter",
     raw_input()
-    
+
 def sespage02():
     sys.stdout.write("\033[H\033[J")
     page02 = sp.parse(sp.readpage(0x02))
@@ -119,6 +119,31 @@ def sespage02():
     print "press enter",
     raw_input()
 
+def sespage05():
+    sys.stdout.write("\033[H\033[J")
+    page05 = sp.parse(sp.readpage(0x05))
+    if not page05["data"]:
+        page01 = sp.parse(sp.readpage(0x01))
+        page05 = sp.parse(sp.readpage(0x05))
+    
+    for enclosure in page05["data"].enclosures.val:
+        for typ in enclosure:
+            print "type:", "%.2X" % typ["type"], typ["text"]
+            elnum = 0
+            for element in typ["elements"]:
+                print "%.3d" % elnum, "%3d %3d %3d %3d" % \
+                (
+                 element.hicrit.val,
+                 element.hiwarn.val,
+                 element.lowarn.val,
+                 element.locrit.val,
+                 )
+                elnum += 1
+            
+    print
+    print "press enter",
+    raw_input()
+
 ses_menu = \
     Menu("SES Page Dump",
          [
@@ -126,6 +151,7 @@ ses_menu = \
           ['Page 0x00: Supported Diagnostic Pages', sespage00],
           ['Page 0x01: Configuration'             , sespage01],
           ['Page 0x02: Enclosure Status'          , sespage02],
+          ['Page 0x05: Threshold Status'          , sespage05],
           ])
 
 sas_menu = \
