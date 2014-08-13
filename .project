@@ -3,6 +3,7 @@
 	<name>debug-util</name>
 	<comment></comment>
 	<projects>
+		<project>listdict</project>
 		<project>python-scsi-pt</project>
 	</projects>
 	<buildSpec>

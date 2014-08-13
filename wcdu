@@ -83,16 +83,16 @@ def sespage01():
         encdict = Cmd.extracttodict(enclist[:-1])
         #print
         #print encdict
-        print "Enclosure #" + str(encdict["subid"][0])
-        print "    %-31s:" % encdict["logid"   ][2], "%X" % encdict["logid"   ][0]
-        print "    %-31s:" % encdict["vendor"  ][2], encdict["vendor"  ][0]
-        print "    %-31s:" % encdict["product" ][2], encdict["product" ][0]
-        print "    %-31s:" % encdict["revision"][2], encdict["revision"][0]
+        print "Enclosure #" + str(encdict["subid"].val)
+        print "    %-31s:" % encdict["logid"   ].desc, "%X" % encdict["logid"   ].val
+        print "    %-31s:" % encdict["vendor"  ].desc, encdict["vendor"  ].val
+        print "    %-31s:" % encdict["product" ].desc, encdict["product" ].val
+        print "    %-31s:" % encdict["revision"].desc, encdict["revision"].val
         print "    Type Descriptors:"
         print "        type possible text"
         for tdlist in enclist[-1]:
             tddict = Cmd.extracttodict(tdlist)
-            print "        %.2X   %3d      %-s" % (tddict["type"][0], tddict["possible"][0], tddict["text"][0])
+            print "        %.2X   %3d      %-s" % (tddict["type"].val, tddict["possible"].val, tddict["text"].val)
     print
     print "press enter",
     raw_input()
@@ -100,7 +100,24 @@ def sespage01():
 def sespage02():
     sys.stdout.write("\033[H\033[J")
     page02 = sp.parse(sp.readpage(0x02))
+    if not page02["data"]:
+        page01 = sp.parse(sp.readpage(0x01))
+        page02 = sp.parse(sp.readpage(0x02))
     
+    for enclosure in Cmd.extracttodict(page02["data"])["enclosures"].val:
+        for typ in enclosure:
+            print "type:", "%.2X" % typ["type"], typ["text"]
+            elnum = 0
+            for element in typ["elements"]:
+                eldict = Cmd.extracttodict(element)
+                prdfail  = "P" if eldict["prdfail" ].val else "."
+                disabled = "D" if eldict["disabled"].val else "."
+                swap     = "S" if eldict["swap"    ].val else "."
+                elstat = eldict["elstat"].val
+                status = eldict["status"].val
+                print "%.3d" % elnum, prdfail+disabled+swap, elstat, "%.6X" % status
+                elnum += 1
+            
     print
     print "press enter",
     raw_input()

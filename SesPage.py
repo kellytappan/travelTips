@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../../ih/python-scsi-pt')
+sys.path.append('/home/larry/git/ih/python-scsi-pt')
 
 import abc
 
@@ -12,7 +12,7 @@ class SesPage(object):
     __metaclass__ = abc.ABCMeta
     
     def __init__(self):
-        pass
+        self.page01 = None
     
     @abc.abstractmethod
     def readpage(self, pagenum):
@@ -34,6 +34,11 @@ class SesPage(object):
     
     #@staticmethod
     def parse_01(self, data):
+        """
+        return a list of enclosures
+        an enclosure is a list of fields and type descriptor list
+        a type descriptor is a list of fields, including text instead of desclen
+        """
         configuration = \
         (
          (  0   , 1*8, "int", "pc",          "page code"),
@@ -71,14 +76,14 @@ class SesPage(object):
         bo += 8
         enclosures = []
         encnumtypes = []
-        numenclosures = 1+Cmd.extracttodict(head)["secondaries"][0]
+        numenclosures = 1+Cmd.extracttodict(head)["secondaries"].val
         for encnum in range(numenclosures):
             #print "encnum =", encnum
             enclist = Cmd.extract(data[bo:], enclosure_descriptor, bo)
             encdict = Cmd.extracttodict(enclist)
             enclosures.append(enclist)
-            encnumtypes.append(encdict["number"][0])
-            bo += 4+encdict["length"][0]
+            encnumtypes.append(encdict["number"].val)
+            bo += 4+encdict["length"].val
         for encnum in range(numenclosures):
             typeheaders = []
             for typenum in range(encnumtypes[encnum]):
@@ -87,8 +92,8 @@ class SesPage(object):
             enclosures[encnum].append(typeheaders)
         for encnum in range(numenclosures):
             for typenum in range(encnumtypes[encnum]):
-                thislen = enclosures[encnum][-1][typenum][3][0]
-                type_descriptor_text[0][1] = thislen*8  # ugly
+                thislen = enclosures[encnum][-1][typenum][3].val
+                type_descriptor_text[0][1] = thislen*8  # ugly, set the number of bits to extract
                 enclosures[encnum][-1][typenum][3] = Cmd.extract(data[bo:], type_descriptor_text, bo)[0]
                 bo += thislen
         self.page01 = enclosures
@@ -96,6 +101,12 @@ class SesPage(object):
     
     #@staticmethod
     def parse_02(self, data):
+        """
+        return a list of header Fields plus "enclosures": list of enclosures
+        an enclosure is a dictionary with "subid": enclosure number and "types": list of types
+        a type is a dictionary with "type": element type and "elements": list of status elements, starting with the overall status element
+        a status element is a list of Fields
+        """
         enclosure_status = \
         (
          (  0   , 1*8, "int", "pc"      , "page code"),
@@ -106,6 +117,7 @@ class SesPage(object):
          (( 1,0), 1  , "int", "unrecov" , "unrecov"),
          (  2   , 2*8, "int", "length"  , "pagelength"),
          (  4   , 4*8, "int", "gen"     , "generation code"),
+         (  8   , 0  , "str", "status"  , "status descriptor list"),
          )
         status_element = \
         (
@@ -115,12 +127,34 @@ class SesPage(object):
          (( 0,3), 4  , "int", "elstat"  , "element status code"),
          (  1   , 3*8, "int", "status"  , "element type specific status information"),
          )
+        
+        if not self.page01:
+            # We need the information from SES page 0x01 before we can
+            # parse page 0x02.
+            return None
+        
         bo = 0  # byte offset
-        head = Cmd.extract(data[bo:], enclosure_status)
+        head = Cmd.extract(data[bo:], enclosure_status, bo)
         bo += 8
         
-        
-        pass
+        enclosures02 = []
+        for enclist01 in self.page01:
+            typelist02 = []
+            for typedef01 in enclist01[-1]:
+                typedict01 = Cmd.extracttodict(typedef01)
+                #print typedict01["type"].val, typedict01["possible"].val
+                ellist02 = []
+                for elnum in range(1+typedict01["possible"].val):
+                    ellist02.append(Cmd.extract(data[bo:], status_element, bo))
+                    bo += 4
+                typelist02.append({
+                                   "type":typedict01["type"].val,
+                                   "text":typedict01["text"].val,
+                                   "elements":ellist02,
+                                   })
+            enclosures02.append(typelist02)
+        head.append(Cmd.Field(enclosures02, 8, "enclosures", "list of enclosures"))
+        return head
 
     #@staticmethod
     def parse_04(self, data):
