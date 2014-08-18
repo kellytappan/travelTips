@@ -1,33 +1,34 @@
 #!/usr/bin/env python
 
 from Menu import Menu
+import sys
 
-def first():
+def first(p):
     print "first operation"
     
-def second():
+def second(p):
     print "second operation"
     
-def third():
+def third(p):
     print "third operation"
     
-def subone():
+def subone(p):
     print "sub menu item 1"
 
     
 submenu = Menu("Sub Menu 1",
             [
-            ['Exit'   , Menu.stop],
-            ['Sub one', subone],
+            ['Exit'   , Menu.stop, "help"],
+            ['Sub one', subone   , "sample"],
             ])
 
 menu = Menu("Main Menu",
         [
-        ['Exit'            , Menu.stop],
-        ['Operation first' , first ],
-        ['Operation second', second],
-        ['Operation third' , third ],
-        ['Invoke sub menu' , submenu.run],
+        ['Exit'            , Menu.stop  , "help"],
+        ['Operation first' , first      , "first"],
+        ['Operation second', second     , "second"],
+        ['Operation third' , third      , "third"],
+        ['Invoke sub menu' , submenu.run, "sub"],
         ])
 
-menu.run()
+menu.run(sys.argv[1:])

@@ -223,10 +223,108 @@ class SesPage(object):
 
     #@staticmethod
     def parse_07(self, data):
+        element_descriptor_head = \
+        (
+         (  0   , 1*8, "int", "pc"        , "page code"),
+         (  2   , 2*8, "int", "length"    , "pagelength"),
+         (  4   , 4*8, "int", "gen"       , "generation code"),
+         (  8   , 0  , "str", "enclosures", "enclosure descriptor list"),
+         )
+        descriptor_head = \
+        (
+         (  0   , 2*8, "str", None    , "reserved"),
+         (  2   , 2*8, "int", "length", "descriptor length"),
+         )
+        # This must be lists instead of tuples so we can modify the length.
+        descriptor_text = \
+        [
+         [  0   , 0*8, "str", "text", "type descriptor text"],
+         ]
+
+        if not self.page01:
+            # We need the information from SES page 0x01 before we can
+            # parse page 0x04.
+            return None
+        
+        bo = 0  # byte offset
+        head = Cmd.extract(data[bo:], element_descriptor_head, bo)
+        bo += 8
+        
+        enclosures07 = []
+        for enclosure01 in self.page01.enclosures.val:
+            typelist07 = []
+            for typedef01 in enclosure01.typedesc.val:
+                ellist07 = []
+                for elnum in range(1+typedef01.possible.val):
+                    length = Cmd.extract(data[bo:], descriptor_head, bo).length.val
+                    bo += 4
+                    descriptor_text[0][1] = length*8
+                    ellist07.append(Cmd.extract(data[bo:], descriptor_text, bo))
+                    bo += length
+                typelist07.append({
+                                   "type":typedef01.type.val,
+                                   "text":typedef01.text.val,
+                                   "elements":ellist07,
+                                   })
+            enclosures07.append(typelist07)
+        head.enclosures = Cmd.Field(enclosures07, 8, "enclosures", "list of enclosures")
+        return head
         pass
+    
     #@staticmethod
     def parse_0a(self, data):
+        additional_element_head = \
+        (
+         (  0   , 1*8, "int", "pc"         , "page code"),
+         (  2   , 2*8, "int", "length"     , "pagelength"),
+         (  4   , 4*8, "int", "gen"        , "generation code"),
+         (  8   , 0  , "str", "descriptors", "additional element descriptor list"),
+         )
+        descriptor_head = \
+        (
+         (( 0,7), 1  , "int", "invalid" , "invalid"),
+         (( 0,4), 1  , "int", "eip"     , "element index present"),
+         (( 0,3), 4  , "int", "protocol", "protocol identifier"),
+         (  1   , 1*8, "int", "length"  , "additional element status descriptor length"),
+         )
+        with_eip1 = \
+        (
+         (( 0,7), 1  , "int", "eiioe", "element index includes overall elements"),
+         (  1   , 1*8, "int", "index", "element index"),
+         )
+        specific = \
+        [
+         [  0   , 0  , "str", "info", "protocol-specific information"],
+         ]
+        
+        if not self.page01:
+            # We need the information from SES page 0x01 before we can
+            # parse page 0x04.
+            return None
+        
+        bo = 0  # byte offset
+        head = Cmd.extract(data[bo:], additional_element_head, bo)
+        bo += 8
+        
+        dhead = Cmd.extract(data[bo:], descriptor_head, bo)
+        bo += 2
+        
+        eip = None
+        if dhead.eip.val:
+            eip = Cmd.extract(data[bo:], with_eip1, bo)
+            bo += 2
+        
+        len = dhead.length.val
+        if eip: len -= 2
+        specific[0][1] = len*8
+        #print "dhead.length.val =", dhead.length.val
+        spec = Cmd.extract(data[bo:], specific, bo)
+        bo += dhead.length.val
+        
+        return (head, dhead, eip, spec)
+        
         pass
+    
     #@staticmethod
     def parse_0e(self, data):
         pass
