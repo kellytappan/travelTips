@@ -9,6 +9,7 @@ import sys
 from Menu import Menu
 from SesPageSas  import SesPageSas
 from SesPageFile import SesPageFile
+from configuration import Configuration
 
 # Set up communication path.
 #sp = SesPageSas("/dev/sg3")
@@ -64,17 +65,17 @@ sensor_menu      = Menu("Sensor"        , [['Exit', Menu.stop]])
 lcd_menu         = Menu("LCD"           , [['Exit', Menu.stop]])
 
 def sespage00(p):
+    Menu.clear()
     page00 = sp.parse(sp.readpage(0x00))
     print page00["pagedesc"] + ":"
     for p in page00["data"]:
         print "%.2X" % p,
     print
-    print "press enter",
-    raw_input()
-    
+
+    Menu.wait()
 
 def sespage01(p):
-    sys.stdout.write("\033[H\033[J")
+    Menu.clear()
     page01 = sp.parse(sp.readpage(0x01))
     #print page01
     for enclist in page01["data"].enclosures.val:
@@ -90,12 +91,10 @@ def sespage01(p):
         print "        type possible text"
         for tdlist in enclist.typedesc.val:
             print "        %.2X   %3d      %-s" % (tdlist.type.val, tdlist.possible.val, tdlist.text.val)
-    print
-    print "press enter",
-    raw_input()
+    Menu.wait()
 
 def sespage02(p):
-    sys.stdout.write("\033[H\033[J")
+    Menu.clear()
     page02 = sp.parse(sp.readpage(0x02))
     if not page02["data"]:
         page01 = sp.parse(sp.readpage(0x01))
@@ -114,12 +113,10 @@ def sespage02(p):
                 print "%.3d" % elnum, prdfail+disabled+swap, elstat, "%.6X" % status
                 elnum += 1
             
-    print
-    print "press enter",
-    raw_input()
+    Menu.wait()
 
 def sespage05(p):
-    sys.stdout.write("\033[H\033[J")
+    Menu.clear()
     page05 = sp.parse(sp.readpage(0x05))
     if not page05["data"]:
         page01 = sp.parse(sp.readpage(0x01))
@@ -139,12 +136,10 @@ def sespage05(p):
                  )
                 elnum += 1
             
-    print
-    print "press enter",
-    raw_input()
+    Menu.wait()
 
 def sespage07(p):
-    sys.stdout.write("\033[H\033[J")
+    Menu.clear()
     page07 = sp.parse(sp.readpage(0x07))
     if not page07["data"]:
         page01 = sp.parse(sp.readpage(0x01))
@@ -158,36 +153,37 @@ def sespage07(p):
                 print "%.3d" % elnum, '"' + element.text.val + '"'
                 elnum += 1
             
-    print
-    print "press enter",
-    raw_input()
+    Menu.wait()
+
+def sespage0a(p):
+    Menu.clear()
+    page0a = sp.parse(sp.readpage(0x0a))
+    if not page0a["data"]:
+        page01 = sp.parse(sp.readpage(0x01))
+        page0a = sp.parse(sp.readpage(0x0a))
+    
+    addelpage = page0a["data"]
+    for addel in addelpage.descriptors.val:
+        if addel.eip.val:
+            print "Element Index: %.2d, valid: %5s, notall: %5s," % (addel.index.val, not addel.invalid.val, not not addel.notall.val),
+            for phy in addel.phydescriptors.val:
+                si = 'S' if phy.ssp_init.val else '.'
+                ti = 'S' if phy.stp_init.val else '.'
+                mi = 'S' if phy.smp_init.val else '.'
+                st = 'S' if phy.ssp_targ.val else '.'
+                tt = 'S' if phy.stp_targ.val else '.'
+                mt = 'S' if phy.smp_targ.val else '.'
+                ports = si+ti+mi+' '+st+tt+mt
+                print "%.16x %.2x %s" % (phy.sas_addr.val, phy.phy_id.val, ports)
+
+    Menu.wait()
+
 
 def dump_fields(fl):
     if fl:
         for f in fl:
             print f.val, f.name
     
-def sespage0a(p):
-    sys.stdout.write("\033[H\033[J")
-    page0a = sp.parse(sp.readpage(0x0a))
-    if not page0a["data"]:
-        page01 = sp.parse(sp.readpage(0x01))
-        page0a = sp.parse(sp.readpage(0x0a))
-    
-    head, dhead, eip, info = page0a["data"]
-    print "dhead =", dhead.invalid.val, dhead.eip.val, dhead.protocol.val, dhead.length.val
-    #dump_fields(dhead)
-    #print
-    print "eip =", eip.eiioe.val, eip.index.val
-    #dump_fields(eip)
-    #print
-    print "info ="
-    dump_fields(info)
-    print
-
-    print
-    print "press enter",
-    raw_input()
 
 ses_menu = \
     Menu("SES Page Dump",
@@ -231,5 +227,6 @@ utility_menu = \
           ['SAS Menu'      , sas_menu     .run, "sas"      ],
           ])
 
+Configuration.setInteractive(not sys.argv[1:])
 utility_menu.run(sys.argv[1:])
 

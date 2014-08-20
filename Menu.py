@@ -2,10 +2,33 @@ import types
 import collections
 import sys
 
+from configuration import Configuration
+
 class Menu(object):
     
     # Magic function element that is translated to self.stopfunc.
     stop = -1
+    
+    @staticmethod
+    def clear():
+        """
+        Clear the screen,
+        only if the configuration says it's OK.
+        """
+        if Configuration.getClear() and Configuration.getInteractive():
+            sys.stdout.write(Configuration.clearcode)
+    
+    @staticmethod
+    def wait():
+        """
+        Prompt and wait for user to press enter,
+        only if the configuration says it's OK.
+        """
+        if Configuration.getClear() and Configuration.getInteractive():
+            print
+            print "press enter",
+            raw_input()
+
     
     def __init__(self, title, data):
         self.title = title
@@ -43,7 +66,7 @@ class Menu(object):
             # menu
             self.running = True
             while self.running:
-                sys.stdout.write("\033[H\033[J")
+                self.clear()
                 print '-' * 20
                 print self.title
                 print '-' * 20

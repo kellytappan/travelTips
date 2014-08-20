@@ -280,6 +280,7 @@ class SesPage(object):
          (  4   , 4*8, "int", "gen"        , "generation code"),
          (  8   , 0  , "str", "descriptors", "additional element descriptor list"),
          )
+        
         descriptor_head = \
         (
          (( 0,7), 1  , "int", "invalid" , "invalid"),
@@ -287,15 +288,40 @@ class SesPage(object):
          (( 0,3), 4  , "int", "protocol", "protocol identifier"),
          (  1   , 1*8, "int", "length"  , "additional element status descriptor length"),
          )
-        with_eip1 = \
+        descriptor_eip1 = \
         (
-         (( 0,7), 1  , "int", "eiioe", "element index includes overall elements"),
+         (( 0,0), 1  , "int", "eiioe", "element index includes overall elements"),
          (  1   , 1*8, "int", "index", "element index"),
          )
-        specific = \
-        [
-         [  0   , 0  , "str", "info", "protocol-specific information"],
-         ]
+        
+        sas_specific_head = \
+        (
+         (  0   , 1*8, "int", "numphys", "number of phy descriptors"),
+         (( 1,7), 2  , "int", "type"   , "descriptor type (00b)"),
+         (( 1,0), 1  , "int", "notall" , "not all phys"),
+        #(  2   , 0  , "str", "phydescriptors", "phy descriptor list"),
+         )
+        sas_specific_eip1 = \
+        (
+         (  1   , 1*8, "int", "slotnum", "device slot number"),
+        #(  4   , 0  , "str", "phydescriptors", "phy descriptor list"),
+         )
+        
+        phy_descriptor = \
+        (
+         (( 0,6), 3  , "int", "type"    , "device type"),
+         (( 2,3), 1  , "int", "ssp_init", "ssp initiator port"),
+         (( 2,2), 1  , "int", "stp_init", "stp initiator port"),
+         (( 2,1), 1  , "int", "smp_init", "smp initiator port"),
+         (( 3,7), 1  , "int", "selector", "sata port selector"),
+         (( 3,3), 1  , "int", "ssp_targ", "ssp target port"),
+         (( 3,2), 1  , "int", "stp_targ", "stp target port"),
+         (( 3,1), 1  , "int", "smp_targ", "smp target port"),
+         (( 3,0), 1  , "int", "device"  , "sata device"),
+         (  4   , 8*8, "int", "attached_sas_addr", "attached sas_specific address"),
+         ( 12   , 8*8, "int", "sas_addr", "sas_specific address"),
+         ( 20   , 1*8, "int", "phy_id"  , "phy identifier"),
+         )
         
         if not self.page01:
             # We need the information from SES page 0x01 before we can
@@ -306,24 +332,39 @@ class SesPage(object):
         head = Cmd.extract(data[bo:], additional_element_head, bo)
         bo += 8
         
-        dhead = Cmd.extract(data[bo:], descriptor_head, bo)
-        bo += 2
-        
-        eip = None
-        if dhead.eip.val:
-            eip = Cmd.extract(data[bo:], with_eip1, bo)
+        endbo = bo-4 + head.length.val
+        descriptors = []
+        while bo < endbo:
+            # Retrieve a descriptor header.
+            dhead = Cmd.extract(data[bo:], descriptor_head, bo)
             bo += 2
-        
-        len = dhead.length.val
-        if eip: len -= 2
-        specific[0][1] = len*8
-        #print "dhead.length.val =", dhead.length.val
-        spec = Cmd.extract(data[bo:], specific, bo)
-        bo += dhead.length.val
-        
-        return (head, dhead, eip, spec)
-        
-        pass
+            length = dhead.length.val
+            if dhead.eip.val:
+                dhead += Cmd.extract(data[bo:], descriptor_eip1, bo)
+                bo += 2
+                length -= 2
+            
+            if dhead.protocol.val != 0x06:
+                return None  # Only SAS protocol is supported.
+            
+            sas_specific = Cmd.extract(data[bo:], sas_specific_head, bo)
+            bo += 2
+            if dhead.eip.val:
+                sas_specific += Cmd.extract(data[bo:], sas_specific_eip1, bo)
+                bo += 2
+    
+            phylist = []
+            phybo = bo
+            for phynum in range(sas_specific.numphys.val):
+                phylist.append(Cmd.extract(data[bo:], phy_descriptor, bo))
+                bo += 28
+            sas_specific.append(Cmd.Field(phylist, phybo, "phydescriptors", "phy descriptor list"), "phydescriptors")
+            descriptor = dhead + sas_specific
+            descriptors.append(descriptor)
+
+        head.descriptors.val = descriptors
+        return head
+
     
     #@staticmethod
     def parse_0e(self, data):
