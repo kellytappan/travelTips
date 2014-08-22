@@ -74,6 +74,36 @@ class SesPage(object):
         [
          [  0   , 0*8, "str", "text", "type descriptor text"],
          ]
+        # Table 60 in ses3r06.pdf
+        element_type_codes = \
+        {
+         0x00: "Unspecified",
+         0x01: "Device Slot",
+         0x02: "Power Supply",
+         0x03: "Cooling",
+         0x04: "Temperature Sensor",
+         0x05: "Door",
+         0x06: "Audible Alarm",
+         0x07: "Enclosure Services Controller Electronics",
+         0x08: "SCC Controller Electronics",
+         0x09: "Nonvolatile Cache",
+         0x0a: "Invalid Operation Reason",
+         0x0b: "Uninterruptible Power Supply",
+         0x0c: "Display",
+         0x0d: "Key Pad Entry",
+         0x0e: "Enclosure",
+         0x0f: "SCSI Port/Transceiver",
+         0x10: "Language",
+         0x11: "Communication Port",
+         0x12: "Voltage Sensor",
+         0x13: "Current Sensor",
+         0x14: "SCSI Target Port",
+         0x15: "SCSI Initiator Port",
+         0x16: "Simple Subenclosure",
+         0x17: "Array Device Slot",
+         0x18: "SAS Expander",
+         0x19: "SAS Connector",
+         }
         bo = 0   # byte offset
         head = Cmd.extract(data[bo:], configuration, bo)
         bo += 8
@@ -94,8 +124,13 @@ class SesPage(object):
             for typenum in range(enctypecounts[encidx]):
                 # A typeheader is a ListDict of Fields.
                 # typeheaders is a list of them.
-                typeheaders.append(Cmd.extract(data[bo:], type_descriptor_header, bo))
+                typeheader = Cmd.extract(data[bo:], type_descriptor_header, bo)
                 bo += 4
+                # Does the text have a default value?
+                if typeheader.type.val in element_type_codes:
+                    typeheader.text.val = element_type_codes[typeheader.type.val]
+                # Add it to the list.
+                typeheaders.append(typeheader)
             # Replace the placeholder for the list of type descriptors.
             enclosures[encidx].typedesc.val = typeheaders
             enclosures[encidx].typedesc.bo  = typedescbo
@@ -142,7 +177,7 @@ class SesPage(object):
         
         if not self.page01:
             # We need the information from SES page 0x01 before we can
-            # parse page 0x02.
+            # parse this page.
             return None
         
         bo = 0  # byte offset
@@ -197,7 +232,7 @@ class SesPage(object):
         
         if not self.page01:
             # We need the information from SES page 0x01 before we can
-            # parse page 0x04.
+            # parse this page.
             return None
         
         bo = 0  # byte offset
@@ -243,7 +278,7 @@ class SesPage(object):
 
         if not self.page01:
             # We need the information from SES page 0x01 before we can
-            # parse page 0x04.
+            # parse this page.
             return None
         
         bo = 0  # byte offset
@@ -325,7 +360,7 @@ class SesPage(object):
         
         if not self.page01:
             # We need the information from SES page 0x01 before we can
-            # parse page 0x04.
+            # parse this page.
             return None
         
         bo = 0  # byte offset
@@ -338,11 +373,21 @@ class SesPage(object):
             # Retrieve a descriptor header.
             dhead = Cmd.extract(data[bo:], descriptor_head, bo)
             bo += 2
-            length = dhead.length.val
             if dhead.eip.val:
                 dhead += Cmd.extract(data[bo:], descriptor_eip1, bo)
                 bo += 2
-                length -= 2
+                index_remaining = dhead.index.val
+                foundit = False
+                for enclosure in self.page01.enclosures.val:
+                    for typedef in enclosure.typedesc.val:
+                        if index_remaining > typedef.possible.val + dhead.eiioe.val:
+                            index_remaining -= typedef.possible.val + dhead.eiioe.val
+                        else:
+                            foundit = True
+                            break
+                    if foundit:
+                        break
+                dhead.index.val = (enclosure.subid.val, typedef.type.val, index_remaining-dhead.eiioe.val)
             
             if dhead.protocol.val != 0x06:
                 return None  # Only SAS protocol is supported.
