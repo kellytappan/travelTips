@@ -413,7 +413,58 @@ class SesPage(object):
     
     #@staticmethod
     def parse_0e(self, data):
-        pass
+        download_microcode_head = \
+        (
+         (  0   , 1*8, "int", "pc"         , "page code"),
+         (  1   , 1*8, "int", "secondaries", "number of secondary subenclosures"),
+         (  2   , 2*8, "int", "length"     , "pagelength"),
+         (  4   , 4*8, "int", "gen"        , "generation code"),
+         (  8   , 0  , "str", "descriptors", "additional element descriptor list"),
+         )
+        descriptor_format = \
+        (
+         (  1   , 1*8, "int", "subid"            , "subenclosure identifier"),
+         (  2   , 1*8, "int", "status"           , "subenclosure download microcode status"),
+         (  3   , 1*8, "int", "additional_status", "subenclosure download microcode additional status"),
+         (  4   , 4*8, "int", "maxsize"          , "subenclosure download microcode maximum size"),
+         ( 11   , 1*8, "int", "expected_id"      , "subenclosure download microcode exected buffer id"),
+         ( 12   , 4*8, "int", "expected_offset"  , "subenclosure download microcode expected buffer offset"),
+         )
+        status_text = \
+        { # ses3r06.pdf table 52
+         # Codes indicating interim status
+         0x00: "No download microcode operation in progress.",
+         0x01: "Download microcode operation in progress. The enclosure services process has received one or more Download Microcode Control diagnostic pages and is awaiting additional microcode data.",
+         0x02: "Download microcode operation data transfer complete, currently updating non-volatile storage",
+         0x03: "The enclosure services process is currently updating non-volatile storage with deferred microcode",
+         # Codes indicating completion with no errors
+         0x10: "Download microcode operation complete with no error. The enclosure services process begins using the new microcode after returning this status.",
+         0x11: "Download microcode operation complete with no error. The enclosure services process (e.g., a standalone enclosure services process) begins using the new microcode after the next hard reset or power on.",
+         0x12: "Download microcode operation complete with no error. The enclosure services process (e.g., an attached enclosure services process) begins using the new microcode after the next power on.",
+         0x13: "Download microcode operation complete with no error. The enclosure services process (e.g., an attached enclosure services process) begins using the new microcode after: a) processing a Download Microcode Control diagnostic page specifying the active deferred microcode mode; b) hard reset; or c) power on.",
+         # Codes indicating completion with errors
+         0x80: "Error in one or more of the Download Microcode Control diagnostic page fields, new microcode discarded. The SUBENCLOSURE DOWNLOAD MICROCODE ADDITIONAL STATUS field shall be set to the offset of the lowest byte of the field in the Download Microcode Control diagnostic page that is in error.",
+         0x81: "Microcode image error (e.g., a problem detected from a vendor specific check of the microcode image such as a checksum), new microcode discarded",
+         0x82: "Download microcode timeout, new microcode discarded. The enclosure services process may discard microcode data after a vendor specific amount of time if it does not receive the entire microcode image.",
+         0x83: "Internal error in the download microcode operation; new microcode image is needed before a hard reset or power on (e.g., a flash ROM write failed and no backup ROM image is available).",
+         0x84: "Internal error in the download microcode operation; hard reset and power on safe (e.g., the enclosure services process will use a backup ROM image on hard reset or power on).",
+         0x85: "Processed a Download Microcode Control diagnostic page with the DOWNLOAD MICROCODE MODE field set to 0Fh (i.e., activate deferred microcode) when there is no deferred microcode.",
+         }
+
+        bo = 0  # byte offset
+        head = Cmd.extract(data[bo:], download_microcode_head, bo)
+        bo += 8
+        
+        descriptors = []
+        for encidx in range(1+head.secondaries.val):
+            descriptor = Cmd.extract(data[bo:], descriptor_format, bo)
+            bo += 16
+            descriptor.append(Cmd.Field(status_text[descriptor.status.val], -1, "status_text", "status meaning"), "status_text")
+            descriptors.append(descriptor)
+            
+        head.descriptors.val = descriptors
+        return head
+
     
     pagedict = {
          0x00: (parse_00, "Supported Diagnostic Pages"),
@@ -424,6 +475,18 @@ class SesPage(object):
          0x07: (parse_07, "Element Descriptor"),
          0x0a: (parse_0a, "Additional Element"),
          0x0e: (parse_0e, "Download Microcode"),
+         #['Page 0x80: Event Log'                 , sespage80, "0x80"], # SK and PG
+         #['Page 0x82: SXP Firmware Status'       , sespage82, "0x82"], # PG only
+         #['Page 0x91: SXP Boot Configuration Status', sespage91, "0x91"], # BM only
+         #['Page 0x92: Low Power Condition Status', sespage92, "0x92"], # BM only
+         #['Page 0xe0: Report PHY Status'         , sespagee0, "0xe0"], # ST only
+         #['Page 0xe1: Report PHY Status'         , sespagee1, "0xe1"], # ST only
+         #['Page 0xe2: Report PHY Status'         , sespagee2, "0xe2"], # ST only
+         #['Page 0xe3: Report PHY Status'         , sespagee3, "0xe3"], # ST only
+         #['Page 0xe4: Report PHY Status'         , sespagee4, "0xe4"], # ST only
+         #['Page 0xe5: Report PHY Status'         , sespagee5, "0xe5"], # ST only
+         #['Page 0xe8: CLI Command In'            , sespagee8, "0xe8"], # ST only
+         #['Page 0xe9: Product Type Flag Status'  , sespagee9, "0xe9"],
          }
     
     #@staticmethod

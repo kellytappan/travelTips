@@ -194,6 +194,19 @@ def sespage0a(p):
             leftline = ' ' * len(leftline)
     Menu.wait()
 
+def sespage0e(p):
+    Menu.clear()
+    page0e = sp.parse(sp.readpage(0x0e))
+    for descriptor in page0e["data"].descriptors.val:
+        print "Enclosure #" + str(descriptor.subid.val)
+        print "    status                : %.2X - %s" % (descriptor.status.val, descriptor.status_text.val)
+        print "    additional status     : %.2X" % descriptor.additional_status.val
+        print "    maximum size          : %d" % descriptor.maxsize.val
+        print "    expected buffer id    : %.2X" % descriptor.expected_id.val
+        print "    expected buffer offset: %.8X" % descriptor.expected_offset.val
+    pass
+    Menu.wait()
+
 
 def dump_fields(fl):
     if fl:
@@ -208,10 +221,28 @@ ses_menu = \
           ['Page 0x00: Supported Diagnostic Pages', sespage00, "0x00"],
           ['Page 0x01: Configuration'             , sespage01, "0x01"],
           ['Page 0x02: Enclosure Status'          , sespage02, "0x02"],
-          ['Page 0x05: Threshold Status'          , sespage05, "0x05"],
+         #['Page 0x04: String In'                 , sespage04, "0x04"],
+          ['Page 0x05: Threshold In'              , sespage05, "0x05"],
           ['Page 0x07: Element Descriptor'        , sespage07, "0x07"],
           ['Page 0x0a: Additional Element'        , sespage0a, "0x0a"],
+          ['Page 0x0e: Download Microcode Status' , sespage0e, "0x0e"],
+         #['Page 0x80: Event Log'                 , sespage80, "0x80"], # SK and PG
+         #['Page 0x82: SXP Firmware Status'       , sespage82, "0x82"], # PG only
+         #['Page 0x91: SXP Boot Configuration Status', sespage91, "0x91"], # BM only
+         #['Page 0x92: Low Power Condition Status', sespage92, "0x92"], # BM only
+         #['Page 0xe0: Report PHY Status'         , sespagee0, "0xe0"], # ST only
+         #['Page 0xe1: Report PHY Status'         , sespagee1, "0xe1"], # ST only
+         #['Page 0xe2: Report PHY Status'         , sespagee2, "0xe2"], # ST only
+         #['Page 0xe3: Report PHY Status'         , sespagee3, "0xe3"], # ST only
+         #['Page 0xe4: Report PHY Status'         , sespagee4, "0xe4"], # ST only
+         #['Page 0xe5: Report PHY Status'         , sespagee5, "0xe5"], # ST only
+         #['Page 0xe8: CLI Command In'            , sespagee8, "0xe8"], # ST only
+         #['Page 0xe9: Product Type Flag Status'  , sespagee9, "0xe9"],
           ])
+        # WC: Wolf Creek
+        # BM: Blue Moon
+        # ST: Skytree addendum to Blue Moon
+        # PG: Pinot Grigio
 
 sas_menu = \
     Menu("SAS",
