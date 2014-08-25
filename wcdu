@@ -16,53 +16,7 @@ from configuration import Configuration
 sp = SesPageFile()
 
 
-# items in Platform menu
-def reset(p): pass
-smbus_menu     = Menu("SMBUS"    , [['Exit', Menu.stop]])
-pci_menu       = Menu("PCI"      , [['Exit', Menu.stop]])
-hdd_menu       = Menu("HDD"      , [['Exit', Menu.stop]])
-bpm_menu       = Menu("BPM"      , [['Exit', Menu.stop]])
-ethernet_menu  = Menu("Ethernet" , [['Exit', Menu.stop]])
-gpio_menu      = Menu("GPIO"     , [['Exit', Menu.stop]])
-processor_menu = Menu("Processor", [['Exit', Menu.stop]])
-memory_menu    = Menu("Memory"   , [['Exit', Menu.stop]])
-tpm_menu       = Menu("TPM"      , [['Exit', Menu.stop]])
-usb_menu       = Menu("USB"      , [['Exit', Menu.stop]])
-
-platform_menu = \
-    Menu("Platform",
-         [
-          ['Exit'            , Menu.stop         , "help"      ],
-          ['BPM Menu'        , bpm_menu      .run, "bpm"       ],
-          ['Ethernet Menu'   , ethernet_menu .run, "ethernet"  ],
-          ['GPIO Menu'       , gpio_menu     .run, "gpio"      ],
-          ['HDD Menu'        , hdd_menu      .run, "hdd"       ],
-          ['Memory Menu'     , memory_menu   .run, "memory"    ],
-          ['PCI Menu'        , pci_menu      .run, "pci"       ],
-          ['Processor Menu'  , processor_menu.run, "processor" ],
-          ['Reset the System', reset             , "reset"     ],
-          ['SMBUS Menu'      , smbus_menu    .run, "smbus"     ],
-          ['TPM Menu'        , tpm_menu      .run, "tpm"       ],
-          ['USB Menu'        , usb_menu      .run, "usb"       ],
-          ])
-
-bmc_menu = Menu("BMC", [['Exit', Menu.stop]])
-
-# items in SAS menu
-def enclosure_status     (p): pass
-powersupply_menu = Menu("Power Supply"  , [['Exit', Menu.stop]])
-cpld_menu        = Menu("CPLD"          , [['Exit', Menu.stop]])
-def flash_expander_image (p): pass
-def rebootreset_expander (p): pass
-def drive_status         (p): pass
-log_menu         = Menu("Log"           , [['Exit', Menu.stop]])
-led_menu         = Menu("LED"           , [['Exit', Menu.stop]])
-fan_menu         = Menu("Fan"           , [['Exit', Menu.stop]])
-twi_menu         = Menu("TWI"           , [['Exit', Menu.stop]])
-phy_menu         = Menu("PHY"           , [['Exit', Menu.stop]])
-vpd_menu         = Menu("VPD"           , [['Exit', Menu.stop]])
-sensor_menu      = Menu("Sensor"        , [['Exit', Menu.stop]])
-lcd_menu         = Menu("LCD"           , [['Exit', Menu.stop]])
+# utility functions
 
 def indentedtext(head, text, tail):
     """
@@ -71,6 +25,14 @@ def indentedtext(head, text, tail):
     lines in text.
     """
     return head + text.replace("\n", "\n"+" "*len(head)) + tail
+
+def dump_fields(fl):
+    if fl:
+        for f in fl:
+            print f.val, f.name
+    
+
+# SES page display functions
 
 def sespage00(p):
     Menu.clear()
@@ -208,12 +170,53 @@ def sespage0e(p):
     Menu.wait()
 
 
-def dump_fields(fl):
-    if fl:
-        for f in fl:
-            print f.val, f.name
-    
+# menu definitions and stubs
 
+bmc_menu = Menu("BMC", [['Exit', Menu.stop]])
+
+# items in Platform menu
+bpm_menu       = Menu("BPM"      , [['Exit', Menu.stop]])
+ethernet_menu  = Menu("Ethernet" , [['Exit', Menu.stop]])
+gpio_menu      = Menu("GPIO"     , [['Exit', Menu.stop]])
+hdd_menu       = Menu("HDD"      , [['Exit', Menu.stop]])
+memory_menu    = Menu("Memory"   , [['Exit', Menu.stop]])
+pci_menu       = Menu("PCI"      , [['Exit', Menu.stop]])
+processor_menu = Menu("Processor", [['Exit', Menu.stop]])
+def reset(p): pass
+smbus_menu     = Menu("SMBUS"    , [['Exit', Menu.stop]])
+tpm_menu       = Menu("TPM"      , [['Exit', Menu.stop]])
+usb_menu       = Menu("USB"      , [['Exit', Menu.stop]])
+
+platform_menu = \
+    Menu("Platform",
+         [
+          ['Exit'            , Menu.stop         , "help"      ],
+          ['BPM Menu'        , bpm_menu      .run, "bpm"       ],
+          ['Ethernet Menu'   , ethernet_menu .run, "ethernet"  ],
+          ['GPIO Menu'       , gpio_menu     .run, "gpio"      ],
+          ['HDD Menu'        , hdd_menu      .run, "hdd"       ],
+          ['Memory Menu'     , memory_menu   .run, "memory"    ],
+          ['PCI Menu'        , pci_menu      .run, "pci"       ],
+          ['Processor Menu'  , processor_menu.run, "processor" ],
+          ['Reset the System', reset             , "reset"     ],
+          ['SMBUS Menu'      , smbus_menu    .run, "smbus"     ],
+          ['TPM Menu'        , tpm_menu      .run, "tpm"       ],
+          ['USB Menu'        , usb_menu      .run, "usb"       ],
+          ])
+
+# items in SAS menu
+cpld_menu        = Menu("CPLD"          , [['Exit', Menu.stop]])
+def drive_status         (p): pass
+def enclosure_status     (p): pass
+fan_menu         = Menu("Fan"           , [['Exit', Menu.stop]])
+def flash_expander_image (p): pass
+lcd_menu         = Menu("LCD"           , [['Exit', Menu.stop]])
+led_menu         = Menu("LED"           , [['Exit', Menu.stop]])
+log_menu         = Menu("Log"           , [['Exit', Menu.stop]])
+phy_menu         = Menu("PHY"           , [['Exit', Menu.stop]])
+powersupply_menu = Menu("Power Supply"  , [['Exit', Menu.stop]])
+def rebootreset_expander (p): pass
+sensor_menu      = Menu("Sensor"        , [['Exit', Menu.stop]])
 ses_menu = \
     Menu("SES Page Dump",
          [
@@ -243,6 +246,8 @@ ses_menu = \
         # BM: Blue Moon
         # ST: Skytree addendum to Blue Moon
         # PG: Pinot Grigio
+twi_menu         = Menu("TWI"           , [['Exit', Menu.stop]])
+vpd_menu         = Menu("VPD"           , [['Exit', Menu.stop]])
 
 sas_menu = \
     Menu("SAS",
