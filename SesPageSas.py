@@ -15,6 +15,9 @@ class SesPageSas(SesPage):
         """
         super(SesPageSas, self).__init__()
         self.pt = ScsiPT(ptdev)
+    
+    def __del__(self):
+        del self.pt
         
     def readpage(self, pagenum):
         """
@@ -28,10 +31,12 @@ class SesPageSas(SesPage):
             (ord(data[3]) << 0)
         return self._getsespage(pagenum, length)
     
-    def writepage(self, pagenum, data):
+    def writepage(self, expanderid, data):
         """
         Write the SES page specified by integer pagenum with string, data.
         """
+        #page = Cmd.clicommandout(Cls, expanderid, command)
+        #cmd = Cmd("sd", {"self-test_code":0, "pf":1, "parameter_list_length":len(page)})
         pass
     
     def _getsespage(self, page, length):

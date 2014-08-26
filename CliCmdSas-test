@@ -1,0 +1,6 @@
+#!/usr/bin/env python
+
+from CliCmdSas import CliCmdSas
+
+cli = CliCmdSas("/dev/sg7")
+cli.execute("help\n")

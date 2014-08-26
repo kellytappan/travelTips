@@ -464,29 +464,45 @@ class SesPage(object):
             
         head.descriptors.val = descriptors
         return head
-
+    
+    
+    def parse_e8(self, data):
+        clicommandin_head = \
+        (
+         (  0   , 1*8, "int", "pc"         , "page code"),
+         (  2   , 2*8, "int", "length"     , "pagelength"),
+         (  4   , 1*8, "int", "expanderid" , "expander id"),
+         (  5   , 0  , "str", "response"   , "cli response"),
+         )
+        
+        bo = 0  # byte offset
+        head = Cmd.extract(data[bo:], clicommandin_head, bo)
+        bo += 5
+        
+        head.response.val = data[bo:]
+        return head
     
     pagedict = {
-         0x00: (parse_00, "Supported Diagnostic Pages"),
-         0x01: (parse_01, "Configuration"),
-         0x02: (parse_02, "Enclosure"),
-         0x04: (parse_04, "String"),
-         0x05: (parse_05, "Threshold"),
-         0x07: (parse_07, "Element Descriptor"),
-         0x0a: (parse_0a, "Additional Element"),
-         0x0e: (parse_0e, "Download Microcode"),
-         #['Page 0x80: Event Log'                 , sespage80, "0x80"], # SK and PG
-         #['Page 0x82: SXP Firmware Status'       , sespage82, "0x82"], # PG only
-         #['Page 0x91: SXP Boot Configuration Status', sespage91, "0x91"], # BM only
-         #['Page 0x92: Low Power Condition Status', sespage92, "0x92"], # BM only
-         #['Page 0xe0: Report PHY Status'         , sespagee0, "0xe0"], # ST only
-         #['Page 0xe1: Report PHY Status'         , sespagee1, "0xe1"], # ST only
-         #['Page 0xe2: Report PHY Status'         , sespagee2, "0xe2"], # ST only
-         #['Page 0xe3: Report PHY Status'         , sespagee3, "0xe3"], # ST only
-         #['Page 0xe4: Report PHY Status'         , sespagee4, "0xe4"], # ST only
-         #['Page 0xe5: Report PHY Status'         , sespagee5, "0xe5"], # ST only
-         #['Page 0xe8: CLI Command In'            , sespagee8, "0xe8"], # ST only
-         #['Page 0xe9: Product Type Flag Status'  , sespagee9, "0xe9"],
+         0x00: (parse_00, "Supported Diagnostic Pages"   ),
+         0x01: (parse_01, "Configuration"                ),
+         0x02: (parse_02, "Enclosure"                    ),
+         0x04: (parse_04, "String"                       ),
+         0x05: (parse_05, "Threshold"                    ),
+         0x07: (parse_07, "Element Descriptor"           ),
+         0x0a: (parse_0a, "Additional Element"           ),
+         0x0e: (parse_0e, "Download Microcode"           ),
+        #0x80: (parse_80, "Event Log"                    ), # SK and PG
+        #0x82: (parse_82, "SXP Firmware Status"          ), # PG only
+        #0x91: (parse_91, "SXP Boot Configuration Status"), # BM only
+        #0x92: (parse_92, "Low Power Condition Status"   ), # BM only
+        #0xe0: (parse_e0, "Report PHY Status"            ), # ST only
+        #0xe1: (parse_e1, "Report PHY Status"            ), # ST only
+        #0xe2: (parse_e2, "Report PHY Status"            ), # ST only
+        #0xe3: (parse_e3, "Report PHY Status"            ), # ST only
+        #0xe4: (parse_e4, "Report PHY Status"            ), # ST only
+        #0xe5: (parse_e5, "Report PHY Status"            ), # ST only
+         0xe8: (parse_e8, "CLI Command In"               ), # ST only
+        #0xe9: (parse_e9, "Product Type Flag Status"     ),
          }
     
     #@staticmethod
