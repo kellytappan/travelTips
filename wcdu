@@ -7,13 +7,16 @@ Wolf Creek Debug Utility
 import sys
 
 from Menu import Menu
-from SesPageSas  import SesPageSas
-from SesPageFile import SesPageFile
+from SesPageSas   import SesPageSas
+from SesPageFile  import SesPageFile
+from SesPageCli   import SesPageCli
+from CliCmdSerial import CliCmdSerial
 from configuration import Configuration
 
 # Set up communication path.
-#sp = SesPageSas("/dev/sg3")
-sp = SesPageFile()
+#sp = SesPageSas("/dev/sg8")
+#sp = SesPageFile()
+sp = SesPageCli(CliCmdSerial("/dev/ttyUSB0"))
 
 
 # utility functions
@@ -163,14 +166,46 @@ def sespage0e(p):
         print "Enclosure #" + str(descriptor.subid.val)
         print "    status                : %.2X - %s" % (descriptor.status.val, descriptor.status_text.val)
         print "    additional status     : %.2X" % descriptor.additional_status.val
-        print "    maximum size          : %d" % descriptor.maxsize.val
+        print "    maximum size          : %s" % format(descriptor.maxsize.val, ",d")
         print "    expected buffer id    : %.2X" % descriptor.expected_id.val
         print "    expected buffer offset: %.8X" % descriptor.expected_offset.val
     pass
     Menu.wait()
+    
+    
+# configuration functions
+def toggle_interactive(p): Configuration.setInteractive(not Configuration.getInteractive()); setup_config_menu()
+def toggle_clear      (p): Configuration.setClear      (not Configuration.getClear      ()); setup_config_menu()
+def toggle_byteoffsets(p): Configuration.setByteoffsets(not Configuration.getByteoffsets()); setup_config_menu()
+def toggle_shortcuts  (p): Configuration.setShortcuts  (not Configuration.getShortcuts  ()); setup_config_menu()
 
 
 # menu definitions and stubs
+
+config_menu = \
+    Menu("Configuration",
+         [
+          [ 'Exit', Menu.stop, "help" ],
+          [ '[xxxxx] toggle Interactive' , toggle_interactive, "interactive" ],
+          [ '[xxxxx] toggle Clear'       , toggle_clear      , "clear"       ],
+          [ '[xxxxx] toggle Byte Offsets', toggle_byteoffsets, "byteoffsets" ],
+          [ '[xxxxx] toggle Shortcuts'   , toggle_shortcuts  , "shortcuts"   ],
+          ])
+def setup_config_menu():
+    def display_current(name, value):
+        data = config_menu.data
+        for item in data:
+            if item[2] == name:
+                item[0] = "%7s%s" % ('[' + str(value) + ']', item[0][7:])
+                print "item[0][0:7] =", "%7s" % ('[' + str(value) + ']')
+                print "item[0][0:7] =", item[0][0:7]
+    display_current("interactive", Configuration.getInteractive())
+    display_current("clear"      , Configuration.getClear      ())
+    display_current("byteoffsets", Configuration.getByteoffsets())
+    display_current("shortcuts"  , Configuration.getShortcuts  ())
+def configure(p):
+    setup_config_menu()
+    config_menu.run(p)
 
 bmc_menu = Menu("BMC", [['Exit', Menu.stop]])
 
@@ -274,11 +309,14 @@ utility_menu = \
     Menu("Debug Utility",
          [
           ['Exit'          , Menu.stop        , "help"     ],
+          ['Configure'     , configure        , "configure"],
           ['BMC Menu'      , bmc_menu     .run, "bmc"      ],
           ['Platform Menu' , platform_menu.run, "platform" ],
           ['SAS Menu'      , sas_menu     .run, "sas"      ],
           ])
 
+# If we passed keyword parameters, don't clear or wait.
 Configuration.setInteractive(not sys.argv[1:])
+# Run the main menu.
 utility_menu.run(sys.argv[1:])
 

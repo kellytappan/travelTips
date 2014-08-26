@@ -13,6 +13,7 @@ class SesPageSas(SesPage):
         """
         pt is a SCSI passthrough device file name
         """
+        super(SesPageSas, self).__init__()
         self.pt = ScsiPT(ptdev)
         
     def readpage(self, pagenum):
