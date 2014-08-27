@@ -6,17 +6,18 @@ Wolf Creek Debug Utility
 
 import sys
 
-from Menu import Menu
-from SesPageSas   import SesPageSas
-from SesPageFile  import SesPageFile
-from SesPageCli   import SesPageCli
-from CliCmdSerial import CliCmdSerial
+from Menu          import Menu
+from SesPageSas    import SesPageSas
+from SesPageFile   import SesPageFile
+from SesPageCli    import SesPageCli
+from CliCmdSerial  import CliCmdSerial
 from configuration import Configuration
+from discovery     import Discovery
 
 # Set up communication path.
-#sp = SesPageSas("/dev/sg8")
-#sp = SesPageFile()
-sp = SesPageCli(CliCmdSerial("/dev/ttyUSB0"))
+#sp = SesPageSas("/dev/sg4")
+sp = SesPageFile()
+#sp = SesPageCli(CliCmdSerial("/dev/ttyUSB0"))
 
 
 # utility functions
@@ -172,6 +173,24 @@ def sespage0e(p):
     pass
     Menu.wait()
     
+def sespages(p):
+    if Configuration.interactive:
+        # We're running interactive menus; continue on this way.
+        ses_menu.run(p)
+    else:
+        # We were passed subcommands on the command line.  Search the menu for a matching page.
+        for menu_item in ses_menu.data:
+            # Find the given page.
+            try:
+                if int(menu_item[2], 0) == int(p[0], 0):
+                    # Found a matching page; call its function.
+                    return menu_item[1](p)
+            except:
+                pass
+        else:
+            # Couldn't find the specified page in the menu.
+            print "unimplemented page: " + p[0]
+    
     
 # configuration functions
 def toggle_interactive(p): Configuration.setInteractive(not Configuration.getInteractive()); setup_config_menu()
@@ -182,14 +201,36 @@ def toggle_shortcuts  (p): Configuration.setShortcuts  (not Configuration.getSho
 
 # menu definitions and stubs
 
+def discover_interfaces(p):
+    Menu.clear()
+    sas = Discovery.discover_sas()
+    ser = Discovery.discover_serial()
+    
+    print "SAS devices"
+    if len(sas) > 0:
+        for dev in sas:
+            print "    "+dev
+    else:
+        print "    None"
+
+    print "Serial devices"
+    if len(ser) > 0:
+        for dev in ser:
+            print "    "+dev
+    else:
+        print "    None"
+        
+    Menu.wait()
+
 config_menu = \
     Menu("Configuration",
          [
           [ 'Exit', Menu.stop, "help" ],
-          [ '[xxxxx] toggle Interactive' , toggle_interactive, "interactive" ],
-          [ '[xxxxx] toggle Clear'       , toggle_clear      , "clear"       ],
-          [ '[xxxxx] toggle Byte Offsets', toggle_byteoffsets, "byteoffsets" ],
-          [ '[xxxxx] toggle Shortcuts'   , toggle_shortcuts  , "shortcuts"   ],
+          [ 'Discover interfaces'        , discover_interfaces, "discover"    ],
+          [ '[xxxxx] toggle Interactive' , toggle_interactive , "interactive" ],
+          [ '[xxxxx] toggle Clear'       , toggle_clear       , "clear"       ],
+          [ '[xxxxx] toggle Byte Offsets', toggle_byteoffsets , "byteoffsets" ],
+          [ '[xxxxx] toggle Shortcuts'   , toggle_shortcuts   , "shortcuts"   ],
           ])
 def setup_config_menu():
     def display_current(name, value):
@@ -197,8 +238,6 @@ def setup_config_menu():
         for item in data:
             if item[2] == name:
                 item[0] = "%7s%s" % ('[' + str(value) + ']', item[0][7:])
-                print "item[0][0:7] =", "%7s" % ('[' + str(value) + ']')
-                print "item[0][0:7] =", item[0][0:7]
     display_current("interactive", Configuration.getInteractive())
     display_current("clear"      , Configuration.getClear      ())
     display_current("byteoffsets", Configuration.getByteoffsets())
@@ -300,7 +339,7 @@ sas_menu = \
           ['Power Supply Menu'    , powersupply_menu.run, "powersupply"        ],
           ['Reboot/Reset Expander', rebootreset_expander, "reboot"             ],
           [      'Sensor Menu'    ,      sensor_menu.run, "sensor"             ],
-          ['SES Page Dump'        ,         ses_menu.run, "ses"                ],
+          ['SES Page Dump'        , sespages            , "ses"                ],
           [         'TWI Menu'    ,         twi_menu.run, "twi"                ],
           [         'VPD Menu'    ,         vpd_menu.run, "vpd"                ],
           ])
@@ -308,11 +347,11 @@ sas_menu = \
 utility_menu = \
     Menu("Debug Utility",
          [
-          ['Exit'          , Menu.stop        , "help"     ],
-          ['Configure'     , configure        , "configure"],
-          ['BMC Menu'      , bmc_menu     .run, "bmc"      ],
-          ['Platform Menu' , platform_menu.run, "platform" ],
-          ['SAS Menu'      , sas_menu     .run, "sas"      ],
+          ['Exit'              , Menu.stop        , "help"     ],
+          ['Configuration Menu', configure        , "configure"],
+          ['BMC Menu'          , bmc_menu     .run, "bmc"      ],
+          ['Platform Menu'     , platform_menu.run, "platform" ],
+          ['SAS Menu'          , sas_menu     .run, "sas"      ],
           ])
 
 # If we passed keyword parameters, don't clear or wait.
