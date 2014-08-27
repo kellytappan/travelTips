@@ -117,9 +117,14 @@ class Menu(object):
         return tuple(self.data[x][2] for x in matches)
     
     def help(self):
+        width = 0
+        for item in self.data[1:]:
+            if item[2]:
+                if  width < len(item[2]):
+                    width = len(item[2])
         print "Valid values are"
         for item in self.data[1:]:
             if item[2]:
-                print item[2] + ":", item[0]
+                print ("%-"+str(width)+"s: %s") % (item[2], item[0])
         pass
 
