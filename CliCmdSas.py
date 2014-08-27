@@ -24,7 +24,8 @@ class CliCmdSas(CliCmd):
         """
         cmd = Cmd.clicommandout(1, command)
         cdb = CDB(cmd.cdb)
+        cdb.set_data_out(cmd.dat)
         self.pt.sendcdb(cdb)
         
-        page = self.ses.readpage(0xe8)
+        page = self.ses.parse(self.ses.readpage(0xe8))
         return page["data"].response.val

@@ -2,5 +2,5 @@
 
 from CliCmdSas import CliCmdSas
 
-cli = CliCmdSas("/dev/sg7")
-cli.execute("help\n")
+cli = CliCmdSas("/dev/sg4")
+print cli.execute("help")
