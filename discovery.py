@@ -15,7 +15,11 @@ class Discovery(object):
         devdir = "/dev"
         prefix = "/sys/class/enclosure"
         postfix = "device/scsi_generic"
-        for enclosure in os.listdir(prefix):
+        try:
+            enclosures = os.listdir(prefix)
+        except:
+            enclosures = []
+        for enclosure in enclosures:
             for sg in os.listdir(prefix + "/" + enclosure + "/" + postfix):
                 devices.append(devdir + "/" + sg)
         return devices
