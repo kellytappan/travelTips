@@ -30,7 +30,10 @@ class SesPage(object):
     
     #@staticmethod
     def parse_00(self, data):
-        return tuple(ord(pc) for pc in data[4:])
+        return tuple((
+                      ord(pc),
+                      self.pagedict.get(ord(pc),(-1,""))[1]  # description, defaults to ""
+                      ) for pc in data[4:])
     
     #@staticmethod
     def parse_01(self, data):
@@ -491,18 +494,18 @@ class SesPage(object):
          0x07: (parse_07, "Element Descriptor"           ),
          0x0a: (parse_0a, "Additional Element"           ),
          0x0e: (parse_0e, "Download Microcode"           ),
-        #0x80: (parse_80, "Event Log"                    ), # SK and PG
-        #0x82: (parse_82, "SXP Firmware Status"          ), # PG only
-        #0x91: (parse_91, "SXP Boot Configuration Status"), # BM only
-        #0x92: (parse_92, "Low Power Condition Status"   ), # BM only
-        #0xe0: (parse_e0, "Report PHY Status"            ), # ST only
-        #0xe1: (parse_e1, "Report PHY Status"            ), # ST only
-        #0xe2: (parse_e2, "Report PHY Status"            ), # ST only
-        #0xe3: (parse_e3, "Report PHY Status"            ), # ST only
-        #0xe4: (parse_e4, "Report PHY Status"            ), # ST only
-        #0xe5: (parse_e5, "Report PHY Status"            ), # ST only
-         0xe8: (parse_e8, "CLI Command In"               ), # ST only
-        #0xe9: (parse_e9, "Product Type Flag Status"     ),
+         0x80: (None    , "Event Log"                    ), # SK and PG
+         0x82: (None    , "SXP Firmware Status"          ), # PG only
+         0x91: (None    , "SXP Boot Configuration Status"), # BM only
+         0x92: (None    , "Low Power Condition Status"   ), # BM only
+         0xe0: (None    , "Report PHY Status"            ), # ST only
+         0xe1: (None    , "Report PHY Status"            ), # ST only
+         0xe2: (None    , "Report PHY Status"            ), # ST only
+         0xe3: (None    , "Report PHY Status"            ), # ST only
+         0xe4: (None    , "Report PHY Status"            ), # ST only
+         0xe5: (None    , "Report PHY Status"            ), # ST only
+         0xe8: (parse_e8, "CLI Command"                  ), # ST only
+         0xe9: (None    , "Product Type Flag Status"     ),
          }
     
     #@staticmethod
