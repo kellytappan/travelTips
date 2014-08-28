@@ -37,20 +37,29 @@ def dump_fields(fl):
         for f in fl:
             print f.val, f.name
 
-def pbo(f):
+def pbo(f, printit=True):
     """
     Print Byte Offset, if so configured.
     """
     if Configuration.getByteoffsets():
-        print '(' + "%.4X"%f.byteoffset + ')',
-def pbob():
+        bostr = '(' + "%.4X"%f.byteoffset + ') '
+    else:
+        bostr = ""
+    if printit:
+        sys.stdout.write(bostr)
+    return bostr
+def pbob(printit=True):
     """
     Print Byte Offset, but Blanks instead.
     Print as many spaces as characters from pbo.
     """
     if Configuration.getByteoffsets():
-        print "      ",
-    
+        bostr = "       "
+    else:
+        bostr = ""
+    if printit:
+        sys.stdout.write(bostr)
+    return bostr
 
 # SES page display functions
 
@@ -72,7 +81,7 @@ def sespageall(p):
                 sys.stdout = myIO = StringIO()
                 menu_item[1](p)
                 sys.stdout = save_stdout
-                print "SES Page 0x%.2X" % page[0]
+                print "SES Page 0x%.2X: %s" % page
                 myIO.seek(0)
                 for line in myIO:
                     print "    " + line,
@@ -103,9 +112,8 @@ def sespage01(p):
         pbob(); print "        type possible text"
         for tdlist in enclist.typedesc.val:
             pbo(tdlist.type)
-            print "        %.2X   %3d     " % \
-                (tdlist.type.val, tdlist.possible.val),
-            pbo(tdlist.text); print tdlist.text.val
+            print "        %.2X   %3d      %-s" % \
+                (tdlist.type.val, tdlist.possible.val, pbo(tdlist.text, False) + tdlist.text.val)
     Menu.wait()
 
 def sespage02(p):
@@ -117,7 +125,7 @@ def sespage02(p):
     
     for enclosure in page02["data"].enclosures.val:
         for typ in enclosure:
-            print "type:", "%.2X" % typ["type"], typ["text"]
+            pbob(); print "type:", "%.2X" % typ["type"], typ["text"]
             elnum = 0
             for element in typ["elements"]:
                 prdfail  = "P" if element.prdfail .val else "."
@@ -125,7 +133,7 @@ def sespage02(p):
                 swap     = "S" if element.swap    .val else "."
                 elstat = element.elstat.val
                 status = element.status.val
-                print "    %.3d" % elnum, prdfail+disabled+swap, elstat, "%.6X" % status
+                pbo(element.prdfail); print "    %.3d" % elnum, prdfail+disabled+swap, elstat, "%.6X" % status
                 elnum += 1
     Menu.wait()
 
@@ -138,9 +146,10 @@ def sespage05(p):
     
     for enclosure in page05["data"].enclosures.val:
         for typ in enclosure:
-            print "type:", "%.2X" % typ["type"], typ["text"]
+            pbob(); print "type:", "%.2X" % typ["type"], typ["text"]
             elnum = 0
             for element in typ["elements"]:
+                pbo(element.hicrit)
                 print "    %.3d" % elnum, "%3d %3d %3d %3d" % \
                 (
                  element.hicrit.val,
@@ -160,11 +169,11 @@ def sespage07(p):
     
     for enclosure in page07["data"].enclosures.val:
         for typ in enclosure:
-            print "type:", "%.2X" % typ["type"], typ["text"]
+            pbob(); print "type:", "%.2X" % typ["type"], typ["text"]
             elnum = 0
             for element in typ["elements"]:
                 #print "%.3d" % elnum, '"' + element.text.val + '"'
-                print indentedtext('    %.3d "' % elnum, element.text.val, '"')
+                print indentedtext(pbo(element.text,False) + '    %.3d "' % elnum, element.text.val, '"')
                 elnum += 1
     Menu.wait()
 
@@ -178,11 +187,11 @@ def sespage0a(p):
     addelpage = page0a["data"]
     headline = ''
     headline += "enc:typ:idx valid?  all?   init targ attached sas adr sas address      phy"
-    print headline
+    pbob(); print headline
     for addel in addelpage.descriptors.val:
         leftline = ''
         if addel.eip.val:
-            leftline += "%3d: %.2X:%.3d " % addel.index.val
+            leftline += "%3d: %.2X:%3d " % addel.index.val
         else:
             leftline += "    "
         leftline += "invalid" if addel.invalid.val else "  valid"
@@ -196,6 +205,7 @@ def sespage0a(p):
             tt = 'T' if phy.stp_targ.val else '.'
             mt = 'M' if phy.smp_targ.val else '.'
             ports = si+ti+mi+'  '+st+tt+mt
+            pbo(addel.invalid)
             print leftline, "%s  %.16X %.16X %.2X " % \
                 (ports, phy.attached_sas_addr.val, phy.sas_addr.val, phy.phy_id.val)
             leftline = ' ' * len(leftline)
@@ -205,12 +215,12 @@ def sespage0e(p):
     Menu.clear()
     page0e = sp.parse(sp.readpage(0x0e))
     for descriptor in page0e["data"].descriptors.val:
-        print "Enclosure #" + str(descriptor.subid.val)
-        print "    status                : %.2X - %s" % (descriptor.status.val, descriptor.status_text.val)
-        print "    additional status     : %.2X" % descriptor.additional_status.val
-        print "    maximum size          : %s" % format(descriptor.maxsize.val, ",d")
-        print "    expected buffer id    : %.2X" % descriptor.expected_id.val
-        print "    expected buffer offset: %.8X" % descriptor.expected_offset.val
+        pbo(descriptor.subid            ); print "Enclosure #" + str(descriptor.subid.val)
+        pbo(descriptor.status           ); print "    status                : %.2X - %s" % (descriptor.status.val, descriptor.status_text.val)
+        pbo(descriptor.additional_status); print "    additional status     : %.2X" % descriptor.additional_status.val
+        pbo(descriptor.maxsize          ); print "    maximum size          : %s" % format(descriptor.maxsize.val, ",d")
+        pbo(descriptor.expected_id      ); print "    expected buffer id    : %.2X" % descriptor.expected_id.val
+        pbo(descriptor.expected_offset  ); print "    expected buffer offset: %.8X" % descriptor.expected_offset.val
     pass
     Menu.wait()
     
