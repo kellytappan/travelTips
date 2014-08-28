@@ -1,0 +1,13 @@
+finish discovery
+add optional byteoffsets to output
+parse more SES pages
+implement serial commands (send, parse, display)
+more error recovery
+  add field to parsing structures indicating required number of bytes
+better help
+  add optional item field for parameters
+  add optional item field for additional help
+  add field for overall help
+command-line parameters for configuration options
+save and restore default configuration
+optional bread crumbs in menu headings
