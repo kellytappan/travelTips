@@ -5,6 +5,8 @@ Wolf Creek Debug Utility
 """
 
 import sys
+try:    from cStringIO import StringIO
+except: from  StringIO import StringIO
 
 from Menu          import Menu
 from SesPageSas    import SesPageSas
@@ -34,17 +36,54 @@ def dump_fields(fl):
     if fl:
         for f in fl:
             print f.val, f.name
+
+def pbo(f):
+    """
+    Print Byte Offset, if so configured.
+    """
+    if Configuration.getByteoffsets():
+        print '(' + "%.4X"%f.byteoffset + ')',
+def pbob():
+    """
+    Print Byte Offset, but Blanks instead.
+    Print as many spaces as characters from pbo.
+    """
+    if Configuration.getByteoffsets():
+        print "      ",
     
 
 # SES page display functions
+
+def sespageall(p):
+    """
+    Print all implemented pages, indented with a page header.
+    """
+    Menu.clear()
+    page00 = sp.parse(sp.readpage(0x00))
+    for page in page00["data"]:
+        for menu_item in ses_menu.data:
+            try:
+                match = int(menu_item[2], 0) == page[0]
+            except:
+                match = False
+            if match:
+                # Redirect stdout.
+                save_stdout = sys.stdout
+                sys.stdout = myIO = StringIO()
+                menu_item[1](p)
+                sys.stdout = save_stdout
+                print "SES Page 0x%.2X" % page[0]
+                myIO.seek(0)
+                for line in myIO:
+                    print "    " + line,
+    Menu.wait()
 
 def sespage00(p):
     Menu.clear()
     page00 = sp.parse(sp.readpage(0x00))
     print page00["pagedesc"] + ":"
     for p in page00["data"]:
-        print "%.2X" % p,
-    print
+        print "    %.2X: %s" % p
     Menu.wait()
 
 def sespage01(p):
@@ -55,16 +94,18 @@ def sespage01(p):
         #print enclist
         #print
         #print enclist
-        print "Enclosure #" + str(enclist.subid.val)
-        print "    %-31s:" % enclist.logid   .desc, "%X" % enclist.logid   .val
-        print "    %-31s:" % enclist.vendor  .desc, enclist.vendor  .val
-        print "    %-31s:" % enclist.product .desc, enclist.product .val
-        print "    %-31s:" % enclist.revision.desc, enclist.revision.val
-        print "    Type Descriptors:"
-        print "        type possible text"
+        pbo(enclist.subid   ); print "Enclosure #" + str(enclist.subid.val)
+        pbo(enclist.logid   ); print "    %-31s:" % enclist.logid   .desc, "%X" % enclist.logid   .val
+        pbo(enclist.vendor  ); print "    %-31s:" % enclist.vendor  .desc, enclist.vendor  .val
+        pbo(enclist.product ); print "    %-31s:" % enclist.product .desc, enclist.product .val
+        pbo(enclist.revision); print "    %-31s:" % enclist.revision.desc, enclist.revision.val
+        pbob(); print "    Type Descriptors:"
+        pbob(); print "        type possible text"
         for tdlist in enclist.typedesc.val:
-            print "        %.2X   %3d      %-s" % \
-                (tdlist.type.val, tdlist.possible.val, tdlist.text.val)
+            pbo(tdlist.type)
+            print "        %.2X   %3d     " % \
+                (tdlist.type.val, tdlist.possible.val),
+            pbo(tdlist.text); print tdlist.text.val
     Menu.wait()
 
 def sespage02(p):
@@ -182,14 +223,17 @@ def sespages(p):
         for menu_item in ses_menu.data:
             # Find the given page.
             try:
-                if int(menu_item[2], 0) == int(p[0], 0):
+                if menu_item[2] == p[0] or int(menu_item[2], 0) == int(p[0], 0):
                     # Found a matching page; call its function.
                     return menu_item[1](p)
             except:
                 pass
         else:
             # Couldn't find the specified page in the menu.
-            print "unimplemented page: " + p[0]
+            if len(p) > 0:
+                print "unimplemented page: " + p[0]
+            else:
+                print "need another parameter, the page number"
     
     
 # configuration functions
@@ -226,11 +270,14 @@ config_menu = \
     Menu("Configuration",
          [
           [ 'Exit', Menu.stop, "help" ],
-          [ 'Discover interfaces'        , discover_interfaces, "discover"    ],
-          [ '[xxxxx] toggle Interactive' , toggle_interactive , "interactive" ],
-          [ '[xxxxx] toggle Clear'       , toggle_clear       , "clear"       ],
-          [ '[xxxxx] toggle Byte Offsets', toggle_byteoffsets , "byteoffsets" ],
-          [ '[xxxxx] toggle Shortcuts'   , toggle_shortcuts   , "shortcuts"   ],
+          [ 'Discover interfaces'        , discover_interfaces, "discover"    ],  #TODO replace with "select interfaces"
+         #TODO save
+         #TODO restore 
+         #[ '[xxxxx] toggle Interactive' , toggle_interactive , "interactive" ],
+          [ '[xxxxx] toggle Clear Before Menu'         , toggle_clear       , "clear"       ],
+          [ '[xxxxx] toggle Byte Offsets'              , toggle_byteoffsets , "byteoffsets" ],
+          [ '[xxxxx] toggle Insert Shortcuts Into Menu', toggle_shortcuts   , "shortcuts"   ],
+         #TODO breadcrumbs
           ])
 def setup_config_menu():
     def display_current(name, value):
@@ -295,6 +342,7 @@ ses_menu = \
     Menu("SES Page Dump",
          [
           ['Exit', Menu.stop, "help"],
+          ['All Pages'                            , sespageall, "all"],
           ['Page 0x00: Supported Diagnostic Pages', sespage00, "0x00"],
           ['Page 0x01: Configuration'             , sespage01, "0x01"],
           ['Page 0x02: Enclosure Status'          , sespage02, "0x02"],
