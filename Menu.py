@@ -62,16 +62,31 @@ class Menu(object):
             while len(self.data) > powerOfTen:
                 powerOfTen *= 10
                 width += 1
-            form = '%' + str(width) + 'd:'
+            index_form = '%' + str(width) + 'd:'
             # menu
             self.running = True
             while self.running:
                 self.clear()
+                # Find length of longest keyword shortcut.
+                longest = 0
+                for item in self.data:
+                    if len(item) > 2:
+                        if  longest < len(item[2]):
+                            longest = len(item[2])
+                shortcut_form = "%-" + str(longest+3) + "s"
+                # Print heading.
                 print '-' * 20
                 print self.title
                 print '-' * 20
-                for idx in range(len(self.data)):
-                    print form % idx, self.data[idx][0]
+                # Print menu.
+                for idx in range(len(self.data)):                    
+                    print index_form % idx,
+                    if Configuration.shortcuts:
+                        if idx == 0:
+                            print shortcut_form % "",
+                        else:
+                            print shortcut_form % ('(' + self.data[idx][2] + ')'),
+                    print self.data[idx][0]
                 print 'choose:',
                 
                 try:
