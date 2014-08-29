@@ -1,7 +1,6 @@
 finish discovery
-add optional byteoffsets to output
 parse more SES pages
-implement serial commands (send, parse, display)
+implement more commands (send, parse, display)
 more error recovery
   add field to parsing structures indicating required number of bytes
 better help

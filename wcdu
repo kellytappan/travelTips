@@ -230,10 +230,14 @@ def sespages(p):
         ses_menu.run(p)
     else:
         # We were passed subcommands on the command line.  Search the menu for a matching page.
+        inp = ses_menu.match(p[0])
+        if isinstance(inp,int):
+            # We got a unique match with menu item.  Run it.
+            return ses_menu.data[inp][1](p[1:])
         for menu_item in ses_menu.data:
             # Find the given page.
             try:
-                if menu_item[2] == p[0] or int(menu_item[2], 0) == int(p[0], 0):
+                if int(menu_item[2], 0) == int(p[0], 0):
                     # Found a matching page; call its function.
                     return menu_item[1](p)
             except:
