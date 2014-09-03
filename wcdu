@@ -223,6 +223,24 @@ def sespage0e(p):
         pbo(descriptor.expected_offset  ); print "    expected buffer offset: %.8X" % descriptor.expected_offset.val
     pass
     Menu.wait()
+
+def sespage80(p):
+    Menu.clear()
+    page80 = sp.parse(sp.readpage(0x80))
+    pbo(page80["data"].stop)
+    if page80["data"].notavail.val:
+        print "Not Available:", page80["data"].notavail.val
+    else:
+        print "Stop:", page80["data"].stop.val
+        print indentedtext(pbo(page80["data"].log.val,False) + "Log: " + '"', page80["data"].log.val, '"')
+    Menu.wait()
+    
+def sespagee8(p):
+    Menu.clear()
+    pagee8 = sp.parse(sp.readpage(0xe8))
+    pbo(pagee8["data"].expanderid); print "Expander ID:", pagee8["data"].expanderid.val
+    print indentedtext(pbo(pagee8["data"].response.val,False) + "Response: " + '"', pagee8["data"].response.val, '"')
+    Menu.wait()
     
 def sespages(p):
     if Configuration.interactive:
@@ -365,7 +383,7 @@ ses_menu = \
           ['Page 0x07: Element Descriptor'        , sespage07, "0x07"],
           ['Page 0x0a: Additional Element'        , sespage0a, "0x0a"],
           ['Page 0x0e: Download Microcode Status' , sespage0e, "0x0e"],
-         #['Page 0x80: Event Log'                 , sespage80, "0x80"], # SK and PG
+          ['Page 0x80: Event Log'                 , sespage80, "0x80"], # SK and PG
          #['Page 0x82: SXP Firmware Status'       , sespage82, "0x82"], # PG only
          #['Page 0x91: SXP Boot Configuration Status', sespage91, "0x91"], # BM only
          #['Page 0x92: Low Power Condition Status', sespage92, "0x92"], # BM only
@@ -375,7 +393,7 @@ ses_menu = \
          #['Page 0xe3: Report PHY Status'         , sespagee3, "0xe3"], # ST only
          #['Page 0xe4: Report PHY Status'         , sespagee4, "0xe4"], # ST only
          #['Page 0xe5: Report PHY Status'         , sespagee5, "0xe5"], # ST only
-         #['Page 0xe8: CLI Command In'            , sespagee8, "0xe8"], # ST only
+          ['Page 0xe8: CLI Command In'            , sespagee8, "0xe8"], # ST only
          #['Page 0xe9: Product Type Flag Status'  , sespagee9, "0xe9"],
           ])
         # WC: Wolf Creek
