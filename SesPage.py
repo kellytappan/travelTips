@@ -15,6 +15,10 @@ class SesPage(object):
         self.page01 = None
     
     @abc.abstractmethod
+    def close(self):
+        pass
+    
+    @abc.abstractmethod
     def readpage(self, pagenum):
         """
         Read the SES page specified by integer pagenum, returning a string.
@@ -486,21 +490,64 @@ class SesPage(object):
         head.log.val = data[bo:]
         return head
     
-    def parse_ex(self, data, exandernum):
+    def parse_ex(self, data, expandernum):
         report_phy_status_head = \
         (
-         (  0   , 1*8, "int", "pc"         , "page code"),
-         (  2   , 2*8, "int", "length"     , "pagelength"),
+         (  0   , 1*8, "int", "pc"         , "PAGE CODE"),
+         (  2   , 2*8, "int", "length"     , "PAGE LENGTH"),
          )
+        phy_status_descriptor = \
+        (
+         (  0   , 1*8, "int", "phyid"            , "PHY ID"),
+         (  1   , 1*8, "int", "linkrate"         , "Negotiated Physical Link Rate"),
+         (  4   , 4*8, "int", "rxerrors"         , "SAS2 Rx Error Count"),
+         (  8   , 4*8, "int", "invaliddwords"    , "Invalid Dword Count"),
+         ( 12   , 4*8, "int", "disparityerrors"  , "Disparity Error Count"),
+         ( 16   , 4*8, "int", "lossdwordsynchs"  , "Loss of Dword Synchronization Count"),
+         ( 20   , 4*8, "int", "resetsfailed"     , "PHY Reset Failed Count"),
+         ( 24   , 4*8, "int", "codeviolations"   , "Code Violation Error Count"),
+         ( 28   , 2*8, "int", "prbserrors"       , "PRBS Error Count"),
+         ( 30   , 2*8, "int", "testpatternerrors", "Test Pattern Error Count"),
+         ( 32   , 2*8, "int", "crcerrors"        , "CRC Error Count"),
+         ( 34   , 2*8, "int", "iccrcerrors"      , "In-connection CRC Error Count"),
+         ( 36   , 1*8, "int", "phychanges"       , "PHY Change Count Register"),
+         ( 37   , 1*8, "int", "ssplmonitor1"     , "SSPL Monitor 1"),
+         ( 38   , 1*8, "int", "ssplmonitor2"     , "SSPL Monitor 2"),
+         ( 40   , 4*8, "int", "connectstatus"    , "SSPL Connection Status"),
+         ( 44   , 4*8, "int", "interruptstatus"  , "SLICE_TOP:SSPL - Interrupt Status 0"),
+         )
+        negotiated_physical_link_rate = \
+        {
+         0x00:("UNKNOWN", "PHY is enabled: unknown physical link rate*"),
+         0x01:("DISABLE", "PHY is disabled"),
+         0x02:("PHY_RESET_PROBLEM", "PHY is enabled; the PHY obtained dword synchronization for at least one physical link rate during the SAS speed negotiation sequence, but the SAS speed negotiation sequence failed. These failures may be Logged in the SMP REPORT PHY ERROR LOG function and/or the Protocol-Specific Port Log page."),
+         0x03:("SPINUP_HOLD", "PHY is enabled; detected a SATA device and entered the SATA spinup hold state. The LINK RESET and HARD RESET operations in the SMP PHY CONTROL function may be used to release the PHY. This field shall be updated to this value at SATA spinup hold time if SATA spinup hold is supported."),
+         0x04:("PORT_SELECTOR", "PHY is enabled; detected a SATA port selector. The physical link rate has not been negotiated since the last time the phy's SP state machine entered the SP0:OOB_COMINIT state. The SATA spinup hold state has not been entered since the last time the phy's SP state machine entered the SP0:OOB_COMINIT state. The value in this field may change to 3h, 8h, or 9h if attached to the active PHY of the SATA port selector. Presence of a SATA port selector is indicated by the ATTACHED SATA PORT SELECTOR bit."),
+         0x08:("G1", "PHY is enabled; 1.5 Gbps physical link rate. This field shall be updated to this value after the speed negotiation sequence completes."),
+         0x09:("G2", "PHY is enabled; 3.0 Gbps physical link rate. This field shall be updated to 9h after the speed negotiation sequence completes."),
+         0x0a:("G3", "PHY is enabled; 6.0 Gbps physical link rate. This field shall be updated to ah after the speed negotiation sequence completes."),
+         0x0b:("G4", "PHY is enabled; 12.0 Gbps physical link rate. This field shall be updated to bh after the speed negotiation sequence completes."),
+         }
         
-        pass
+        bo = 0  # byte offset
+        head = Cmd.extract(data[bo:], report_phy_status_head, bo)
+        bo += 4
+        
+        descriptors = []
+        while bo < 2+head.length.val:
+            descriptors.append(Cmd.extract(data[bo:], phy_status_descriptor, bo))
+            bo += 48
+        
+        head.append(Cmd.Field(descriptors, 4, "descriptors", "PHY Status Descriptor List"), "descriptors")
+        head.append(Cmd.Field(expandernum, -1, "expandernum", "Expander Number"), "expandernum")
+        return head
     
-    def parse_e0(self, data): self.parse_ex(data, 0)
-    def parse_e1(self, data): self.parse_ex(data, 1)
-    def parse_e2(self, data): self.parse_ex(data, 2)
-    def parse_e3(self, data): self.parse_ex(data, 3)
-    def parse_e4(self, data): self.parse_ex(data, 4)
-    def parse_e5(self, data): self.parse_ex(data, 5)
+    def parse_e0(self, data): return self.parse_ex(data, 0)
+    def parse_e1(self, data): return self.parse_ex(data, 1)
+    def parse_e2(self, data): return self.parse_ex(data, 2)
+    def parse_e3(self, data): return self.parse_ex(data, 3)
+    def parse_e4(self, data): return self.parse_ex(data, 4)
+    def parse_e5(self, data): return self.parse_ex(data, 5)
     
     def parse_e8(self, data):
         clicommandin_head = \
@@ -510,6 +557,15 @@ class SesPage(object):
          (  4   , 1*8, "int", "expanderid" , "expander id"),
          (  5   , 0  , "str", "response"   , "cli response"),
          )
+        expander_id = \
+        {
+         0x01: "SBB Canister A",
+         0x02: "SBB Canister B",
+         0x03: "FEM Canister A SAS Expander 1",
+         0x04: "FEM Canister A SAS Expander 2",
+         0x05: "FEM Canister B SAS Expander 1",
+         0x06: "FEM Canister B SAS Expander 2",
+         }
         
         bo = 0  # byte offset
         head = Cmd.extract(data[bo:], clicommandin_head, bo)

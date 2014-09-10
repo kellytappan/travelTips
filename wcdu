@@ -13,14 +13,23 @@ from SesPageSas    import SesPageSas
 from SesPageFile   import SesPageFile
 from SesPageCli    import SesPageCli
 from CliCmdSerial  import CliCmdSerial
+from CliCmdSas     import CliCmdSas
 from configuration import Configuration
 from discovery     import Discovery
 
-# Set up communication path.
+# Set up communication paths.
 #sp = SesPageSas("/dev/sg4")
-sp = SesPageFile()
+#sp = SesPageFile()
 #sp = SesPageCli(CliCmdSerial("/dev/ttyUSB0"))
 
+cli = None
+#cli = CliCmdSas("/dev/sg7", 1)
+#cli = CliCmdSerial("/dev/ttyUSB0")
+
+#Discovery.probe()
+#sp       = Discovery.create_best(Discovery.CAP_SES)
+#sp_short = Discovery.create_best(Discovery.CAP_SES_SHORT)
+#cli      = Discovery.create_best(Discovery.CAP_CLI)
 
 # utility functions
 
@@ -61,6 +70,14 @@ def pbob(printit=True):
         sys.stdout.write(bostr)
     return bostr
 
+def auto_configure():
+    global sp, sp_short, cli
+    Discovery.close_all()
+    Discovery.probe()
+    sp       = Discovery.create_best(Discovery.CAP_SES      )
+    sp_short = Discovery.create_best(Discovery.CAP_SES_SHORT)
+    cli      = Discovery.create_best(Discovery.CAP_CLI      )
+
 # SES page display functions
 
 def sespageall(p):
@@ -68,7 +85,8 @@ def sespageall(p):
     Print all implemented pages, indented with a page header.
     """
     Menu.clear()
-    page00 = sp.parse(sp.readpage(0x00))
+    if not sp_short: return
+    page00 = sp_short.parse(sp_short.readpage(0x00))
     for page in page00["data"]:
         for menu_item in ses_menu.data:
             try:
@@ -89,7 +107,8 @@ def sespageall(p):
 
 def sespage00(p):
     Menu.clear()
-    page00 = sp.parse(sp.readpage(0x00))
+    if not sp_short: return
+    page00 = sp_short.parse(sp_short.readpage(0x00))
     print page00["pagedesc"] + ":"
     for p in page00["data"]:
         print "    %.2X: %s" % p
@@ -97,7 +116,8 @@ def sespage00(p):
 
 def sespage01(p):
     Menu.clear()
-    page01 = sp.parse(sp.readpage(0x01))
+    if not sp_short: return
+    page01 = sp_short.parse(sp_short.readpage(0x01))
     #print page01
     for enclist in page01["data"].enclosures.val:
         #print enclist
@@ -118,6 +138,7 @@ def sespage01(p):
 
 def sespage02(p):
     Menu.clear()
+    if not sp: return
     page02 = sp.parse(sp.readpage(0x02))
     if not page02["data"]:
         page01 = sp.parse(sp.readpage(0x01))
@@ -139,6 +160,7 @@ def sespage02(p):
 
 def sespage05(p):
     Menu.clear()
+    if not sp: return
     page05 = sp.parse(sp.readpage(0x05))
     if not page05["data"]:
         page01 = sp.parse(sp.readpage(0x01))
@@ -162,6 +184,7 @@ def sespage05(p):
     
 def sespage07(p):
     Menu.clear()
+    if not sp: return
     page07 = sp.parse(sp.readpage(0x07))
     if not page07["data"]:
         page01 = sp.parse(sp.readpage(0x01))
@@ -179,6 +202,7 @@ def sespage07(p):
 
 def sespage0a(p):
     Menu.clear()
+    if not sp: return
     page0a = sp.parse(sp.readpage(0x0a))
     if not page0a["data"]:
         page01 = sp.parse(sp.readpage(0x01))
@@ -213,6 +237,7 @@ def sespage0a(p):
 
 def sespage0e(p):
     Menu.clear()
+    if not sp: return
     page0e = sp.parse(sp.readpage(0x0e))
     for descriptor in page0e["data"].descriptors.val:
         pbo(descriptor.subid            ); print "Enclosure #" + str(descriptor.subid.val)
@@ -226,6 +251,7 @@ def sespage0e(p):
 
 def sespage80(p):
     Menu.clear()
+    if not sp: return
     page80 = sp.parse(sp.readpage(0x80))
     pbo(page80["data"].stop)
     if page80["data"].notavail.val:
@@ -234,9 +260,29 @@ def sespage80(p):
         print "Stop:", page80["data"].stop.val
         print indentedtext(pbo(page80["data"].log.val,False) + "Log: " + '"', page80["data"].log.val, '"')
     Menu.wait()
+
+def sespageex(p, expandernum):
+    Menu.clear()
+    if not sp: return
+    pageex = sp.parse(sp.readpage(0xe0 + expandernum))
+    print "Expander #" + str(expandernum)
+    for phydesc in pageex["data"].descriptors.val:
+        for field in phydesc:
+            pbo(field); print field.desc + ':', field.val
+        print
+    Menu.wait()
+    pass
+
+def sespagee0(p): sespageex(p, 0)
+def sespagee1(p): sespageex(p, 1)
+def sespagee2(p): sespageex(p, 2)
+def sespagee3(p): sespageex(p, 3)
+def sespagee4(p): sespageex(p, 4)
+def sespagee5(p): sespageex(p, 5)
     
 def sespagee8(p):
     Menu.clear()
+    if not sp: return
     pagee8 = sp.parse(sp.readpage(0xe8))
     pbo(pagee8["data"].expanderid); print "Expander ID:", pagee8["data"].expanderid.val
     print indentedtext(pbo(pagee8["data"].response.val,False) + "Response: " + '"', pagee8["data"].response.val, '"')
@@ -298,11 +344,28 @@ def discover_interfaces(p):
         
     Menu.wait()
 
+def probe_interfaces(p):
+    Menu.clear()
+    Discovery.probe()
+    for cap,val in Discovery.capabilities.items():
+        print "capability:", Discovery.description[cap]
+        for ad in sorted(val, key=lambda a: a[0]):
+            print "   ", ad[0], ad[2]
+    Menu.wait()
+
+def auto_configure_item(p):
+    Menu.clear()
+    auto_configure()
+    Menu.wait()
+    #TODO
+
 config_menu = \
     Menu("Configuration",
          [
           [ 'Exit', Menu.stop, "help" ],
           [ 'Discover interfaces'        , discover_interfaces, "discover"    ],  #TODO replace with "select interfaces"
+          [ 'Probe interfaces'           , probe_interfaces   , "probe"       ],
+          [ 'Auto Configure'             , auto_configure_item, "autoconfigure"],
          #TODO save
          #TODO restore 
          #[ '[xxxxx] toggle Interactive' , toggle_interactive , "interactive" ],
@@ -360,7 +423,11 @@ platform_menu = \
 # items in SAS menu
 cpld_menu        = Menu("CPLD"          , [['Exit', Menu.stop]])
 def drive_status         (p): pass
-def enclosure_status     (p): pass
+def enclosure_status     (p):
+    Menu.clear()
+    if not cli: return
+    print cli.execute("info")
+    Menu.wait()
 fan_menu         = Menu("Fan"           , [['Exit', Menu.stop]])
 def flash_expander_image (p): pass
 lcd_menu         = Menu("LCD"           , [['Exit', Menu.stop]])
@@ -387,12 +454,12 @@ ses_menu = \
          #['Page 0x82: SXP Firmware Status'       , sespage82, "0x82"], # PG only
          #['Page 0x91: SXP Boot Configuration Status', sespage91, "0x91"], # BM only
          #['Page 0x92: Low Power Condition Status', sespage92, "0x92"], # BM only
-         #['Page 0xe0: Report PHY Status'         , sespagee0, "0xe0"], # ST only
-         #['Page 0xe1: Report PHY Status'         , sespagee1, "0xe1"], # ST only
-         #['Page 0xe2: Report PHY Status'         , sespagee2, "0xe2"], # ST only
-         #['Page 0xe3: Report PHY Status'         , sespagee3, "0xe3"], # ST only
-         #['Page 0xe4: Report PHY Status'         , sespagee4, "0xe4"], # ST only
-         #['Page 0xe5: Report PHY Status'         , sespagee5, "0xe5"], # ST only
+          ['Page 0xe0: Report PHY Status'         , sespagee0, "0xe0"], # ST only
+          ['Page 0xe1: Report PHY Status'         , sespagee1, "0xe1"], # ST only
+          ['Page 0xe2: Report PHY Status'         , sespagee2, "0xe2"], # ST only
+          ['Page 0xe3: Report PHY Status'         , sespagee3, "0xe3"], # ST only
+          ['Page 0xe4: Report PHY Status'         , sespagee4, "0xe4"], # ST only
+          ['Page 0xe5: Report PHY Status'         , sespagee5, "0xe5"], # ST only
           ['Page 0xe8: CLI Command In'            , sespagee8, "0xe8"], # ST only
          #['Page 0xe9: Product Type Flag Status'  , sespagee9, "0xe9"],
           ])
@@ -436,6 +503,15 @@ utility_menu = \
 
 # If we passed keyword parameters, don't clear or wait.
 Configuration.setInteractive(not sys.argv[1:])
+
+# Configure accessors.
+auto_configure()
+
 # Run the main menu.
 utility_menu.run(sys.argv[1:])
+
+Discovery.close_all()
+#if sp      : sp      .close()
+#if sp_short: sp_short.close()
+#if cli     : cli     .close()
 

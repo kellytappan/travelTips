@@ -4,3 +4,7 @@ from discovery import Discovery
 
 print Discovery.discover_sas()
 print Discovery.discover_serial()
+
+print
+Discovery.probe()
+print Discovery.capabilities

@@ -9,12 +9,19 @@ class SesPageCli(SesPage):
         super(SesPageCli, self).__init__()
         self.cli_interface = cli_interface
         
+    def close(self):
+        if self.cli_interface:
+            self.cli_interface.close()
+            self.cli_interface = None
+        
     def readpage(self, pagenum):
         raw = self.cli_interface.execute("ses rcv " + str(pagenum))
         expected_index = 0  # The first line of data starts with "0000".
         page = ""  # No data yet.
         state = "before"  # We're not yet looking at a line with data.
-        for line in raw.split("\r\n"):
+        #print "raw = "
+        #print raw
+        for line in raw.split("\n"):
             # Skip everything before the starting "0000".
             if state == "before":
                 words = line.split()

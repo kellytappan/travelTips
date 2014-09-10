@@ -6,7 +6,7 @@ from CDB     import CDB
 
 class CliCmdSas(CliCmd):
     
-    def __init__(self, ptdev, expanderid):
+    def __init__(self, ptdev, expanderid=None):
         """
         pt is a SCSI passthrough device file name
         expanderid can have one of the values
@@ -16,11 +16,18 @@ class CliCmdSas(CliCmd):
           0x04: FEM Canister A SAS Expander 2
           0x05: FEM Canister B SAS Expander 1
           0x06: FEM Canister B SAS Expander 2
+        Alternately, the first parameter may be a sequence of (ptdev,expanderid).
         """
         super(CliCmdSas, self).__init__()
+        if not isinstance(ptdev, str):
+            # If it's not a string, assume it's a sequence.
+            ptdev, expanderid = ptdev
         self.ses = SesPageSas(ptdev)
         self.pt = ScsiPT(ptdev)
         self.expanderid = expanderid
+    
+    def close(self):
+        pass
     
     def __del__(self):
         #del self.ses

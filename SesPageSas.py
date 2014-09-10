@@ -16,8 +16,12 @@ class SesPageSas(SesPage):
         super(SesPageSas, self).__init__()
         self.pt = ScsiPT(ptdev)
     
-    def __del__(self):
+    def close(self):
         del self.pt
+        self.pt= None
+    
+    def __del__(self):
+        self.close()
         
     def readpage(self, pagenum):
         """
