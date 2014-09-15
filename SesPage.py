@@ -1,6 +1,3 @@
-#import sys
-#sys.path.append('/home/larry/git/ih/python-scsi-pt')
-
 import abc
 
 from Cmd import Cmd

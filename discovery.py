@@ -125,10 +125,12 @@ class Discovery(object):
                 Discovery.capabilities[capability].add(definition)
             sp.close()
         for devfile in Discovery.discover_serial():
+            cli = None
             try:
                 cli = CliCmdSerial(devfile)
             except:
-                cli.close()
+                if cli:
+                    cli.close()
                 continue
             for capability in Discovery.probe_cli(cli):
                 #print "cli capability of", devfile, "=", Discovery.description[capability]
@@ -157,6 +159,7 @@ class Discovery(object):
         if definition in Discovery.created:
             retval = Discovery.created[definition]
             if retval:
+                print "create_accessor: returning existing accessor for", definition, ":", retval  #TODO
                 return retval
         
         quality, funcs, param = definition
@@ -167,12 +170,15 @@ class Discovery(object):
         for func in funcs[::-1]:
             param = func(param)
         Discovery.created[definition] = param
+        print "create_accessor: new accessor for", definition, ":", param  #TODO
         return param
     
     @staticmethod
     def close_all():
         for ad,accessor in Discovery.created.items():
             accessor.close()
+            del ad
+        print "Discovery.created =", Discovery.created  #TODO
     
     @staticmethod
     def find_candidates(cap_set):

@@ -5,6 +5,7 @@ Wolf Creek Debug Utility
 """
 
 import sys
+import argparse
 try:    from cStringIO import StringIO
 except: from  StringIO import StringIO
 
@@ -14,6 +15,8 @@ from SesPageFile   import SesPageFile
 from SesPageCli    import SesPageCli
 from CliCmdSerial  import CliCmdSerial
 from CliCmdSas     import CliCmdSas
+from CliCmd        import CliCmd
+from SesPage       import SesPage
 from configuration import Configuration
 from discovery     import Discovery
 
@@ -72,11 +75,30 @@ def pbob(printit=True):
 
 def auto_configure():
     global sp, sp_short, cli
+    global verbose
     Discovery.close_all()
     Discovery.probe()
     sp       = Discovery.create_best(Discovery.CAP_SES      )
     sp_short = Discovery.create_best(Discovery.CAP_SES_SHORT)
     cli      = Discovery.create_best(Discovery.CAP_CLI      )
+    if verbose:
+        print "sp       =", Discovery.find_best(Discovery.CAP_SES      )
+        print "sp_short =", Discovery.find_best(Discovery.CAP_SES_SHORT)
+        print "cli      =", Discovery.find_best(Discovery.CAP_CLI      )
+    
+def SesPage_create(device):
+    if "sg"        in device: return SesPageSas (device)
+    if "tty"       in device: return SesPageCli (CliCmdSerial(device))
+    if "/dev/" not in device: return SesPageFile(device)
+    return None
+    
+def CliCmd_create(device):
+    if "sg"  in device: return CliCmdSas   (device.split(','))
+    if "tty" in device: return CliCmdSerial(device)
+    return None
+
+
+
 
 # SES page display functions
 
@@ -108,6 +130,7 @@ def sespageall(p):
 def sespage00(p):
     Menu.clear()
     if not sp_short: return
+    print "sp_short =", sp_short
     page00 = sp_short.parse(sp_short.readpage(0x00))
     print page00["pagedesc"] + ":"
     for p in page00["data"]:
@@ -501,14 +524,32 @@ utility_menu = \
           ['SAS Menu'          , sas_menu     .run, "sas"      ],
           ])
 
-# If we passed keyword parameters, don't clear or wait.
-Configuration.setInteractive(not sys.argv[1:])
+# Parse command-line options.
+parser = argparse.ArgumentParser(description="Wolf Creek Debug Utility -- Display information about a Jabil system.")
+parser.add_argument("--probe"  , action="store_true", help="Probe the system to find appropriate and best device files.")
+parser.add_argument("--cli"    , nargs=1, type=str,   help="device file to use for CLI access")
+parser.add_argument("--sespage", nargs=1, type=str,   help="device file to use for SES Page access")
+parser.add_argument("--verbose", action="store_true", help="Print some things not normally printed.")
+params, commands = parser.parse_known_args()
+params = vars(params)
+
+verbose = params["verbose"]
+
+# If we passed keyword parameters, don't clear the screen or wait.
+Configuration.setInteractive(not commands)
 
 # Configure accessors.
-auto_configure()
+if params["probe"]:
+    auto_configure()
+# "cli" and "sespage" can override the results of "probe".
+if params["cli"]:
+    cli = CliCmd_create(params["cli"][0])
+if params["sespage"]:
+    sp  = SesPage_create(params["sespage"][0])
+    sp_short = sp
 
 # Run the main menu.
-utility_menu.run(sys.argv[1:])
+utility_menu.run(commands)
 
 Discovery.close_all()
 #if sp      : sp      .close()

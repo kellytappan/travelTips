@@ -10,3 +10,10 @@ better help
 command-line parameters for configuration options
 save and restore default configuration
 optional bread crumbs in menu headings
+serial on MSWin
+
+status on:
+enclosure
+drive
+fan
+power
