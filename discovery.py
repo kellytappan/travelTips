@@ -159,7 +159,7 @@ class Discovery(object):
         if definition in Discovery.created:
             retval = Discovery.created[definition]
             if retval:
-                print "create_accessor: returning existing accessor for", definition, ":", retval  #TODO
+                #print "create_accessor: returning existing accessor for", definition, ":", retval  # DEBUG
                 return retval
         
         quality, funcs, param = definition
@@ -170,7 +170,7 @@ class Discovery(object):
         for func in funcs[::-1]:
             param = func(param)
         Discovery.created[definition] = param
-        print "create_accessor: new accessor for", definition, ":", param  #TODO
+        #print "create_accessor: new accessor for", definition, ":", param  # DEBUG
         return param
     
     @staticmethod
@@ -178,7 +178,7 @@ class Discovery(object):
         for ad,accessor in Discovery.created.items():
             accessor.close()
             del ad
-        print "Discovery.created =", Discovery.created  #TODO
+        #print "Discovery.created =", Discovery.created  # DEBUG
     
     @staticmethod
     def find_candidates(cap_set):

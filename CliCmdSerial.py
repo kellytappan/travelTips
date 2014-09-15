@@ -38,12 +38,10 @@ class CliCmdSerial(CliCmd):
         else:
             self.prompt_toggled = False
         
-        #print "tty =", tty, "echo_toggled =", self.echo_toggled, "prompt_toggled =", self.prompt_toggled  # TODO
         self._flush()
         
     def close(self):
         # Restore "echo" and "prompt" to previous values.
-        #print "closing ", self.tty
         try:
             if self.echo_toggled  : self.proc.sendline("echo")
             if self.prompt_toggled: self.proc.sendline("prompt")
