@@ -7,35 +7,35 @@ class SesPage(object):
     Read and write SES pages through various means.
     """
     __metaclass__ = abc.ABCMeta
-    
+
     def __init__(self):
         self.page01 = None
-    
+
     @abc.abstractmethod
     def close(self):
         pass
-    
+
     @abc.abstractmethod
     def readpage(self, pagenum):
         """
         Read the SES page specified by integer pagenum, returning a string.
         """
         pass
-    
+
     @abc.abstractmethod
     def writepage(self, pagenum, data):
         """
         Write the SES page specified by integer pagenum with string, data.
         """
         pass
-    
+
     #@staticmethod
     def parse_00(self, data):
         return tuple((
                       ord(pc),
                       self.pagedict.get(ord(pc),(-1,""))[1]  # description, defaults to ""
                       ) for pc in data[4:])
-    
+
     #@staticmethod
     def parse_01(self, data):
         """
@@ -149,7 +149,7 @@ class SesPage(object):
         head.enclosures.val = enclosures
         self.page01 = head
         return head
-    
+
     #@staticmethod
     def parse_02(self, data):
         """
@@ -178,16 +178,16 @@ class SesPage(object):
          (( 0,3), 4  , "int", "elstat"  , "element status code"),
          (  1   , 3*8, "int", "status"  , "element type specific status information"),
          )
-        
+
         if not self.page01:
             # We need the information from SES page 0x01 before we can
             # parse this page.
             return None
-        
+
         bo = 0  # byte offset
         head = Cmd.extract(data[bo:], enclosure_status, bo)
         bo += 8
-        
+
         enclosures02 = []
         for enclosure01 in self.page01.enclosures.val:
             typelist02 = []
@@ -233,16 +233,16 @@ class SesPage(object):
          (  2   , 1*8, "int", "lowarn", "low warning threshold"),
          (  3   , 1*8, "int", "locrit", "low critical threshold"),
          )
-        
+
         if not self.page01:
             # We need the information from SES page 0x01 before we can
             # parse this page.
             return None
-        
+
         bo = 0  # byte offset
         head = Cmd.extract(data[bo:], threshold_in, bo)
         bo += 8
-        
+
         enclosures05 = []
         for enclosure01 in self.page01.enclosures.val:
             typelist05 = []
@@ -284,11 +284,11 @@ class SesPage(object):
             # We need the information from SES page 0x01 before we can
             # parse this page.
             return None
-        
+
         bo = 0  # byte offset
         head = Cmd.extract(data[bo:], element_descriptor_head, bo)
         bo += 8
-        
+
         enclosures07 = []
         for enclosure01 in self.page01.enclosures.val:
             typelist07 = []
@@ -309,7 +309,7 @@ class SesPage(object):
         head.enclosures = Cmd.Field(enclosures07, 8, "enclosures", "list of enclosures")
         return head
         pass
-    
+
     #@staticmethod
     def parse_0a(self, data):
         additional_element_head = \
@@ -319,7 +319,7 @@ class SesPage(object):
          (  4   , 4*8, "int", "gen"        , "generation code"),
          (  8   , 0  , "str", "descriptors", "additional element descriptor list"),
          )
-        
+
         descriptor_head = \
         (
          (( 0,7), 1  , "int", "invalid" , "invalid"),
@@ -332,7 +332,7 @@ class SesPage(object):
          (( 0,0), 1  , "int", "eiioe", "element index includes overall elements"),
          (  1   , 1*8, "int", "index", "element index"),
          )
-        
+
         sas_specific_head = \
         (
          (  0   , 1*8, "int", "numphys", "number of phy descriptors"),
@@ -345,7 +345,7 @@ class SesPage(object):
          (  1   , 1*8, "int", "slotnum", "device slot number"),
         #(  4   , 0  , "str", "phydescriptors", "phy descriptor list"),
          )
-        
+
         phy_descriptor = \
         (
          (( 0,6), 3  , "int", "type"    , "device type"),
@@ -361,16 +361,16 @@ class SesPage(object):
          ( 12   , 8*8, "int", "sas_addr", "sas_specific address"),
          ( 20   , 1*8, "int", "phy_id"  , "phy identifier"),
          )
-        
+
         if not self.page01:
             # We need the information from SES page 0x01 before we can
             # parse this page.
             return None
-        
+
         bo = 0  # byte offset
         head = Cmd.extract(data[bo:], additional_element_head, bo)
         bo += 8
-        
+
         endbo = bo-4 + head.length.val
         descriptors = []
         while bo < endbo:
@@ -392,16 +392,16 @@ class SesPage(object):
                     if foundit:
                         break
                 dhead.index.val = (enclosure.subid.val, typedef.type.val, index_remaining-dhead.eiioe.val)
-            
+
             if dhead.protocol.val != 0x06:
                 return None  # Only SAS protocol is supported.
-            
+
             sas_specific = Cmd.extract(data[bo:], sas_specific_head, bo)
             bo += 2
             if dhead.eip.val:
                 sas_specific += Cmd.extract(data[bo:], sas_specific_eip1, bo)
                 bo += 2
-    
+
             phylist = []
             phybo = bo
             for phynum in range(sas_specific.numphys.val):
@@ -414,7 +414,7 @@ class SesPage(object):
         head.descriptors.val = descriptors
         return head
 
-    
+
     #@staticmethod
     def parse_0e(self, data):
         download_microcode_head = \
@@ -458,18 +458,18 @@ class SesPage(object):
         bo = 0  # byte offset
         head = Cmd.extract(data[bo:], download_microcode_head, bo)
         bo += 8
-        
+
         descriptors = []
         for encidx in range(1+head.secondaries.val):
             descriptor = Cmd.extract(data[bo:], descriptor_format, bo)
             bo += 16
             descriptor.append(Cmd.Field(status_text[descriptor.status.val], -1, "status_text", "status meaning"), "status_text")
             descriptors.append(descriptor)
-            
+
         head.descriptors.val = descriptors
         return head
-    
-    
+
+
     def parse_80(self, data):
         eventlogin_head = \
         (
@@ -479,14 +479,14 @@ class SesPage(object):
          (( 5,0), 1  , "int", "stop"       , "stop"),
          (  6   , 0  , "str", "log"        , "log data"),
          )
-        
+
         bo = 0  # byte offset
         head = Cmd.extract(data[bo:], eventlogin_head, bo)
         bo += 6
-        
+
         head.log.val = data[bo:]
         return head
-    
+
     def parse_ex(self, data, expandernum):
         report_phy_status_head = \
         (
@@ -525,27 +525,27 @@ class SesPage(object):
          0x0a:("G3", "PHY is enabled; 6.0 Gbps physical link rate. This field shall be updated to ah after the speed negotiation sequence completes."),
          0x0b:("G4", "PHY is enabled; 12.0 Gbps physical link rate. This field shall be updated to bh after the speed negotiation sequence completes."),
          }
-        
+
         bo = 0  # byte offset
         head = Cmd.extract(data[bo:], report_phy_status_head, bo)
         bo += 4
-        
+
         descriptors = []
         while bo < 2+head.length.val:
             descriptors.append(Cmd.extract(data[bo:], phy_status_descriptor, bo))
             bo += 48
-        
+
         head.append(Cmd.Field(descriptors, 4, "descriptors", "PHY Status Descriptor List"), "descriptors")
         head.append(Cmd.Field(expandernum, -1, "expandernum", "Expander Number"), "expandernum")
         return head
-    
+
     def parse_e0(self, data): return self.parse_ex(data, 0)
     def parse_e1(self, data): return self.parse_ex(data, 1)
     def parse_e2(self, data): return self.parse_ex(data, 2)
     def parse_e3(self, data): return self.parse_ex(data, 3)
     def parse_e4(self, data): return self.parse_ex(data, 4)
     def parse_e5(self, data): return self.parse_ex(data, 5)
-    
+
     def parse_e8(self, data):
         clicommandin_head = \
         (
@@ -563,14 +563,14 @@ class SesPage(object):
          0x05: "FEM Canister B SAS Expander 1",
          0x06: "FEM Canister B SAS Expander 2",
          }
-        
+
         bo = 0  # byte offset
         head = Cmd.extract(data[bo:], clicommandin_head, bo)
         bo += 5
-        
+
         head.response.val = data[bo:]
         return head
-    
+
     pagedict = {
          0x00: (parse_00, "Supported Diagnostic Pages"   ),
          0x01: (parse_01, "Configuration"                ),
@@ -593,7 +593,7 @@ class SesPage(object):
          0xe8: (parse_e8, "CLI Command"                  ), # ST only
          0xe9: (None    , "Product Type Flag Status"     ),
          }
-    
+
     #@staticmethod
     def parse(self, data):
         """
@@ -612,4 +612,4 @@ class SesPage(object):
                     "pagedesc": "unknown",
                     "data"    : data,
                     }
-    
+

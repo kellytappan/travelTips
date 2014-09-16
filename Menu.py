@@ -5,10 +5,10 @@ import sys
 from configuration import Configuration
 
 class Menu(object):
-    
+
     # Magic function element that is translated to self.stopfunc.
     stop = -1
-    
+
     @staticmethod
     def clear():
         """
@@ -17,7 +17,7 @@ class Menu(object):
         """
         if Configuration.getClear() and Configuration.getInteractive():
             sys.stdout.write(Configuration.clearcode)
-    
+
     @staticmethod
     def wait():
         """
@@ -29,7 +29,7 @@ class Menu(object):
             print "press enter",
             raw_input()
 
-    
+
     def __init__(self, title, data):
         self.title = title
         self.data  = data
@@ -41,7 +41,7 @@ class Menu(object):
             if item[1] == Menu.stop:
                 item[1] = self.stopfunc
             assert(type(item[1]) in (types.FunctionType, types.MethodType))
-        
+
     def run(self, clparms=None):
         if clparms:
             inp = self.match(clparms[0])
@@ -79,7 +79,7 @@ class Menu(object):
                 print self.title
                 print '-' * 20
                 # Print menu.
-                for idx in range(len(self.data)):                    
+                for idx in range(len(self.data)):
                     print index_form % idx,
                     if Configuration.shortcuts:
                         if idx == 0:
@@ -88,7 +88,7 @@ class Menu(object):
                             print shortcut_form % ('(' + self.data[idx][2] + ')'),
                     print self.data[idx][0]
                 print 'choose:',
-                
+
                 try:
                     rawinp = raw_input()
                 except KeyboardInterrupt:
@@ -98,16 +98,16 @@ class Menu(object):
                     print
                     self.stopfunc(None)
                     continue
-                
+
                 try:
                     inp = int(rawinp)
                 except:
                     inp = -1
-                
+
                 if not 0 <= inp < len(self.data):
                     print "bad item number"
                     continue
-                
+
                 try:
                     self.data[inp][1](None)
                 except KeyboardInterrupt:
@@ -130,7 +130,7 @@ class Menu(object):
         if len(matches) == 0: return None
         if len(matches) == 1: return matches[0]
         return tuple(self.data[x][2] for x in matches)
-    
+
     def help(self):
         width = 0
         for item in self.data[1:]:

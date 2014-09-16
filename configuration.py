@@ -2,7 +2,7 @@ class Configuration:
     """
     Hold various configuration variables to be accessible to everyone.
     """
-    
+
     # Are we menu-driven (interactive) or command-line driven (not interactive)?
     interactive = True
     @staticmethod
@@ -24,7 +24,7 @@ class Configuration:
     def setByteoffsets(v):        Configuration.byteoffsets = not not v
     @staticmethod
     def getByteoffsets( ): return Configuration.byteoffsets
-    
+
     # Should the menus display command-line shortcuts?
     shortcuts = False
     @staticmethod

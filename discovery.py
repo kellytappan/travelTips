@@ -10,13 +10,13 @@ class Discovery(object):
     """
     Discover interfaces for us to use.
     """
-    
+
     # capabilities
     CAP_CLI         = -999
     CAP_SES         = -998  # can return full SES pages
     CAP_FAN_CONTROL = -997  # includes CAP_CLI
     CAP_SES_SHORT   = -996  # can return short SES pages (maybe long, too)
-    
+
     description = \
     {
      CAP_CLI        : "cli",
@@ -24,17 +24,17 @@ class Discovery(object):
      CAP_FAN_CONTROL: "fan control",
      CAP_SES_SHORT  : "ses, short results",
      }
-    
+
     capabilities = {}
-    
+
     created = {}
-    
+
     @staticmethod
     def discover_sas():
         """
         Look through sysfs for the sg device names of enclosures.
         Only works on Linux.
-        
+
         Returns a list of device file names.
         """
         devfiles = []
@@ -55,17 +55,17 @@ class Discovery(object):
         """
         Look for serial devices we can use.
         Only works on Linux.
-        
+
         Returns a list of device file names.
         """
         dev = "/dev"
         return [dev + "/" + s for s in os.listdir(dev) if "ttyUSB" in s]
-    
+
     @staticmethod
     def probe_cli(cli):
         """
         Probe the given CliCmd object for its capabilities.
-        
+
         Returns a list of capabilities.
         """
         try:
@@ -83,7 +83,7 @@ class Discovery(object):
     def probe_ses(sp):
         """
         Probe the given SesPage object for its capabilities.
-        
+
         Returns a list of capabilities.
         """
         try:
@@ -142,17 +142,17 @@ class Discovery(object):
                 definition = ( 3, (SesPageCli,CliCmdSerial), devfile )
                 Discovery.capabilities[capability].add(definition)
             sp.close()
-    
+
     @staticmethod
     def create_accessor(definition):
         """
         Create an accessor object based on definition.
-        
+
         definition is a sequence where the first element is a function or sequence of functions
         and the second parameter is a parameter.
         Call the function or call the list of functions starting from the end, initially passing the parameter,
         subsequently passing the result of the previous function call.
-        
+
         For example, if definition is ( (SesPageCli,CliCmdSerial), "/dev/ttyUSB0" ), then return
             SesPageCli(CliCmdSerial("/dev/ttyUSB0"))
         """
@@ -161,7 +161,7 @@ class Discovery(object):
             if retval:
                 #print "create_accessor: returning existing accessor for", definition, ":", retval  # DEBUG
                 return retval
-        
+
         quality, funcs, param = definition
         try:
             funcs[0]
@@ -172,14 +172,14 @@ class Discovery(object):
         Discovery.created[definition] = param
         #print "create_accessor: new accessor for", definition, ":", param  # DEBUG
         return param
-    
+
     @staticmethod
     def close_all():
         for ad,accessor in Discovery.created.items():
             accessor.close()
             del ad
         #print "Discovery.created =", Discovery.created  # DEBUG
-    
+
     @staticmethod
     def find_candidates(cap_set):
         """
@@ -195,7 +195,7 @@ class Discovery(object):
             else:
                 retval &= ads
         return retval
-    
+
     @staticmethod
     def find_best(cap_set):
         """

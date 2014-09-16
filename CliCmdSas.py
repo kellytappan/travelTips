@@ -5,7 +5,7 @@ from Cmd     import Cmd
 from CDB     import CDB
 
 class CliCmdSas(CliCmd):
-    
+
     def __init__(self, ptdev, expanderid=None):
         """
         pt is a SCSI passthrough device file name
@@ -25,14 +25,14 @@ class CliCmdSas(CliCmd):
         self.ses = SesPageSas(ptdev)
         self.pt = ScsiPT(ptdev)
         self.expanderid = expanderid
-    
+
     def close(self):
         pass
-    
+
     def __del__(self):
         #del self.ses
         pass
-    
+
     def execute(self, command):
         """
         Send a CLI command through SES page 0xe8.
@@ -41,6 +41,6 @@ class CliCmdSas(CliCmd):
         cdb = CDB(cmd.cdb)
         cdb.set_data_out(cmd.dat)
         self.pt.sendcdb(cdb)
-        
+
         page = self.ses.parse(self.ses.readpage(0xe8))
         return page["data"].response.val

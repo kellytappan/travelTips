@@ -3,9 +3,9 @@ from CliCmd import CliCmd
 import pexpect
 
 class CliCmdSerial(CliCmd):
-    
+
     timeout= .4   # seconds  # .3 works for 424 bytes
-    
+
     def __init__(self, tty, baud=115200):
         self.tty  = tty
         self.baud = baud
@@ -37,9 +37,9 @@ class CliCmdSerial(CliCmd):
             self.prompt_toggled = True
         else:
             self.prompt_toggled = False
-        
+
         self._flush()
-        
+
     def close(self):
         # Restore "echo" and "prompt" to previous values.
         try:
@@ -52,10 +52,10 @@ class CliCmdSerial(CliCmd):
             self.proc.close()
         except:
             pass
-    
+
     def __del__(self):
         self.close()
-        
+
     def execute(self, cmd):
         """
         Send the command, cmd, to the device and return the output.
@@ -73,7 +73,7 @@ class CliCmdSerial(CliCmd):
         if retval[-1] == "\n": retval = retval[:-1]
         self._flush()
         return retval
-    
+
     def _flush(self):
         # Kludge to clear out self.proc.before.
         self.proc.expect("$")
@@ -81,5 +81,5 @@ class CliCmdSerial(CliCmd):
         assert(self.proc.before == "")
         #print "len before =", len(self.proc.before)
         #if len(self.proc.before) > 4: print "before =", self.proc.before
-    
-    
+
+

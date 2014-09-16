@@ -4,16 +4,16 @@ class SesPageCli(SesPage):
     """
     Read and write SES pages through a CLI.
     """
-    
+
     def __init__(self, cli_interface):
         super(SesPageCli, self).__init__()
         self.cli_interface = cli_interface
-        
+
     def close(self):
         if self.cli_interface:
             self.cli_interface.close()
             self.cli_interface = None
-        
+
     def readpage(self, pagenum):
         raw = self.cli_interface.execute("ses rcv " + str(pagenum))
         expected_index = 0  # The first line of data starts with "0000".
@@ -43,7 +43,7 @@ class SesPageCli(SesPage):
                     else:
                         return None
         return page
-    
+
     def writepage(self, pagenum, data):
         # Not yet implemented.
         pass

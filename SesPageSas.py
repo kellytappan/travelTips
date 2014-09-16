@@ -8,7 +8,7 @@ class SesPageSas(SesPage):
     """
     Read and write SES pages through SAS.
     """
-    
+
     def __init__(self, ptdev):
         """
         pt is a SCSI passthrough device file name
@@ -16,15 +16,15 @@ class SesPageSas(SesPage):
         super(SesPageSas, self).__init__()
         self.pt = ScsiPT(ptdev)
         #print "__init__: self.pt =", self.pt  # DEBUG
-    
+
     def close(self):
         del self.pt
         self.pt = None
         #print "close: self.pt =", self.pt  # DEBUG
-    
+
     def __del__(self):
         self.close()
-        
+
     def readpage(self, pagenum):
         """
         Read the SES page specified by integer pagenum, returning a string.
@@ -36,7 +36,7 @@ class SesPageSas(SesPage):
             (ord(data[2]) << 8) + \
             (ord(data[3]) << 0)
         return self._getsespage(pagenum, length)
-    
+
     def writepage(self, expanderid, data):
         """
         Write the SES page specified by integer pagenum with string, data.
@@ -44,7 +44,7 @@ class SesPageSas(SesPage):
         #page = Cmd.clicommandout(Cls, expanderid, command)
         #cmd = Cmd("sd", {"self-test_code":0, "pf":1, "parameter_list_length":len(page)})
         pass
-    
+
     def _getsespage(self, page, length):
         # uses pt
         cmd = Cmd("rdr", {"pcv":1, "page_code":page, "alloc":length})
