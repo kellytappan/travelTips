@@ -10,6 +10,7 @@ class SesPage(object):
 
     def __init__(self):
         self.page01 = None
+        self.page02 = None
 
     @abc.abstractmethod
     def close(self):
@@ -29,14 +30,14 @@ class SesPage(object):
         """
         pass
 
-    #@staticmethod
+
+
     def parse_00(self, data):
         return tuple((
                       ord(pc),
                       self.pagedict.get(ord(pc),(-1,""))[1]  # description, defaults to ""
                       ) for pc in data[4:])
 
-    #@staticmethod
     def parse_01(self, data):
         """
         return a ListDict of Fields, including "enclosures": list of enclosures
@@ -150,6 +151,130 @@ class SesPage(object):
         self.page01 = head
         return head
 
+    page_02_specific_control = \
+    {
+     0x01: {  # Device Slot
+              "RQST ACTIVE"  : (( 2,7), 1  , 0),
+              "DO NOT REMOVE": (( 2,6), 1  , 0),
+              "RQST MISSING" : (( 2,4), 1  , 0),
+              "RQST INSERT"  : (( 2,3), 1  , 0),
+              "RQST REMOVE"  : (( 2,2), 1  , 0),
+              "RQST IDENT"   : (( 2,1), 1  , 0),
+              "RQST FAULT"   : (( 3,5), 1  , 0),
+              "DEVICE OFF"   : (( 3,4), 1  , 0),
+              "ENABLE BYP A" : (( 3,3), 1  , 0),
+              "ENABLE BYP B" : (( 3,2), 1  , 0),
+            },
+     0x02: {  # Power Supply
+              "RQST IDENT": (( 1,7), 1  , 0),
+              "RQST FAIL" : (( 3,6), 1  , 0),
+              "RQST ON"   : (( 3,5), 1  , 0),
+            },
+     0x03: {  # Cooling
+              "RQST IDENT"          : (( 1,7), 1  , 0),
+              "RQST FAIL"           : (( 3,6), 1  , 0),
+              "RQST ON"             : (( 3,5), 1  , 0),
+              "REQUESTED SPEED CODE": (( 3,2), 3  , 0),
+            },
+     0x04: {  # Temperature Sensor
+              "RQST IDENT": (( 1,7), 1  , 0),
+              "RQST FAIL" : (( 1,6), 1  , 0),
+            },
+     0x07: {  # Enclosure Services Controller Electronics
+              "RQST IDENT"    : (( 1,7), 1  , 0),
+              "RQST FAIL"     : (( 1,6), 1  , 0),
+              "SELECT ELEMENT": (( 2,0), 1  , 0),
+            },
+     0x0c: {  # Display
+              "RQST IDENT"       : (( 1,7), 1  , 0),
+              "RQST FAIL"        : (( 1,6), 1  , 0),
+              "DISPLAY MODE"     : (( 1,1), 2  , 0),
+              "DISPLAY CHARACTER": (  2   , 2*8, 0),
+            },
+     0x0e: {  # Enclosure
+              "RQST IDENT"         : (( 1,7), 1  , 0),
+              "POWER CYCLE REQUEST": (( 2,7), 2  , 0),
+              "POWER CYCLE DELAY"  : (( 2,5), 6  , 0),
+              "POWER OFF DURATION" : (( 3,7), 6  , 0),
+              "REQUEST FAILURE"    : (( 3,1), 1  , 0),
+              "REQUEST WARNING"    : (( 3,0), 1  , 0),
+            },
+     0x17: {  # Array Device Slot
+              "RQST OK"             : (( 1,7), 1  , 0),
+              "RQST RSVD DEVICE"    : (( 1,6), 1  , 0),
+              "RQST HOT SPARE"      : (( 1,5), 1  , 0),
+              "RQST CONS CHECK"     : (( 1,4), 1  , 0),
+              "RQST IN CRIT ARRAY"  : (( 1,3), 1  , 0),
+              "RQST IN FAILED ARRAY": (( 1,2), 1  , 0),
+              "RQST REBUILD/REMAP"  : (( 1,1), 1  , 0),
+              "RQST R/R ABORT"      : (( 1,0), 1  , 0),
+              "RQST ACTIVE"         : (( 2,7), 1  , 0),
+              "DO NOT REMOVE"       : (( 2,6), 1  , 0),
+              "RQST MISSING"        : (( 2,4), 1  , 0),
+              "RQST INSERT"         : (( 2,3), 1  , 0),
+              "RQST REMOVE"         : (( 2,2), 1  , 0),
+              "RQST IDENT"          : (( 2,1), 1  , 0),
+              "RQST FAULT"          : (( 3,5), 1  , 0),
+              "DEVICE OFF"          : (( 3,4), 1  , 0),
+              "ENABLE BYP A"        : (( 3,3), 1  , 0),
+              "ENABLE BYP B"        : (( 3,2), 1  , 0),
+            },
+     0x18: {  # SAS Expander
+              "RQST IDENT": (( 1,7), 1  , 0),
+              "RQST FAIL" : (( 1,6), 1  , 0),
+            },
+     0x19: {  # SAS Connector
+              "RQST IDENT": (( 1,7), 1  , 0),
+              "RQST FAIL" : (( 3,6), 1  , 0),
+            },
+     }
+
+    def page_02_fill(self, callback, params):
+        page_02_head = \
+        {
+         "PAGE CODE"               : (  0   , 1*8, 0x02),
+         "INFO"                    : (( 1,3), 1  , 0),
+         "NON-CRIT"                : (( 1,2), 1  , 0),
+         "CRIT"                    : (( 1,1), 1  , 0),
+         "UNRECOV"                 : (( 1,0), 1  , 0),
+         "PAGE LENGTH"             : (  2   , 2*8, 0),
+         "EXPECTED GENERATION CODE": (  4   , 4*8, 0),
+         }
+
+        if not self.page01:
+            self.parse(self.readpage(0x01))
+        if not self.page02:
+            self.parse(self.readpage(0x02))
+
+        dat = [0] * 8
+#         for enclosure in self.page01.enclosures.val:
+#             for typ in enclosure.typedesc.val:
+#                 for elnum in range(1+typ.possible.val):
+#                     eldat = callback(typ.type.val, elnum, params)
+#                     if eldat:
+#                         Cmd.fill(eldat, {"SELECT":((0,7),1,0)}, {"SELECT":1})
+#                     else:
+#                         eldat = [0] * 4
+#                     dat += eldat
+        for enclosure in self.page02.enclosures.val:
+            for typ in enclosure:
+                elnum = 0
+                for element in typ["elements"]:
+                    defaults = {}
+                    defaults["SELECT"  ] = 1  # select this element
+                    defaults["PRDFAIL" ] = element.prdfail.val
+                    defaults["DISABLE" ] = element.disabled.val
+                    defaults["RST SWAP"] = 0  # do not reset
+                    eldat = callback(typ["type"], elnum, defaults, params)
+                    if eldat:
+                        Cmd.fill(eldat, {"SELECT":((0,7),1,0)}, {"SELECT":1})
+                    else:
+                        eldat = [0] * 4
+                    dat += eldat
+                    elnum += 1
+        Cmd.fill(dat, page_02_head, {"PAGE LENGTH":len(dat)-4})
+        return dat
+
     #@staticmethod
     def parse_02(self, data):
         """
@@ -178,6 +303,127 @@ class SesPage(object):
          (( 0,3), 4  , "int", "elstat"  , "element status code"),
          (  1   , 3*8, "int", "status"  , "element type specific status information"),
          )
+        specific_status = \
+        {
+         0x01: (  # Device Slot
+                  (  1   , 1*8, "int", None, "SLOT ADDRESS"),
+                  (( 2,7), 1  , "int", None, "APP CLIENT BYPASSED A"),
+                  (( 2,6), 1  , "int", None, "DO NOT REMOVE"),
+                  (( 2,5), 1  , "int", None, "ENCLOSURE BYPASSED A"),
+                  (( 2,4), 1  , "int", None, "ENCLOSURE BYPASSED B"),
+                  (( 2,3), 1  , "int", None, "READY TO INSERT"),
+                  (( 2,2), 1  , "int", None, "RMV"),
+                  (( 2,1), 1  , "int", None, "IDENT"),
+                  (( 2,0), 1  , "int", None, "REPORT"),
+                  (( 3,7), 1  , "int", None, "APP CLIENT BYPASSED B"),
+                  (( 3,6), 1  , "int", None, "FAULT SENSED"),
+                  (( 3,5), 1  , "int", None, "FAULT REQSTD"),
+                  (( 3,4), 1  , "int", None, "DEVICE OFF"),
+                  (( 3,3), 1  , "int", None, "BYPASSED A"),
+                  (( 3,2), 1  , "int", None, "BYPASSED B"),
+                  (( 3,1), 1  , "int", None, "DEVICE BYPASSED A"),
+                  (( 3,0), 1  , "int", None, "DEVICE BYPASSED B"),
+                ),
+         0x02: (  # Power Supply
+                  (( 1,7), 1  , "int", None, "IDENT"),
+                  (( 2,3), 1  , "int", None, "DC OVER VOLTAGE"),
+                  (( 2,2), 1  , "int", None, "DC UNDER VOLTAGE"),
+                  (( 2,1), 1  , "int", None, "DC OVER CURRENT"),
+                  (( 3,7), 1  , "int", None, "HOT SWAP"),
+                  (( 3,6), 1  , "int", None, "FAIL"),
+                  (( 3,5), 1  , "int", None, "RQSTED ON"),
+                  (( 3,4), 1  , "int", None, "OFF"),
+                  (( 3,3), 1  , "int", None, "OVERTMP FAIL"),
+                  (( 3,2), 1  , "int", None, "TEMP WARN"),
+                  (( 3,1), 1  , "int", None, "AC FAIL"),
+                  (( 3,0), 1  , "int", None, "DC FAIL"),
+                ),
+         0x03: (  # Cooling
+                  (( 1,7), 1  , "int", "ident"     , "IDENT"),
+                  (( 1,2),11  , "int", "fan_speed" , "ACTUAL FAN SPEED"),
+                  (( 3,7), 1  , "int", None        , "HOT SWAP"),
+                  (( 3,6), 1  , "int", "fail"      , "FAIL"),
+                  (( 3,5), 1  , "int", None        , "RQSTED ON"),
+                  (( 3,4), 1  , "int", "off"       , "OFF"),
+                  (( 3,2), 3  , "int", "speed_code", "ACTUAL SPEED CODE"),
+                ),
+         0x04: (  # Temperature Sensor
+                  (( 1,7), 1  , "int", None, "IDENT"),
+                  (( 1,6), 1  , "int", None, "FAIL"),
+                  (  2   , 1*8, "int", None, "TEMPERATURE"),
+                  (( 3,3), 1  , "int", None, "OT FAILURE"),
+                  (( 3,2), 1  , "int", None, "OT WARNING"),
+                  (( 3,1), 1  , "int", None, "UT FAILURE"),
+                  (( 3,0), 1  , "int", None, "UT WARNING"),
+                ),
+         0x07: (  # Enclosure Services Controller Electronics
+                  (( 1,7), 1  , "int", None, "IDENT"),
+                  (( 1,6), 1  , "int", None, "FAIL"),
+                  (( 2,0), 1  , "int", None, "REPORT"),
+                  (( 3,7), 1  , "int", None, "HOT SWAP"),
+                ),
+         0x0c: (  # Display
+                  (( 1,7), 1  , "int", None, "IDENT"),
+                  (( 1,6), 1  , "int", None, "FAIL"),
+                  (( 1,1), 2  , "int", None, "DISPLAY MODE STATUS"),
+                  (  2   , 2*8, "int", None, "DISPLAY CHARACTER STATUS"),
+                ),
+         0x0e: (  # Enclosure
+                  (( 1,7), 1  , "int", None, "IDENT"),
+                  (( 2,7), 6  , "int", None, "TIME UNTIL POWER CYCLE"),
+                  (( 2,1), 1  , "int", None, "FAILURE INDICATION"),
+                  (( 2,0), 1  , "int", None, "WARNING INDICATION"),
+                  (( 3,7), 6  , "int", None, "REQUESTED POWER OFF DURATION"),
+                  (( 3,1), 1  , "int", None, "FAILURE REQUESTED"),
+                  (( 3,0), 1  , "int", None, "WARNING REQUESTED"),
+                ),
+         0x17: (  # Array Device Slot
+                  (( 1,7), 1  , "int", None, "OK"),
+                  (( 1,6), 1  , "int", None, "RSVD DEVICE"),
+                  (( 1,5), 1  , "int", None, "HOT SPARE"),
+                  (( 1,4), 1  , "int", None, "CONS CHK"),
+                  (( 1,3), 1  , "int", None, "IN CRIT ARRAY"),
+                  (( 1,2), 1  , "int", None, "IN FAILED ARRAY"),
+                  (( 1,1), 1  , "int", None, "REBUILD/REMAP"),
+                  (( 1,0), 1  , "int", None, "R/R ABORT"),
+                  (( 2,7), 1  , "int", None, "APP CLIENT BYPASSED A"),
+                  (( 2,6), 1  , "int", None, "DO NOT REMOVE"),
+                  (( 2,5), 1  , "int", None, "ENCLOSURE BYPASSED A"),
+                  (( 2,4), 1  , "int", None, "ENCLOSURE BYPASSED B"),
+                  (( 2,3), 1  , "int", None, "READY TO INSERT"),
+                  (( 2,2), 1  , "int", None, "RMV"),
+                  (( 2,1), 1  , "int", None, "IDENT"),
+                  (( 2,0), 1  , "int", None, "REPORT"),
+                  (( 3,7), 1  , "int", None, "APP CLIENT BYPASSED B"),
+                  (( 3,6), 1  , "int", None, "FAULT SENSED"),
+                  (( 3,5), 1  , "int", None, "FAULT REQSTD"),
+                  (( 3,4), 1  , "int", None, "DEVICE OFF"),
+                  (( 3,3), 1  , "int", None, "BYPASSED A"),
+                  (( 3,2), 1  , "int", None, "BYPASSED B"),
+                  (( 3,1), 1  , "int", None, "DEVICE BYPASSED A"),
+                  (( 3,0), 1  , "int", None, "DEVICE BYPASSED B"),
+                ),
+         0x18: (  # SAS Expander
+                  (( 1,7), 1  , "int", None, "IDENT"),
+                  (( 1,6), 1  , "int", None, "FAIL"),
+                ),
+         0x19: (  # SAS Connector
+                  (( 1,7), 1  , "int", None, "IDENT"),
+                  (( 1,6), 7  , "int", None, "CONNECTOR TYPE"),
+                  (  2   , 1*8, "int", None, "CONNECTOR PHYSICAL LINK"),
+                  (( 3,6), 1  , "int", None, "FAIL"),
+                ),
+         #01 array
+         #18 sas expander
+         #sas connector (external ports)
+         #19 sas connector (hdd ports)
+         #0e enclosure
+         #04 temperature sensor
+         #02 power supply
+         #03 cooling
+         #0c display
+         #07?SEP
+         }
 
         if not self.page01:
             # We need the information from SES page 0x01 before we can
@@ -194,7 +440,11 @@ class SesPage(object):
             for typedef01 in enclosure01.typedesc.val:
                 ellist02 = []
                 for elnum in range(1+typedef01.possible.val):
-                    ellist02.append(Cmd.extract(data[bo:], status_element, bo))
+                    fieldlist = Cmd.extract(data[bo:], status_element, bo)
+                    if typedef01.type.val in specific_status and elnum > 0:
+                        fieldlist += Cmd.extract(data[bo:], specific_status[typedef01.type.val], bo+1)
+                        pass
+                    ellist02.append(fieldlist)
                     bo += 4
                 typelist02.append({
                                    "type":typedef01.type.val,
@@ -204,6 +454,7 @@ class SesPage(object):
             enclosures02.append(typelist02)
         head.enclosures = Cmd.Field(enclosures02, 8, "enclosures", "list of enclosures")
         #head.append(Cmd.Field(enclosures02, 8, "enclosures", "list of enclosures"), "enclosures")
+        self.page02 = head
         return head
 
     #@staticmethod
@@ -613,3 +864,33 @@ class SesPage(object):
                     "data"    : data,
                     }
 
+    def create_0e(self, sub_id, mode, buf_id, buf_offset, data_len, microcode):
+        download_microcode = \
+        {
+         "page_code" :(  0   , 1*8, 0x0e),
+         "sub_id"    :(  1   , 1*8, 0x00),
+         "page_len"  :(  2   , 2*8, 0),
+         "gen_code"  :(  4   , 4*8, 0),
+         "mode"      :(  8   , 1*8, 0),
+         "buf_id"    :( 11   , 1*8, 0),
+         "buf_offset":( 12   , 4*8, 0),
+         "image_len" :( 16   , 4*8, 0),
+         "data_len"  :( 20   , 4*8, 0),
+         "data"      :[ 24   , 0  , 0],
+         }
+        download_microcode["data"][1] = 8*data_len
+        padded_len = (data_len+3) / 4 * 4
+        dat = [0] * (24 + padded_len)
+        Cmd.fill(dat,
+                 download_microcode,
+                 {
+                  "sub_id"  : sub_id,
+                  "page_len": len(dat) - 4,
+                  "mode"    : mode,
+                  "buf_id"  : buf_id,
+                  "buf_offset": buf_offset,
+                  "image_len" : len(microcode),
+                  "data_len"  : data_len,
+                  "data"      : microcode[buf_offset:buf_offset+data_len],
+                  })
+        return dat

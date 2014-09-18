@@ -20,6 +20,8 @@ from SesPage       import SesPage
 from configuration import Configuration
 from discovery     import Discovery
 
+from Cmd import Cmd
+
 # Set up communication paths.
 #sp = SesPageSas("/dev/sg4")
 #sp = SesPageFile()
@@ -48,6 +50,25 @@ def dump_fields(fl):
     if fl:
         for f in fl:
             print f.val, f.name
+
+def dumpbuf(buf):
+    """
+    Print a buffer as hexadecimal bytes.
+    This code is not pretty.
+    """
+    a = 0
+    for i in buf:
+        if a % 16 == 0:
+            adr = "%.4x" % a
+            hxd = ''
+            asc = ''
+        hxd += " %.2x" % (i)
+        asc += i if (32 <= (i) and (i) < 128) else '.'
+        if (a+1) % 16 == 0:
+            print adr, "%-49s" % hxd, asc
+        a += 1
+    if a % 16 != 0:
+        print adr, "%-49s" % hxd, asc 
 
 def pbo(f, printit=True):
     """
@@ -78,9 +99,10 @@ def auto_configure():
     global verbose
     Discovery.close_all()
     Discovery.probe()
-    sp       = Discovery.create_best(Discovery.CAP_SES      )
-    sp_short = Discovery.create_best(Discovery.CAP_SES_SHORT)
-    cli      = Discovery.create_best(Discovery.CAP_CLI      )
+    sp       = Discovery.create_best(Discovery.CAP_SES        )
+    sp_short = Discovery.create_best(Discovery.CAP_SES_SHORT  )
+    cli      = Discovery.create_best(Discovery.CAP_FAN_CONTROL) or \
+               Discovery.create_best(Discovery.CAP_CLI        )
     if verbose:
         print "sp       =", Discovery.find_best(Discovery.CAP_SES      )
         print "sp_short =", Discovery.find_best(Discovery.CAP_SES_SHORT)
@@ -97,6 +119,25 @@ def CliCmd_create(device):
     if "tty" in device: return CliCmdSerial(device)
     return None
 
+def get_input(prompt, p):
+    """
+    Print optional prompt, then get input.
+    <ctrl>-C aborts the program.
+    <ctrl>-D raises EOFError.
+    """
+    if p:
+        return p.pop(0)
+    else:
+        sys.stdout.write(prompt)
+        try:
+            rawinp = raw_input()
+        except KeyboardInterrupt:
+            print
+            sys.exit()
+        except EOFError:
+            print
+            raise EOFError
+        return rawinp
 
 
 
@@ -159,6 +200,24 @@ def sespage01(p):
                 (tdlist.type.val, tdlist.possible.val, pbo(tdlist.text, False) + tdlist.text.val)
     Menu.wait()
 
+def sespage02_specific(typ, elnum=None, element=None):
+    if   typ == 0x03:
+        if elnum == None:
+            return "ID fanspeed code off fail"
+        elif elnum == 0:
+            return ""
+        else:
+            return "%2s %7s  %3d  %2s  %2s" % \
+                (
+                 ("X" if element.ident.val else ""),
+                 format(element.fan_speed.val*10, ",d"),
+                 element.speed_code.val,
+                 ("X" if element.off.val   else ""),
+                 ("X" if element.fail.val  else ""),
+                 )
+    else:
+        return ""
+
 def sespage02(p):
     Menu.clear()
     if not sp: return
@@ -170,6 +229,7 @@ def sespage02(p):
     for enclosure in page02["data"].enclosures.val:
         for typ in enclosure:
             pbob(); print "type:", "%.2X" % typ["type"], typ["text"]
+            pbob(); print "    ele PDS   status", sespage02_specific(typ["type"])
             elnum = 0
             for element in typ["elements"]:
                 prdfail  = "P" if element.prdfail .val else "."
@@ -177,7 +237,8 @@ def sespage02(p):
                 swap     = "S" if element.swap    .val else "."
                 elstat = element.elstat.val
                 status = element.status.val
-                pbo(element.prdfail); print "    %.3d" % elnum, prdfail+disabled+swap, elstat, "%.6X" % status
+                specific = sespage02_specific(typ["type"], elnum, element)
+                pbo(element.prdfail); print "    %.3d" % elnum, prdfail+disabled+swap, elstat, "%.6X" % status, specific
                 elnum += 1
     Menu.wait()
 
@@ -443,15 +504,158 @@ platform_menu = \
           ['USB Menu'        , usb_menu      .run, "usb"       ],
           ])
 
+# items in the SAS Fan menu
+def fan_status(p):
+    Menu.clear()
+    #if not cli: return
+    #print cli.execute("fan")
+
+    if not sp: return
+    page02 = sp.parse(sp.readpage(0x02))
+    if not page02["data"]:
+        page01 = sp.parse(sp.readpage(0x01))
+        page02 = sp.parse(sp.readpage(0x02))
+    
+    for enclosure in page02["data"].enclosures.val:
+        for typ in enclosure:
+            if typ["type"] == 0x03:
+                print "ele PDS   status", sespage02_specific(typ["type"])
+                elnum = 0
+                for element in typ["elements"]:
+                    prdfail  = "P" if element.prdfail .val else "."
+                    disabled = "D" if element.disabled.val else "."
+                    swap     = "S" if element.swap    .val else "."
+                    elstat = element.elstat.val
+                    status = element.status.val
+                    specific = sespage02_specific(typ["type"], elnum, element)
+                    pbo(element.prdfail); print "%.3d" % elnum, prdfail+disabled+swap, elstat, "%.6X" % status, specific
+                    elnum += 1
+
+    Menu.wait()
+
+def fan_identify_callback(typ, elnum, defaults, params):
+    """
+    SesPage.page02_fill calls this function for each element.
+    If something is returned, it is added to the control page data with the SELECT bit set.
+    Otherwise, it will add an empty element with the SELECT bit clear.
+    
+    Input:
+      typ:    element type; we're expecting 0x03 for Cooling Element
+      elnum:  element number
+      params: whatever was passed in to SesPage.page02
+    Return:
+      either a 4-byte control element, if this is one we want to change,
+      or None
+    """
+    if typ == 0x03:
+        fan_id = params
+        if fan_id == "all" or fan_id == elnum:
+            dat = [0] * 4
+            Cmd.fill(dat,
+                     sp.page_02_specific_control[typ],
+                     {"REQUESTED SPEED CODE":speed},
+                     )
+            return dat
+
+def fan_identify(p):
+    Menu.clear()
+    #if not cli: return
+    if not sp: return
+
+    try:
+        fan_id = get_input("fan ID: ", p)
+    except EOFError:
+        return
+    
+    #print cli.execute("fan identify " + fan_id)
+    dat = sp.page_02_fill(fan_speed_callback, fan_id)
+    if True:  # DEBUG
+        print "page 02 data:"
+        dumpbuf(dat)
+    sp.writepage(dat)
+    
+    Menu.wait()
+
+def fan_speed_callback(typ, elnum, defaults, params):
+    """
+    SesPage.page02_fill calls this function for each element.
+    If something is returned, it is added to the control page data with the SELECT bit set.
+    Otherwise, it will add an empty element with the SELECT bit clear.
+    
+    Input:
+      typ:    element type; we're expecting 0x03 for Cooling Element
+      elnum:  element number
+      params: whatever was passed in to SesPage.page02
+    Return:
+      either a 4-byte control element, if this is one we want to change,
+      or None
+    """
+    if typ == 0x03:
+        speed, fan_id = params
+        if fan_id == "all" or fan_id == elnum:
+            dat = [0] * 4
+            Cmd.fill(dat,
+                     sp.page_02_specific_control[typ],
+                     {"REQUESTED SPEED CODE":speed},
+                     )
+            return dat
+
+def fan_speed(p):
+    Menu.clear()
+    #if not cli: return
+    if not sp: return
+
+    try:
+        speed  = get_input("speed code (1-7): ", p)
+        fan_id = get_input("fan ID (all): ", p)
+        try:
+            speed  = int(speed )
+        except:
+            print "Speed code must be an integer."
+            Menu.wait()
+            return
+        try:
+            fan_id = int(fan_id)
+        except:
+            pass
+    except EOFError:
+        return
+
+    dat = sp.page_02_fill(fan_speed_callback, (speed, fan_id))
+    if True:  # DEBUG
+        print "page 02 data:"
+        dumpbuf(dat)
+    sp.writepage(dat)
+        
+    #if fan_id == "all" or fan_id == "":
+    #    fan_selection = 0xffff
+    #else:
+    #    fan_selection = 1 << int(fan_id)
+
+    #print cli.execute("fan speed " + speed + ' ' + str(fan_selection))
+    Menu.wait()
+    pass
+
+
 # items in SAS menu
 cpld_menu        = Menu("CPLD"          , [['Exit', Menu.stop]])
 def drive_status         (p): pass
+
 def enclosure_status     (p):
     Menu.clear()
     if not cli: return
     print cli.execute("info")
     Menu.wait()
-fan_menu         = Menu("Fan"           , [['Exit', Menu.stop]])
+
+fan_menu         = \
+    Menu("Fan"           ,
+         [
+          ['Exit'    , Menu.stop   , "help"    ],
+          ['Status'  , fan_status  , "status"  ],
+          ['Identify', fan_identify, "identify"],
+          ['Speed'   , fan_speed   , "speed"   ],
+          ])
+
 def flash_expander_image (p): pass
 lcd_menu         = Menu("LCD"           , [['Exit', Menu.stop]])
 led_menu         = Menu("LED"           , [['Exit', Menu.stop]])

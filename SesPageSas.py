@@ -37,13 +37,15 @@ class SesPageSas(SesPage):
             (ord(data[3]) << 0)
         return self._getsespage(pagenum, length)
 
-    def writepage(self, expanderid, data):
+    def writepage(self, data):
         """
         Write the SES page specified by integer pagenum with string, data.
         """
-        #page = Cmd.clicommandout(Cls, expanderid, command)
-        #cmd = Cmd("sd", {"self-test_code":0, "pf":1, "parameter_list_length":len(page)})
-        pass
+        cmd = Cmd("sd", {"self-test_code":0, "pf":1, "parameter_list_length":len(data)})
+        cdb = CDB(cmd.cdb)
+        cdb.set_data_out(data)
+        result = self.pt.sendcdb(cdb)
+        print "writepage result =", result  # DEBUG
 
     def _getsespage(self, page, length):
         # uses pt
