@@ -20,8 +20,6 @@ from SesPage       import SesPage
 from configuration import Configuration
 from discovery     import Discovery
 
-from Cmd import Cmd
-
 # Set up communication paths.
 #sp = SesPageSas("/dev/sg4")
 #sp = SesPageFile()
@@ -58,6 +56,8 @@ def dumpbuf(buf):
     """
     a = 0
     for i in buf:
+        if isinstance(i,str):
+            i=ord(i)
         if a % 16 == 0:
             adr = "%.4x" % a
             hxd = ''
@@ -533,29 +533,31 @@ def fan_status(p):
 
     Menu.wait()
 
-def fan_identify_callback(typ, elnum, defaults, params):
+def fan_identify_filter(typ, elnum, status, control, params):
     """
     SesPage.page02_fill calls this function for each element.
     If something is returned, it is added to the control page data with the SELECT bit set.
     Otherwise, it will add an empty element with the SELECT bit clear.
     
     Input:
-      typ:    element type; we're expecting 0x03 for Cooling Element
-      elnum:  element number
-      params: whatever was passed in to SesPage.page02
+      typ:     element type; we're expecting 0x03 for Cooling Element
+      elnum:   element number
+      status:  current values of this control element
+      control: values to set in this control element
+      params:  whatever was passed in to SesPage.page02
     Return:
-      either a 4-byte control element, if this is one we want to change,
+      either a dictionary of values to set, if this is one we want to change,
       or None
     """
     if typ == 0x03:
         fan_id = params
-        if fan_id == "all" or fan_id == elnum:
-            dat = [0] * 4
-            Cmd.fill(dat,
-                     sp.page_02_specific_control[typ],
-                     {"REQUESTED SPEED CODE":speed},
-                     )
-            return dat
+        if elnum > 0 and fan_id == "all" or fan_id == elnum:
+            # Retain some current values.
+            control["RQST FAIL" ] = status.fail.val
+            # Set a new value.
+            control["RQST IDENT"] = 1 - status.ident.val
+            return control
+    return None
 
 def fan_identify(p):
     Menu.clear()
@@ -563,42 +565,46 @@ def fan_identify(p):
     if not sp: return
 
     try:
-        fan_id = get_input("fan ID: ", p)
+        fan_id = get_input("fan ID (all): ", p)
+        try:
+            fan_id = int(fan_id)
+        except:
+            pass
     except EOFError:
         return
     
     #print cli.execute("fan identify " + fan_id)
-    dat = sp.page_02_fill(fan_speed_callback, fan_id)
-    if True:  # DEBUG
-        print "page 02 data:"
-        dumpbuf(dat)
-    sp.writepage(dat)
-    
+    dat = sp.page_02_fill(fan_identify_filter, fan_id)
+    result = sp.writepage(dat)
+
     Menu.wait()
 
-def fan_speed_callback(typ, elnum, defaults, params):
+def fan_speed_filter(typ, elnum, status, control, params):
     """
     SesPage.page02_fill calls this function for each element.
     If something is returned, it is added to the control page data with the SELECT bit set.
     Otherwise, it will add an empty element with the SELECT bit clear.
     
     Input:
-      typ:    element type; we're expecting 0x03 for Cooling Element
-      elnum:  element number
-      params: whatever was passed in to SesPage.page02
+      typ:     element type; we're expecting 0x03 for Cooling Element
+      elnum:   element number
+      status:  current values of this control element
+      control: values to set in this control element
+      params:  whatever was passed in to SesPage.page02
     Return:
-      either a 4-byte control element, if this is one we want to change,
+      either a dictionary of values to set, if this is one we want to change,
       or None
     """
     if typ == 0x03:
         speed, fan_id = params
-        if fan_id == "all" or fan_id == elnum:
-            dat = [0] * 4
-            Cmd.fill(dat,
-                     sp.page_02_specific_control[typ],
-                     {"REQUESTED SPEED CODE":speed},
-                     )
-            return dat
+        if elnum > 0 and fan_id == "all" or fan_id == elnum:
+            # Retain some current values.
+            control["RQST IDENT"          ] = status.ident.val
+            control["RQST FAIL"           ] = status.fail.val
+            # Set a new value.
+            control["REQUESTED SPEED CODE"] = speed
+            return control
+    return None
 
 def fan_speed(p):
     Menu.clear()
@@ -618,14 +624,14 @@ def fan_speed(p):
             fan_id = int(fan_id)
         except:
             pass
+        if fan_id == "":
+            fan_id = "all"
     except EOFError:
         return
 
-    dat = sp.page_02_fill(fan_speed_callback, (speed, fan_id))
-    if True:  # DEBUG
-        print "page 02 data:"
-        dumpbuf(dat)
-    sp.writepage(dat)
+    dat = sp.page_02_fill(fan_speed_filter, (speed, fan_id))
+    result = sp.writepage(dat)
+    print "writepage result =", result
         
     #if fan_id == "all" or fan_id == "":
     #    fan_selection = 0xffff

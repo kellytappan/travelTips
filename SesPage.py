@@ -32,6 +32,25 @@ class SesPage(object):
 
 
 
+    def dumpbuf(self, buf):
+        """
+        Print a ctypes buffer as hexadecimal bytes.
+        This code is not pretty.
+        """
+        a = 0
+        for i in buf.raw:
+            if a % 16 == 0:
+                adr = "%.4x" % a
+                hxd = ''
+                asc = ''
+            hxd += " %.2x" % ord(i)
+            asc += i if (32 <= ord(i) and ord(i) < 128) else '.'
+            if (a+1) % 16 == 0:
+                print adr, "%-49s" % hxd, asc
+            a += 1
+        if a % 16 != 0:
+            print adr, "%-49s" % hxd, asc
+
     def parse_00(self, data):
         return tuple((
                       ord(pc),
@@ -151,85 +170,20 @@ class SesPage(object):
         self.page01 = head
         return head
 
-    page_02_specific_control = \
-    {
-     0x01: {  # Device Slot
-              "RQST ACTIVE"  : (( 2,7), 1  , 0),
-              "DO NOT REMOVE": (( 2,6), 1  , 0),
-              "RQST MISSING" : (( 2,4), 1  , 0),
-              "RQST INSERT"  : (( 2,3), 1  , 0),
-              "RQST REMOVE"  : (( 2,2), 1  , 0),
-              "RQST IDENT"   : (( 2,1), 1  , 0),
-              "RQST FAULT"   : (( 3,5), 1  , 0),
-              "DEVICE OFF"   : (( 3,4), 1  , 0),
-              "ENABLE BYP A" : (( 3,3), 1  , 0),
-              "ENABLE BYP B" : (( 3,2), 1  , 0),
-            },
-     0x02: {  # Power Supply
-              "RQST IDENT": (( 1,7), 1  , 0),
-              "RQST FAIL" : (( 3,6), 1  , 0),
-              "RQST ON"   : (( 3,5), 1  , 0),
-            },
-     0x03: {  # Cooling
-              "RQST IDENT"          : (( 1,7), 1  , 0),
-              "RQST FAIL"           : (( 3,6), 1  , 0),
-              "RQST ON"             : (( 3,5), 1  , 0),
-              "REQUESTED SPEED CODE": (( 3,2), 3  , 0),
-            },
-     0x04: {  # Temperature Sensor
-              "RQST IDENT": (( 1,7), 1  , 0),
-              "RQST FAIL" : (( 1,6), 1  , 0),
-            },
-     0x07: {  # Enclosure Services Controller Electronics
-              "RQST IDENT"    : (( 1,7), 1  , 0),
-              "RQST FAIL"     : (( 1,6), 1  , 0),
-              "SELECT ELEMENT": (( 2,0), 1  , 0),
-            },
-     0x0c: {  # Display
-              "RQST IDENT"       : (( 1,7), 1  , 0),
-              "RQST FAIL"        : (( 1,6), 1  , 0),
-              "DISPLAY MODE"     : (( 1,1), 2  , 0),
-              "DISPLAY CHARACTER": (  2   , 2*8, 0),
-            },
-     0x0e: {  # Enclosure
-              "RQST IDENT"         : (( 1,7), 1  , 0),
-              "POWER CYCLE REQUEST": (( 2,7), 2  , 0),
-              "POWER CYCLE DELAY"  : (( 2,5), 6  , 0),
-              "POWER OFF DURATION" : (( 3,7), 6  , 0),
-              "REQUEST FAILURE"    : (( 3,1), 1  , 0),
-              "REQUEST WARNING"    : (( 3,0), 1  , 0),
-            },
-     0x17: {  # Array Device Slot
-              "RQST OK"             : (( 1,7), 1  , 0),
-              "RQST RSVD DEVICE"    : (( 1,6), 1  , 0),
-              "RQST HOT SPARE"      : (( 1,5), 1  , 0),
-              "RQST CONS CHECK"     : (( 1,4), 1  , 0),
-              "RQST IN CRIT ARRAY"  : (( 1,3), 1  , 0),
-              "RQST IN FAILED ARRAY": (( 1,2), 1  , 0),
-              "RQST REBUILD/REMAP"  : (( 1,1), 1  , 0),
-              "RQST R/R ABORT"      : (( 1,0), 1  , 0),
-              "RQST ACTIVE"         : (( 2,7), 1  , 0),
-              "DO NOT REMOVE"       : (( 2,6), 1  , 0),
-              "RQST MISSING"        : (( 2,4), 1  , 0),
-              "RQST INSERT"         : (( 2,3), 1  , 0),
-              "RQST REMOVE"         : (( 2,2), 1  , 0),
-              "RQST IDENT"          : (( 2,1), 1  , 0),
-              "RQST FAULT"          : (( 3,5), 1  , 0),
-              "DEVICE OFF"          : (( 3,4), 1  , 0),
-              "ENABLE BYP A"        : (( 3,3), 1  , 0),
-              "ENABLE BYP B"        : (( 3,2), 1  , 0),
-            },
-     0x18: {  # SAS Expander
-              "RQST IDENT": (( 1,7), 1  , 0),
-              "RQST FAIL" : (( 1,6), 1  , 0),
-            },
-     0x19: {  # SAS Connector
-              "RQST IDENT": (( 1,7), 1  , 0),
-              "RQST FAIL" : (( 3,6), 1  , 0),
-            },
-     }
-
-    def page_02_fill(self, callback, params):
+    def page_02_fill(self, filter_func, params):
+        """
+        Build page 0x02 data.
+        Call filter_func for each element, passing in
+          element type
+          element number
+          element fields
+          default control values
+          the opaque "params" that were passed in to us
+        If the filter_func wants this element modified, it returns the
+        default control values, modified however it wants.  If it
+        doesn't want to modify this element, it returns None.
+        This function returns the entire page 0x02 data.
+        """
         page_02_head = \
         {
          "PAGE CODE"               : (  0   , 1*8, 0x02),
@@ -240,22 +194,95 @@ class SesPage(object):
          "PAGE LENGTH"             : (  2   , 2*8, 0),
          "EXPECTED GENERATION CODE": (  4   , 4*8, 0),
          }
+        control_element_head = \
+        {
+         "SELECT"  : (( 0,7), 1  , 0),
+         "PRDFAIL" : (( 0,6), 1  , 0),
+         "DISABLE" : (( 0,5), 1  , 0),
+         "RST SWAP": (( 0,4), 1  , 0),
+         }
+        page_02_specific_control = \
+        {
+         0x01: {  # Device Slot
+                  "RQST ACTIVE"  : (( 2,7), 1  , 0),
+                  "DO NOT REMOVE": (( 2,6), 1  , 0),
+                  "RQST MISSING" : (( 2,4), 1  , 0),
+                  "RQST INSERT"  : (( 2,3), 1  , 0),
+                  "RQST REMOVE"  : (( 2,2), 1  , 0),
+                  "RQST IDENT"   : (( 2,1), 1  , 0),
+                  "RQST FAULT"   : (( 3,5), 1  , 0),
+                  "DEVICE OFF"   : (( 3,4), 1  , 0),
+                  "ENABLE BYP A" : (( 3,3), 1  , 0),
+                  "ENABLE BYP B" : (( 3,2), 1  , 0),
+                },
+         0x02: {  # Power Supply
+                  "RQST IDENT": (( 1,7), 1  , 0),
+                  "RQST FAIL" : (( 3,6), 1  , 0),
+                  "RQST ON"   : (( 3,5), 1  , 0),
+                },
+         0x03: {  # Cooling
+                  "RQST IDENT"          : (( 1,7), 1  , 0),
+                  "RQST FAIL"           : (( 3,6), 1  , 0),
+                  "RQST ON"             : (( 3,5), 1  , 0),
+                  "REQUESTED SPEED CODE": (( 3,2), 3  , 0),
+                },
+         0x04: {  # Temperature Sensor
+                  "RQST IDENT": (( 1,7), 1  , 0),
+                  "RQST FAIL" : (( 1,6), 1  , 0),
+                },
+         0x07: {  # Enclosure Services Controller Electronics
+                  "RQST IDENT"    : (( 1,7), 1  , 0),
+                  "RQST FAIL"     : (( 1,6), 1  , 0),
+                  "SELECT ELEMENT": (( 2,0), 1  , 0),
+                },
+         0x0c: {  # Display
+                  "RQST IDENT"       : (( 1,7), 1  , 0),
+                  "RQST FAIL"        : (( 1,6), 1  , 0),
+                  "DISPLAY MODE"     : (( 1,1), 2  , 0),
+                  "DISPLAY CHARACTER": (  2   , 2*8, 0),
+                },
+         0x0e: {  # Enclosure
+                  "RQST IDENT"         : (( 1,7), 1  , 0),
+                  "POWER CYCLE REQUEST": (( 2,7), 2  , 0),
+                  "POWER CYCLE DELAY"  : (( 2,5), 6  , 0),
+                  "POWER OFF DURATION" : (( 3,7), 6  , 0),
+                  "REQUEST FAILURE"    : (( 3,1), 1  , 0),
+                  "REQUEST WARNING"    : (( 3,0), 1  , 0),
+                },
+         0x17: {  # Array Device Slot
+                  "RQST OK"             : (( 1,7), 1  , 0),
+                  "RQST RSVD DEVICE"    : (( 1,6), 1  , 0),
+                  "RQST HOT SPARE"      : (( 1,5), 1  , 0),
+                  "RQST CONS CHECK"     : (( 1,4), 1  , 0),
+                  "RQST IN CRIT ARRAY"  : (( 1,3), 1  , 0),
+                  "RQST IN FAILED ARRAY": (( 1,2), 1  , 0),
+                  "RQST REBUILD/REMAP"  : (( 1,1), 1  , 0),
+                  "RQST R/R ABORT"      : (( 1,0), 1  , 0),
+                  "RQST ACTIVE"         : (( 2,7), 1  , 0),
+                  "DO NOT REMOVE"       : (( 2,6), 1  , 0),
+                  "RQST MISSING"        : (( 2,4), 1  , 0),
+                  "RQST INSERT"         : (( 2,3), 1  , 0),
+                  "RQST REMOVE"         : (( 2,2), 1  , 0),
+                  "RQST IDENT"          : (( 2,1), 1  , 0),
+                  "RQST FAULT"          : (( 3,5), 1  , 0),
+                  "DEVICE OFF"          : (( 3,4), 1  , 0),
+                  "ENABLE BYP A"        : (( 3,3), 1  , 0),
+                  "ENABLE BYP B"        : (( 3,2), 1  , 0),
+                },
+         0x18: {  # SAS Expander
+                  "RQST IDENT": (( 1,7), 1  , 0),
+                  "RQST FAIL" : (( 1,6), 1  , 0),
+                },
+         0x19: {  # SAS Connector
+                  "RQST IDENT": (( 1,7), 1  , 0),
+                  "RQST FAIL" : (( 3,6), 1  , 0),
+                },
+         }
 
-        if not self.page01:
-            self.parse(self.readpage(0x01))
         if not self.page02:
             self.parse(self.readpage(0x02))
 
         dat = [0] * 8
-#         for enclosure in self.page01.enclosures.val:
-#             for typ in enclosure.typedesc.val:
-#                 for elnum in range(1+typ.possible.val):
-#                     eldat = callback(typ.type.val, elnum, params)
-#                     if eldat:
-#                         Cmd.fill(eldat, {"SELECT":((0,7),1,0)}, {"SELECT":1})
-#                     else:
-#                         eldat = [0] * 4
-#                     dat += eldat
         for enclosure in self.page02.enclosures.val:
             for typ in enclosure:
                 elnum = 0
@@ -265,14 +292,18 @@ class SesPage(object):
                     defaults["PRDFAIL" ] = element.prdfail.val
                     defaults["DISABLE" ] = element.disabled.val
                     defaults["RST SWAP"] = 0  # do not reset
-                    eldat = callback(typ["type"], elnum, defaults, params)
-                    if eldat:
-                        Cmd.fill(eldat, {"SELECT":((0,7),1,0)}, {"SELECT":1})
-                    else:
-                        eldat = [0] * 4
+                    set_values = filter_func(typ["type"], elnum, element, defaults, params)
+                    eldat = [0] * 4
+                    if set_values:
+                        d = control_element_head
+                        d.update(page_02_specific_control[typ["type"]])
+                        Cmd.fill(eldat, d, set_values)
                     dat += eldat
                     elnum += 1
-        Cmd.fill(dat, page_02_head, {"PAGE LENGTH":len(dat)-4})
+        Cmd.fill(dat, page_02_head,
+                 {"PAGE LENGTH":len(dat)-4,
+                  "EXPECTED GENERATION CODE":self.page02.gen.val}
+                 )
         return dat
 
     #@staticmethod
@@ -340,7 +371,7 @@ class SesPage(object):
                 ),
          0x03: (  # Cooling
                   (( 1,7), 1  , "int", "ident"     , "IDENT"),
-                  (( 1,2),11  , "int", "fan_speed" , "ACTUAL FAN SPEED"),
+                  (( 1,2),11  , "int", "fan_speed" , "ACTUAL FAN SPEED"), # units of 10 RPM
                   (( 3,7), 1  , "int", None        , "HOT SWAP"),
                   (( 3,6), 1  , "int", "fail"      , "FAIL"),
                   (( 3,5), 1  , "int", None        , "RQSTED ON"),

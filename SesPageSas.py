@@ -15,12 +15,10 @@ class SesPageSas(SesPage):
         """
         super(SesPageSas, self).__init__()
         self.pt = ScsiPT(ptdev)
-        #print "__init__: self.pt =", self.pt  # DEBUG
 
     def close(self):
         del self.pt
         self.pt = None
-        #print "close: self.pt =", self.pt  # DEBUG
 
     def __del__(self):
         self.close()
@@ -45,7 +43,7 @@ class SesPageSas(SesPage):
         cdb = CDB(cmd.cdb)
         cdb.set_data_out(data)
         result = self.pt.sendcdb(cdb)
-        print "writepage result =", result  # DEBUG
+        return result
 
     def _getsespage(self, page, length):
         # uses pt
@@ -54,7 +52,6 @@ class SesPageSas(SesPage):
         #print
         cdb = CDB(cmd.cdb)
         cdb.set_data_in(length)
-        #print "_getsespage: self.pt =", self.pt  # DEBUG
         self.pt.sendcdb(cdb)
         return cdb.buf
 
