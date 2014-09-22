@@ -631,7 +631,6 @@ def fan_speed(p):
 
     dat = sp.page_02_fill(fan_speed_filter, (speed, fan_id))
     result = sp.writepage(dat)
-    print "writepage result =", result
         
     #if fan_id == "all" or fan_id == "":
     #    fan_selection = 0xffff
@@ -640,7 +639,6 @@ def fan_speed(p):
 
     #print cli.execute("fan speed " + speed + ' ' + str(fan_selection))
     Menu.wait()
-    pass
 
 
 # items in SAS menu
