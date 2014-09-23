@@ -12,9 +12,10 @@ save and restore default configuration
 optional bread crumbs in menu headings
 serial on MSWin
 check reserved fields?
+improve error propagation, use exceptions
 
 status on:
   enclosure
-  drive
+  drive - still need product and serial numbers
 x fan
   power

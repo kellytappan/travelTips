@@ -139,6 +139,27 @@ def get_input(prompt, p):
             raise EOFError
         return rawinp
 
+def print_status(pagenum):
+    if not sp: return
+    page02 = sp.parse(sp.readpage(0x02))
+    if not page02["data"]:
+        page01 = sp.parse(sp.readpage(0x01))
+        page02 = sp.parse(sp.readpage(0x02))
+    
+    for enclosure in page02["data"].enclosures.val:
+        for typ in enclosure:
+            if typ["type"] == pagenum:
+                print "ele PDS   status", sespage02_specific(typ["type"])
+                elnum = 0
+                for element in typ["elements"]:
+                    prdfail  = "P" if element.prdfail .val else "."
+                    disabled = "D" if element.disabled.val else "."
+                    swap     = "S" if element.swap    .val else "."
+                    elstat = element.elstat.val
+                    status = element.status.val
+                    specific = sespage02_specific(typ["type"], elnum, element)
+                    pbo(element.prdfail); print "%.3d" % elnum, prdfail+disabled+swap, elstat, "%.6X" % status, specific
+                    elnum += 1
 
 
 # SES page display functions
@@ -196,7 +217,20 @@ def sespage01(p):
     Menu.wait()
 
 def sespage02_specific(typ, elnum=None, element=None):
-    if   typ == 0x03:
+    if   typ == 0x01:
+        if elnum == None:
+            return "ID slot fault off"
+        elif elnum == 0:
+            return ""
+        else:
+            return "%2s %3d  %3s   %2s " % \
+                (
+                 "X" if element.ident.val        else "",
+                 element.slot_address.val,
+                 "X" if element.fault_reqstd.val else "",
+                 "X" if element.device_off.val   else "",
+                 )
+    elif typ == 0x03:
         if elnum == None:
             return "ID fanspeed code off fail"
         elif elnum == 0:
@@ -204,11 +238,11 @@ def sespage02_specific(typ, elnum=None, element=None):
         else:
             return "%2s %7s  %3d  %2s  %2s" % \
                 (
-                 ("X" if element.ident.val else ""),
+                 "X" if element.ident.val else "" ,
                  format(element.fan_speed.val*10, ",d"),
                  element.speed_code.val,
-                 ("X" if element.off.val   else ""),
-                 ("X" if element.fail.val  else ""),
+                 "X" if element.off.val   else "" ,
+                 "X" if element.fail.val  else "" ,
                  )
     else:
         return ""
@@ -499,62 +533,115 @@ platform_menu = \
           ['USB Menu'        , usb_menu      .run, "usb"       ],
           ])
 
-# items in the SAS Fan menu
-def fan_status(p):
+# items in the SAS Drive menu
+def drive_status(p):
     Menu.clear()
-    #if not cli: return
-    #print cli.execute("fan")
+    print_status(0x01)
+    Menu.wait()
 
+def drive_identify(p):
+    def drive_identify_filter(typ, elnum, status, control, params):
+        """
+        SesPage.page02_fill calls this function for each element.
+        If something is returned, it is added to the control page data with the SELECT bit set.
+        Otherwise, it will add an empty element with the SELECT bit clear.
+        
+        Input:
+          typ:     element type; we're expecting 0x03 for Cooling Element
+          elnum:   element number
+          status:  current values of this control element
+          control: values to set in this control element
+          params:  whatever was passed in to SesPage.page02
+        Return:
+          either a dictionary of values to set, if this is one we want to change,
+          or None
+        """
+        if typ == 0x01:
+            drive_id = params
+            if elnum > 0 and drive_id == "all" or drive_id == elnum:
+                # Retain some current values.
+                # Everything else is ignored by Wolf Creek.
+                control["RQST FAULT"] = status.fault_reqstd.val
+                control["DEVICE OFF"] = status.device_off.val
+                # Set a new value.
+                control["RQST IDENT"] = 1 - status.ident.val
+                return control
+        return None
+
+    Menu.clear()
     if not sp: return
-    page02 = sp.parse(sp.readpage(0x02))
-    if not page02["data"]:
-        page01 = sp.parse(sp.readpage(0x01))
-        page02 = sp.parse(sp.readpage(0x02))
+
+    try:
+        drive_id = get_input("drive ID (all): ", p)
+        try:
+            drive_id = int(drive_id)
+        except:
+            pass
+    except EOFError:
+        return
     
-    for enclosure in page02["data"].enclosures.val:
-        for typ in enclosure:
-            if typ["type"] == 0x03:
-                print "ele PDS   status", sespage02_specific(typ["type"])
-                elnum = 0
-                for element in typ["elements"]:
-                    prdfail  = "P" if element.prdfail .val else "."
-                    disabled = "D" if element.disabled.val else "."
-                    swap     = "S" if element.swap    .val else "."
-                    elstat = element.elstat.val
-                    status = element.status.val
-                    specific = sespage02_specific(typ["type"], elnum, element)
-                    pbo(element.prdfail); print "%.3d" % elnum, prdfail+disabled+swap, elstat, "%.6X" % status, specific
-                    elnum += 1
+    dat = sp.page_02_fill(drive_identify_filter, drive_id)
+    result = sp.writepage(dat)
 
     Menu.wait()
 
-def fan_identify_filter(typ, elnum, status, control, params):
-    """
-    SesPage.page02_fill calls this function for each element.
-    If something is returned, it is added to the control page data with the SELECT bit set.
-    Otherwise, it will add an empty element with the SELECT bit clear.
+def drive_pwroff(p):
+    def drive_pwroff_filter(typ, elnum, status, control, params):
+        """
+        See comments on drive_identify_filter().
+        """
+        if typ == 0x01:
+            drive_id = params
+            if elnum > 0 and drive_id == "all" or drive_id == elnum:
+                # Retain some current values.
+                # Everything else is ignored by Wolf Creek.
+                control["RQST FAULT"] = status.fault_reqstd.val
+                control["RQST IDENT"] = status.ident.val
+                # Set a new value.
+                control["DEVICE OFF"] = 1 - status.device_off.val
+                return control
+        return None
+
+    Menu.clear()
+    if not sp: return
+
+    try:
+        drive_id = get_input("drive ID (all): ", p)
+        try:
+            drive_id = int(drive_id)
+        except:
+            pass
+    except EOFError:
+        return
     
-    Input:
-      typ:     element type; we're expecting 0x03 for Cooling Element
-      elnum:   element number
-      status:  current values of this control element
-      control: values to set in this control element
-      params:  whatever was passed in to SesPage.page02
-    Return:
-      either a dictionary of values to set, if this is one we want to change,
-      or None
-    """
-    if typ == 0x03:
-        fan_id = params
-        if elnum > 0 and fan_id == "all" or fan_id == elnum:
-            # Retain some current values.
-            control["RQST FAIL" ] = status.fail.val
-            # Set a new value.
-            control["RQST IDENT"] = 1 - status.ident.val
-            return control
-    return None
+    dat = sp.page_02_fill(drive_pwroff_filter, drive_id)
+    result = sp.writepage(dat)
+
+    Menu.wait()
+
+# items in the SAS Fan menu
+def fan_status(p):
+    Menu.clear()
+    print_status(0x03)
+    #if not cli: return
+    #print cli.execute("fan")
+    Menu.wait()
 
 def fan_identify(p):
+    def fan_identify_filter(typ, elnum, status, control, params):
+        """
+        See comments on drive_identify_filter().
+        """
+        if typ == 0x03:
+            fan_id = params
+            if elnum > 0 and fan_id == "all" or fan_id == elnum:
+                # Retain some current values.
+                control["RQST FAIL" ] = status.fail.val
+                # Set a new value.
+                control["RQST IDENT"] = 1 - status.ident.val
+                return control
+        return None
+
     Menu.clear()
     #if not cli: return
     if not sp: return
@@ -574,34 +661,22 @@ def fan_identify(p):
 
     Menu.wait()
 
-def fan_speed_filter(typ, elnum, status, control, params):
-    """
-    SesPage.page02_fill calls this function for each element.
-    If something is returned, it is added to the control page data with the SELECT bit set.
-    Otherwise, it will add an empty element with the SELECT bit clear.
-    
-    Input:
-      typ:     element type; we're expecting 0x03 for Cooling Element
-      elnum:   element number
-      status:  current values of this control element
-      control: values to set in this control element
-      params:  whatever was passed in to SesPage.page02
-    Return:
-      either a dictionary of values to set, if this is one we want to change,
-      or None
-    """
-    if typ == 0x03:
-        speed, fan_id = params
-        if elnum > 0 and fan_id == "all" or fan_id == elnum:
-            # Retain some current values.
-            control["RQST IDENT"          ] = status.ident.val
-            control["RQST FAIL"           ] = status.fail.val
-            # Set a new value.
-            control["REQUESTED SPEED CODE"] = speed
-            return control
-    return None
-
 def fan_speed(p):
+    def fan_speed_filter(typ, elnum, status, control, params):
+        """
+        See comments on drive_identify_filter().
+        """
+        if typ == 0x03:
+            speed, fan_id = params
+            if elnum > 0 and fan_id == "all" or fan_id == elnum:
+                # Retain some current values.
+                control["RQST IDENT"          ] = status.ident.val
+                control["RQST FAIL"           ] = status.fail.val
+                # Set a new value.
+                control["REQUESTED SPEED CODE"] = speed
+                return control
+        return None
+
     Menu.clear()
     #if not cli: return
     if not sp: return
@@ -637,8 +712,17 @@ def fan_speed(p):
 
 
 # items in SAS menu
+
 cpld_menu        = Menu("CPLD"          , [['Exit', Menu.stop]])
-def drive_status         (p): pass
+
+drive_menu       = \
+    Menu("Drive"         ,
+         [
+          ['Exit'     , Menu.stop     , "help"    ],
+          ['Status'   , drive_status  , "status"  ],
+          ['Identify' , drive_identify, "identify"],
+          ['Power Off', drive_pwroff  , "pwroff"  ],
+          ])
 
 def enclosure_status     (p):
     Menu.clear()
@@ -701,7 +785,7 @@ sas_menu = \
          [
           ['Exit'                 , Menu.stop           , "help"               ],
           [        'CPLD Menu'    ,        cpld_menu.run, "cpld"               ],
-          ['Drive Status'         , drive_status        , "drive"              ],
+          [           'Drive Menu',       drive_menu.run, "drive"              ],
           ['Enclosure Status'     , enclosure_status    , "enclosure"          ],
           [         'FAN Menu'    ,         fan_menu.run, "fan"                ],
           ['Flash Expander Image' , flash_expander_image, "flashexpanderimage" ],

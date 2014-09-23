@@ -279,6 +279,8 @@ class SesPage(object):
                 },
          }
 
+        if not self.page01:
+            self.parse(self.readpage(0x01))
         if not self.page02:
             self.parse(self.readpage(0x02))
 
@@ -337,23 +339,23 @@ class SesPage(object):
         specific_status = \
         {
          0x01: (  # Device Slot
-                  (  1   , 1*8, "int", None, "SLOT ADDRESS"),
-                  (( 2,7), 1  , "int", None, "APP CLIENT BYPASSED A"),
-                  (( 2,6), 1  , "int", None, "DO NOT REMOVE"),
-                  (( 2,5), 1  , "int", None, "ENCLOSURE BYPASSED A"),
-                  (( 2,4), 1  , "int", None, "ENCLOSURE BYPASSED B"),
-                  (( 2,3), 1  , "int", None, "READY TO INSERT"),
-                  (( 2,2), 1  , "int", None, "RMV"),
-                  (( 2,1), 1  , "int", None, "IDENT"),
-                  (( 2,0), 1  , "int", None, "REPORT"),
-                  (( 3,7), 1  , "int", None, "APP CLIENT BYPASSED B"),
-                  (( 3,6), 1  , "int", None, "FAULT SENSED"),
-                  (( 3,5), 1  , "int", None, "FAULT REQSTD"),
-                  (( 3,4), 1  , "int", None, "DEVICE OFF"),
-                  (( 3,3), 1  , "int", None, "BYPASSED A"),
-                  (( 3,2), 1  , "int", None, "BYPASSED B"),
-                  (( 3,1), 1  , "int", None, "DEVICE BYPASSED A"),
-                  (( 3,0), 1  , "int", None, "DEVICE BYPASSED B"),
+                  (  1   , 1*8, "int", "slot_address"         , "SLOT ADDRESS"),
+                  (( 2,7), 1  , "int", "app_client_bypassed_a", "APP CLIENT BYPASSED A"),
+                  (( 2,6), 1  , "int", "do_not_remove"        , "DO NOT REMOVE"),
+                  (( 2,5), 1  , "int", "enclosure_bypassed_a" , "ENCLOSURE BYPASSED A"),
+                  (( 2,4), 1  , "int", "enclosure_bypassed_b" , "ENCLOSURE BYPASSED B"),
+                  (( 2,3), 1  , "int", "ready_to_insert"      , "READY TO INSERT"),
+                  (( 2,2), 1  , "int", "rmv"                  , "RMV"),
+                  (( 2,1), 1  , "int", "ident"                , "IDENT"),
+                  (( 2,0), 1  , "int", "report"               , "REPORT"),
+                  (( 3,7), 1  , "int", "app_client_bypassed_b", "APP CLIENT BYPASSED B"),
+                  (( 3,6), 1  , "int", "fault_sensed"         , "FAULT SENSED"),
+                  (( 3,5), 1  , "int", "fault_reqstd"         , "FAULT REQSTD"),
+                  (( 3,4), 1  , "int", "device_off"           , "DEVICE OFF"),
+                  (( 3,3), 1  , "int", "bypassed_a"           , "BYPASSED A"),
+                  (( 3,2), 1  , "int", "bypassed_b"           , "BYPASSED B"),
+                  (( 3,1), 1  , "int", "device_bypassed_a"    , "DEVICE BYPASSED A"),
+                  (( 3,0), 1  , "int", "device_bypassed_b"    , "DEVICE BYPASSED B"),
                 ),
          0x02: (  # Power Supply
                   (( 1,7), 1  , "int", None, "IDENT"),

@@ -2,4 +2,8 @@
 * Blue Moon SES Spec rev 0.04 section 5.5.9: the HOT SWAP bit is defined as though this were a power supply.
 * Wolf Creek debug utility v06.docx: ">FAN" I can't find PWM in SES pages.
 * Do I need to worry about internationalization, e.g. thousands separater "," or "."?
-* Does fan identify toggle the light or just set it?  There is no separate command to clear it.
+* Do fan identify and drive identify toggle the light or just set it?  There is no separate command to clear it.
+* SAS/Drive Status looks like it should be a menu instead.
+* There's no way to turn a drive back on.
+* Entries in chapter 6, "SAS MENU", look like they're specifying a desired command-line format, but there's no mention of a command line in the document.
+* Inconsistent use of space between ">" and word. ">" and any following space should be removed.
