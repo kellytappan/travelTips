@@ -171,7 +171,6 @@ def sespageall(p):
 def sespage00(p):
     Menu.clear()
     if not sp_short: return
-    print "sp_short =", sp_short
     page00 = sp_short.parse(sp_short.readpage(0x00))
     print page00["pagedesc"] + ":"
     for p in page00["data"]:
@@ -182,11 +181,7 @@ def sespage01(p):
     Menu.clear()
     if not sp_short: return
     page01 = sp_short.parse(sp_short.readpage(0x01))
-    #print page01
     for enclist in page01["data"].enclosures.val:
-        #print enclist
-        #print
-        #print enclist
         pbo(enclist.subid   ); print "Enclosure #" + str(enclist.subid.val)
         pbo(enclist.logid   ); print "    %-31s:" % enclist.logid   .desc, "%X" % enclist.logid   .val
         pbo(enclist.vendor  ); print "    %-31s:" % enclist.vendor  .desc, enclist.vendor  .val

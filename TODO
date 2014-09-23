@@ -14,7 +14,7 @@ serial on MSWin
 check reserved fields?
 
 status on:
-enclosure
-drive
-fan
-power
+  enclosure
+  drive
+x fan
+  power
