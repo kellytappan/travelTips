@@ -287,7 +287,7 @@ class SesPage(object):
         dat = [0] * 8
         for enclosure in self.page02.enclosures.val:
             for typ in enclosure:
-                elnum = 0
+                elnum = -1
                 for element in typ["elements"]:
                     defaults = {}
                     defaults["SELECT"  ] = 1  # select this element

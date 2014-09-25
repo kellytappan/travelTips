@@ -8,5 +8,5 @@ setup(
         'SesPage', 'SesPageFile', 'SesPageCli', 'SesPageSas',
     ],
     scripts=['wcdu', 'wcdu-cli', 'slowfan', 'slowfan2', 'slowfan3', ],
-    install_requires=['scsi_pt', ],
+    install_requires=['scsi_pt', 'argparse', 'pexpect', 'pyserial', ],
 )

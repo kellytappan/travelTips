@@ -6,6 +6,8 @@ Wolf Creek Debug Utility
 
 import sys
 import argparse
+import re
+import subprocess
 try:    from cStringIO import StringIO
 except: from  StringIO import StringIO
 
@@ -19,6 +21,10 @@ from CliCmd        import CliCmd
 from SesPage       import SesPage
 from configuration import Configuration
 from discovery     import Discovery
+
+from ScsiPT import ScsiPT
+from Cmd    import Cmd
+from CDB    import CDB
 
 # Set up communication paths.
 #sp = SesPageSas("/dev/sg4")
@@ -139,7 +145,7 @@ def get_input(prompt, p):
             raise EOFError
         return rawinp
 
-def print_status(pagenum):
+def print_status(pagenum, extras_func=None, param=None):
     if not sp: return
     page02 = sp.parse(sp.readpage(0x02))
     if not page02["data"]:
@@ -149,8 +155,9 @@ def print_status(pagenum):
     for enclosure in page02["data"].enclosures.val:
         for typ in enclosure:
             if typ["type"] == pagenum:
-                print "ele PDS   status", sespage02_specific(typ["type"])
-                elnum = 0
+                extras = extras_func(typ["type"], None, None, param) if extras_func else ""
+                print "ele PDS   status", sespage02_specific(typ["type"]), extras
+                elnum = -1
                 for element in typ["elements"]:
                     prdfail  = "P" if element.prdfail .val else "."
                     disabled = "D" if element.disabled.val else "."
@@ -158,7 +165,9 @@ def print_status(pagenum):
                     elstat = element.elstat.val
                     status = element.status.val
                     specific = sespage02_specific(typ["type"], elnum, element)
-                    pbo(element.prdfail); print "%.3d" % elnum, prdfail+disabled+swap, elstat, "%.6X" % status, specific
+                    extras = extras_func(typ["type"], elnum, element, param) if extras_func else ""
+                    elnumstr = "%.3d" % elnum if elnum >= 0 else "all"
+                    print elnumstr, prdfail+disabled+swap, elstat, "%.6X" % status, specific, extras
                     elnum += 1
 
 
@@ -220,7 +229,7 @@ def sespage02_specific(typ, elnum=None, element=None):
     if   typ == 0x01:
         if elnum == None:
             return "ID slot fault off"
-        elif elnum == 0:
+        elif elnum < 0:
             return ""
         else:
             return "%2s %3d  %3s   %2s " % \
@@ -233,7 +242,7 @@ def sespage02_specific(typ, elnum=None, element=None):
     elif typ == 0x03:
         if elnum == None:
             return "ID fanspeed code off fail"
-        elif elnum == 0:
+        elif elnum < 0:
             return ""
         else:
             return "%2s %7s  %3d  %2s  %2s" % \
@@ -259,7 +268,7 @@ def sespage02(p):
         for typ in enclosure:
             pbob(); print "type:", "%.2X" % typ["type"], typ["text"]
             pbob(); print "    ele PDS   status", sespage02_specific(typ["type"])
-            elnum = 0
+            elnum = -1
             for element in typ["elements"]:
                 prdfail  = "P" if element.prdfail .val else "."
                 disabled = "D" if element.disabled.val else "."
@@ -267,7 +276,8 @@ def sespage02(p):
                 elstat = element.elstat.val
                 status = element.status.val
                 specific = sespage02_specific(typ["type"], elnum, element)
-                pbo(element.prdfail); print "    %.3d" % elnum, prdfail+disabled+swap, elstat, "%.6X" % status, specific
+                elnumstr = "%.3d" % elnum if elnum >= 0 else "all"
+                pbo(element.prdfail); print "    " + elnumstr, prdfail+disabled+swap, elstat, "%.6X" % status, specific
                 elnum += 1
     Menu.wait()
 
@@ -323,7 +333,7 @@ def sespage0a(p):
     
     addelpage = page0a["data"]
     headline = ''
-    headline += "enc:typ:idx valid?  all?   init targ attached sas adr sas address      phy"
+    headline += "enc:typ:ele valid?  all?   init targ attached sas adr sas address      phy"
     pbob(); print headline
     for addel in addelpage.descriptors.val:
         leftline = ''
@@ -359,7 +369,6 @@ def sespage0e(p):
         pbo(descriptor.maxsize          ); print "    maximum size          : %s" % format(descriptor.maxsize.val, ",d")
         pbo(descriptor.expected_id      ); print "    expected buffer id    : %.2X" % descriptor.expected_id.val
         pbo(descriptor.expected_offset  ); print "    expected buffer offset: %.8X" % descriptor.expected_offset.val
-    pass
     Menu.wait()
 
 def sespage80(p):
@@ -384,7 +393,6 @@ def sespageex(p, expandernum):
             pbo(field); print field.desc + ':', field.val
         print
     Menu.wait()
-    pass
 
 def sespagee0(p): sespageex(p, 0)
 def sespagee1(p): sespageex(p, 1)
@@ -424,7 +432,7 @@ def sespages(p):
             if len(p) > 0:
                 print "unimplemented page: " + p[0]
             else:
-                print "need another parameter, the page number"
+                print "need another parameter: the page number"
     
     
 # configuration functions
@@ -534,9 +542,48 @@ platform_menu = \
           ])
 
 # items in the SAS Drive menu
+
 def drive_status(p):
+    def drive_status_extras(typ, elnum, element, param):
+        info = param
+        if elnum == None:
+            return ("%-16s" % "Product ID") + " " + ("%-8s" % "Serial Number")
+        elif elnum < 0:
+            return ""
+        elif info[elnum]:
+            pt = ScsiPT(info[elnum])
+            cmd = Cmd("inq", {"evpd":0, "alloc":0xa4})
+            cdb = CDB(cmd.cdb)
+            cdb.set_data_in(0xa4)
+            pt.sendcdb(cdb)
+            inq = Cmd.extract(cdb.buf, Cmd.data_inquiry)
+            del pt
+            return ("%-16s" % inq.pid.val) + " " + ("%-8s" % inq.sn.val)
+        else:
+            return ""
+    
     Menu.clear()
-    print_status(0x01)
+    # Read SAS addresses from SES page 0x0a.
+    page01 = sp.parse(sp.readpage(0x01))
+    page0a = sp.parse(sp.readpage(0x0a))
+    #print "page0a =", "%X" % page0a["data"].descriptors.val[6].phydescriptors.val[0].sas_addr.val
+    descriptors = page0a["data"].descriptors.val
+    # Associate SAS address with element number.
+    sas_addresses = {}
+    for elnum in range(len(descriptors)):
+        sas_address = descriptors[elnum].phydescriptors.val[0].sas_addr.val
+        if sas_address != 0:
+            sas_addresses["%x" % sas_address] = elnum
+    info = [None] * len(descriptors)
+    SASDEV = re.compile(r'sas.*-0x([0-9a-f]+)-lun-0 -> \.\./\.\./(sd[a-z]+)$')
+    p = subprocess.Popen('ls -l /dev/disk/by-path'.split(), stdout=subprocess.PIPE).stdout
+    for line in p:
+        m = re.search(SASDEV, line)
+        if m and m.group(1) in sas_addresses:
+            info[sas_addresses[m.group(1)]] = '/dev/' + m.group(2)
+    # Finally, print information on each drive.
+    print_status(0x01, drive_status_extras, info)
+
     Menu.wait()
 
 def drive_identify(p):
@@ -548,7 +595,7 @@ def drive_identify(p):
         
         Input:
           typ:     element type; we're expecting 0x03 for Cooling Element
-          elnum:   element number
+          elnum:   element number, -1 for overall element
           status:  current values of this control element
           control: values to set in this control element
           params:  whatever was passed in to SesPage.page02
@@ -558,7 +605,7 @@ def drive_identify(p):
         """
         if typ == 0x01:
             drive_id = params
-            if elnum > 0 and drive_id == "all" or drive_id == elnum:
+            if elnum >= 0 and drive_id == "all" or drive_id == elnum:
                 # Retain some current values.
                 # Everything else is ignored by Wolf Creek.
                 control["RQST FAULT"] = status.fault_reqstd.val
@@ -592,7 +639,7 @@ def drive_pwroff(p):
         """
         if typ == 0x01:
             drive_id = params
-            if elnum > 0 and drive_id == "all" or drive_id == elnum:
+            if elnum >= 0 and drive_id == "all" or drive_id == elnum:
                 # Retain some current values.
                 # Everything else is ignored by Wolf Creek.
                 control["RQST FAULT"] = status.fault_reqstd.val
@@ -634,7 +681,7 @@ def fan_identify(p):
         """
         if typ == 0x03:
             fan_id = params
-            if elnum > 0 and fan_id == "all" or fan_id == elnum:
+            if elnum >= 0 and fan_id == "all" or fan_id == elnum:
                 # Retain some current values.
                 control["RQST FAIL" ] = status.fail.val
                 # Set a new value.
@@ -668,7 +715,7 @@ def fan_speed(p):
         """
         if typ == 0x03:
             speed, fan_id = params
-            if elnum > 0 and fan_id == "all" or fan_id == elnum:
+            if elnum >= 0 and fan_id == "all" or fan_id == elnum:
                 # Retain some current values.
                 control["RQST IDENT"          ] = status.ident.val
                 control["RQST FAIL"           ] = status.fail.val

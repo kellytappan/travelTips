@@ -1,0 +1,15 @@
+
+Ubuntu (apt-get install <name>):
+  libsgutils2-2
+  python
+  python-pip
+  python-pexpect  (or automatically loaded by pip)
+  python-serial   (or automatically loaded by pip)
+
+from PyPI (pip install <name>):
+  listdict
+  scsi-pt
+  argparse  (probably comes with python)
+  pexpect   (also as Ubuntu python-pexpect)
+  pyserial  (also as Ubuntu python-serial)
+

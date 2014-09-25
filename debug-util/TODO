@@ -16,6 +16,6 @@ improve error propagation, use exceptions
 
 status on:
   enclosure
-  drive - still need product and serial numbers
+x drive
 x fan
   power
