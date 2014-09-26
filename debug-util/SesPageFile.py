@@ -22,6 +22,6 @@ class SesPageFile(SesPage):
         f = open(os.path.join(self.directory, "%.2x"%pagenum), "rb")
         return f.read()
 
-    def writepage(self, pagenum, data):
+    def writepage(self, data):
         pass
 

@@ -1,4 +1,4 @@
-finish discovery
+finish discovery: implement auto-open
 parse more SES pages
 implement more commands (send, parse, display)
 more error recovery
@@ -10,12 +10,19 @@ better help
 command-line parameters for configuration options
 save and restore default configuration
 optional bread crumbs in menu headings
-serial on MSWin
+serial on MSWin?
 check reserved fields?
-improve error propagation, use exceptions
+improve error propagation using exceptions
+add more types to page 0x02 output
+create Makefile for build and release
+add INSTALL instructions
+expand REQUIREMENTS
+create README
+create manual or fix specification
+add sas ses dump <filename>
 
 status on:
   enclosure
 x drive
 x fan
-  power
+x power

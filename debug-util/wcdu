@@ -74,7 +74,7 @@ def dumpbuf(buf):
             print adr, "%-49s" % hxd, asc
         a += 1
     if a % 16 != 0:
-        print adr, "%-49s" % hxd, asc 
+        print adr, "%-49s" % hxd, asc
 
 def pbo(f, printit=True):
     """
@@ -113,13 +113,13 @@ def auto_configure():
         print "sp       =", Discovery.find_best(Discovery.CAP_SES      )
         print "sp_short =", Discovery.find_best(Discovery.CAP_SES_SHORT)
         print "cli      =", Discovery.find_best(Discovery.CAP_CLI      )
-    
+
 def SesPage_create(device):
     if "sg"        in device: return SesPageSas (device)
     if "tty"       in device: return SesPageCli (CliCmdSerial(device))
     if "/dev/" not in device: return SesPageFile(device)
     return None
-    
+
 def CliCmd_create(device):
     if "sg"  in device: return CliCmdSas   (device.split(','))
     if "tty" in device: return CliCmdSerial(device)
@@ -151,7 +151,7 @@ def print_status(pagenum, extras_func=None, param=None):
     if not page02["data"]:
         page01 = sp.parse(sp.readpage(0x01))
         page02 = sp.parse(sp.readpage(0x02))
-    
+
     for enclosure in page02["data"].enclosures.val:
         for typ in enclosure:
             if typ["type"] == pagenum:
@@ -239,6 +239,27 @@ def sespage02_specific(typ, elnum=None, element=None):
                  "X" if element.fault_reqstd.val else "",
                  "X" if element.device_off.val   else "",
                  )
+    elif typ == 0x02:
+        if elnum == None:
+            return "ID D+V D-V D+C swp fai on  off t+  tw  ac- dc-"
+        elif elnum < 0:
+            return ""
+        else:
+            return "%2s %2s  %2s  %2s  %2s  %2s  %2s  %2s  %2s  %2s  %2s  %2s" % \
+                (
+                 "X" if element.ident           .val else "",
+                 "X" if element.dc_over_voltage .val else "",
+                 "X" if element.dc_under_voltage.val else "",
+                 "X" if element.dc_over_current .val else "",
+                 "X" if element.hot_swap        .val else "",
+                 "X" if element.fail            .val else "",
+                 "X" if element.rqsted_on       .val else "",
+                 "X" if element.off             .val else "",
+                 "X" if element.overtmp_fail    .val else "",
+                 "X" if element.temp_warn       .val else "",
+                 "X" if element.ac_fail         .val else "",
+                 "X" if element.dc_fail         .val else "",
+                 )
     elif typ == 0x03:
         if elnum == None:
             return "ID fanspeed code off fail"
@@ -263,7 +284,7 @@ def sespage02(p):
     if not page02["data"]:
         page01 = sp.parse(sp.readpage(0x01))
         page02 = sp.parse(sp.readpage(0x02))
-    
+
     for enclosure in page02["data"].enclosures.val:
         for typ in enclosure:
             pbob(); print "type:", "%.2X" % typ["type"], typ["text"]
@@ -288,14 +309,15 @@ def sespage05(p):
     if not page05["data"]:
         page01 = sp.parse(sp.readpage(0x01))
         page05 = sp.parse(sp.readpage(0x05))
-    
+
     for enclosure in page05["data"].enclosures.val:
         for typ in enclosure:
             pbob(); print "type:", "%.2X" % typ["type"], typ["text"]
-            elnum = 0
+            elnum = -1
             for element in typ["elements"]:
+                elnumstr = "%.3d" % elnum if elnum >= 0 else "all"
                 pbo(element.hicrit)
-                print "    %.3d" % elnum, "%3d %3d %3d %3d" % \
+                print "    " + elnumstr, "%3d %3d %3d %3d" % \
                 (
                  element.hicrit.val,
                  element.hiwarn.val,
@@ -304,7 +326,7 @@ def sespage05(p):
                  )
                 elnum += 1
     Menu.wait()
-    
+
 def sespage07(p):
     Menu.clear()
     if not sp: return
@@ -312,14 +334,15 @@ def sespage07(p):
     if not page07["data"]:
         page01 = sp.parse(sp.readpage(0x01))
         page07 = sp.parse(sp.readpage(0x07))
-    
+
     for enclosure in page07["data"].enclosures.val:
         for typ in enclosure:
             pbob(); print "type:", "%.2X" % typ["type"], typ["text"]
-            elnum = 0
+            elnum = -1
             for element in typ["elements"]:
                 #print "%.3d" % elnum, '"' + element.text.val + '"'
-                print indentedtext(pbo(element.text,False) + '    %.3d "' % elnum, element.text.val, '"')
+                elnumstr = "%.3d" % elnum if elnum >= 0 else "all"
+                print indentedtext(pbo(element.text,False) + '    %.3s "' % elnumstr, element.text.val, '"')
                 elnum += 1
     Menu.wait()
 
@@ -330,7 +353,7 @@ def sespage0a(p):
     if not page0a["data"]:
         page01 = sp.parse(sp.readpage(0x01))
         page0a = sp.parse(sp.readpage(0x0a))
-    
+
     addelpage = page0a["data"]
     headline = ''
     headline += "enc:typ:ele valid?  all?   init targ attached sas adr sas address      phy"
@@ -400,7 +423,7 @@ def sespagee2(p): sespageex(p, 2)
 def sespagee3(p): sespageex(p, 3)
 def sespagee4(p): sespageex(p, 4)
 def sespagee5(p): sespageex(p, 5)
-    
+
 def sespagee8(p):
     Menu.clear()
     if not sp: return
@@ -408,7 +431,7 @@ def sespagee8(p):
     pbo(pagee8["data"].expanderid); print "Expander ID:", pagee8["data"].expanderid.val
     print indentedtext(pbo(pagee8["data"].response.val,False) + "Response: " + '"', pagee8["data"].response.val, '"')
     Menu.wait()
-    
+
 def sespages(p):
     if Configuration.interactive:
         # We're running interactive menus; continue on this way.
@@ -433,8 +456,8 @@ def sespages(p):
                 print "unimplemented page: " + p[0]
             else:
                 print "need another parameter: the page number"
-    
-    
+
+
 # configuration functions
 def toggle_interactive(p): Configuration.setInteractive(not Configuration.getInteractive()); setup_config_menu()
 def toggle_clear      (p): Configuration.setClear      (not Configuration.getClear      ()); setup_config_menu()
@@ -448,7 +471,7 @@ def discover_interfaces(p):
     Menu.clear()
     sas = Discovery.discover_sas()
     ser = Discovery.discover_serial()
-    
+
     print "SAS devices"
     if len(sas) > 0:
         for dev in sas:
@@ -462,7 +485,7 @@ def discover_interfaces(p):
             print "    "+dev
     else:
         print "    None"
-        
+
     Menu.wait()
 
 def probe_interfaces(p):
@@ -488,7 +511,7 @@ config_menu = \
           [ 'Probe interfaces'           , probe_interfaces   , "probe"       ],
           [ 'Auto Configure'             , auto_configure_item, "autoconfigure"],
          #TODO save
-         #TODO restore 
+         #TODO restore
          #[ '[xxxxx] toggle Interactive' , toggle_interactive , "interactive" ],
           [ '[xxxxx] toggle Clear Before Menu'         , toggle_clear       , "clear"       ],
           [ '[xxxxx] toggle Byte Offsets'              , toggle_byteoffsets , "byteoffsets" ],
@@ -561,7 +584,7 @@ def drive_status(p):
             return ("%-16s" % inq.pid.val) + " " + ("%-8s" % inq.sn.val)
         else:
             return ""
-    
+
     Menu.clear()
     # Read SAS addresses from SES page 0x0a.
     page01 = sp.parse(sp.readpage(0x01))
@@ -592,7 +615,7 @@ def drive_identify(p):
         SesPage.page02_fill calls this function for each element.
         If something is returned, it is added to the control page data with the SELECT bit set.
         Otherwise, it will add an empty element with the SELECT bit clear.
-        
+
         Input:
           typ:     element type; we're expecting 0x03 for Cooling Element
           elnum:   element number, -1 for overall element
@@ -619,14 +642,14 @@ def drive_identify(p):
     if not sp: return
 
     try:
-        drive_id = get_input("drive ID (all): ", p)
+        drive_id = get_input("drive ID (0-n, all): ", p)
         try:
             drive_id = int(drive_id)
         except:
             pass
     except EOFError:
         return
-    
+
     dat = sp.page_02_fill(drive_identify_filter, drive_id)
     result = sp.writepage(dat)
 
@@ -653,14 +676,14 @@ def drive_pwroff(p):
     if not sp: return
 
     try:
-        drive_id = get_input("drive ID (all): ", p)
+        drive_id = get_input("drive ID (0-n, all): ", p)
         try:
             drive_id = int(drive_id)
         except:
             pass
     except EOFError:
         return
-    
+
     dat = sp.page_02_fill(drive_pwroff_filter, drive_id)
     result = sp.writepage(dat)
 
@@ -670,8 +693,6 @@ def drive_pwroff(p):
 def fan_status(p):
     Menu.clear()
     print_status(0x03)
-    #if not cli: return
-    #print cli.execute("fan")
     Menu.wait()
 
 def fan_identify(p):
@@ -694,14 +715,14 @@ def fan_identify(p):
     if not sp: return
 
     try:
-        fan_id = get_input("fan ID (all): ", p)
+        fan_id = get_input("fan ID (0-n, all): ", p)
         try:
             fan_id = int(fan_id)
         except:
             pass
     except EOFError:
         return
-    
+
     #print cli.execute("fan identify " + fan_id)
     dat = sp.page_02_fill(fan_identify_filter, fan_id)
     result = sp.writepage(dat)
@@ -730,7 +751,7 @@ def fan_speed(p):
 
     try:
         speed  = get_input("speed code (1-7): ", p)
-        fan_id = get_input("fan ID (all): ", p)
+        fan_id = get_input("fan ID (0-n, all): ", p)
         try:
             speed  = int(speed )
         except:
@@ -748,13 +769,74 @@ def fan_speed(p):
 
     dat = sp.page_02_fill(fan_speed_filter, (speed, fan_id))
     result = sp.writepage(dat)
-        
+
     #if fan_id == "all" or fan_id == "":
     #    fan_selection = 0xffff
     #else:
     #    fan_selection = 1 << int(fan_id)
 
     #print cli.execute("fan speed " + speed + ' ' + str(fan_selection))
+    Menu.wait()
+
+# items in the SAS Power Supply menu
+def powersupply_status(p):
+    Menu.clear()
+    print_status(0x02)
+    Menu.wait()
+
+def powersupply_longstatus(p):
+    def powersupply_status_extras(typ, elnum, element, param):
+        typelist = param
+        if elnum == None:
+            return ""
+        elif elnum < 0:
+            return ""
+        else:
+            # Add 1 to allow for the overall element.
+            return "\n" + indentedtext("             ", typelist[elnum+1].text.val, "")
+
+    Menu.clear()
+    # Retrieve the element descriptors so we can print them.
+    page01 = sp.parse(sp.readpage(0x01))
+    page07 = sp.parse(sp.readpage(0x07))
+    for typ in page07["data"].enclosures.val[0]:
+        if typ["type"] == 0x02:
+            break
+    print_status(0x02, powersupply_status_extras, typ["elements"])
+    Menu.wait()
+
+def powersupply_identify(p):
+    def powersupply_identify_filter(typ, elnum, status, control, params):
+        """
+        See comments on drive_identify_filter().
+        """
+        if typ == 0x02:
+            psu_id = params
+            if elnum >= 0 and psu_id == "all" or psu_id == elnum:
+                # Retain some current values.
+                control["RQST FAIL" ] = status.fail.val
+                # Set a new value.
+                control["RQST IDENT"] = 1 - status.ident.val
+                return control
+        return None
+
+    Menu.clear()
+    #if not cli: return
+    if not sp: return
+
+    try:
+        psu_id = get_input("PSU ID (0-n, all): ", p)
+        try:
+            psu_id = int(psu_id)
+        except:
+            pass
+    except EOFError:
+        return
+
+    #print cli.execute("fan identify " + fan_id)
+    dat = sp.page_02_fill(powersupply_identify_filter, psu_id)
+    result = sp.writepage(dat)
+
     Menu.wait()
 
 
@@ -765,10 +847,10 @@ cpld_menu        = Menu("CPLD"          , [['Exit', Menu.stop]])
 drive_menu       = \
     Menu("Drive"         ,
          [
-          ['Exit'     , Menu.stop     , "help"    ],
-          ['Status'   , drive_status  , "status"  ],
-          ['Identify' , drive_identify, "identify"],
-          ['Power Off', drive_pwroff  , "pwroff"  ],
+          ['Exit'            , Menu.stop     , "help"    ],
+          ['Status'          , drive_status  , "status"  ],
+          ['Toggle Identify' , drive_identify, "identify"],
+          ['Toggle Power'    , drive_pwroff  , "pwroff"  ],
           ])
 
 def enclosure_status     (p):
@@ -780,10 +862,19 @@ def enclosure_status     (p):
 fan_menu         = \
     Menu("Fan"           ,
          [
-          ['Exit'    , Menu.stop   , "help"    ],
-          ['Status'  , fan_status  , "status"  ],
-          ['Identify', fan_identify, "identify"],
-          ['Speed'   , fan_speed   , "speed"   ],
+          ['Exit'           , Menu.stop   , "help"    ],
+          ['Status'         , fan_status  , "status"  ],
+          ['Toggle Identify', fan_identify, "identify"],
+          ['Speed'          , fan_speed   , "speed"   ],
+          ])
+
+powersupply_menu = \
+    Menu("Power Supply"  ,
+         [
+          ['Exit'           , Menu.stop             , "help"      ],
+          ['Status'         , powersupply_status    , "status"    ],
+          ['Long Status'    , powersupply_longstatus, "longstatus"],
+          ['Toggle Identify', powersupply_identify  , "identify"  ],
           ])
 
 def flash_expander_image (p): pass
@@ -791,7 +882,6 @@ lcd_menu         = Menu("LCD"           , [['Exit', Menu.stop]])
 led_menu         = Menu("LED"           , [['Exit', Menu.stop]])
 log_menu         = Menu("Log"           , [['Exit', Menu.stop]])
 phy_menu         = Menu("PHY"           , [['Exit', Menu.stop]])
-powersupply_menu = Menu("Power Supply"  , [['Exit', Menu.stop]])
 def rebootreset_expander (p): pass
 sensor_menu      = Menu("Sensor"        , [['Exit', Menu.stop]])
 ses_menu = \

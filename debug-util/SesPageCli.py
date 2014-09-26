@@ -44,7 +44,7 @@ class SesPageCli(SesPage):
                         return None
         return page
 
-    def writepage(self, pagenum, data):
+    def writepage(self, data):
         # Not yet implemented.
         pass
 
