@@ -14,7 +14,6 @@ serial on MSWin?
 check reserved fields?
 improve error propagation using exceptions
 add more types to page 0x02 output
-create Makefile for build and release
 add INSTALL instructions
 expand REQUIREMENTS
 create README
