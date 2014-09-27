@@ -954,10 +954,13 @@ utility_menu = \
 
 # Parse command-line options.
 parser = argparse.ArgumentParser(description="Wolf Creek Debug Utility -- Display information about a Jabil system.")
-parser.add_argument("--probe"  , action="store_true", help="Probe the system to find appropriate and best device files.")
-parser.add_argument("--cli"    , nargs=1, type=str,   help="device file to use for CLI access")
-parser.add_argument("--sespage", nargs=1, type=str,   help="device file to use for SES Page access")
-parser.add_argument("--verbose", action="store_true", help="Print some things not normally printed.")
+parser.add_argument("--probe"      , action="store_true", help="Probe the system to find appropriate and best device files.")
+parser.add_argument("--cli"        , nargs=1, type=str,   help="device file to use for CLI access; include comma (',') and port number if sg device")
+parser.add_argument("--sespage"    , nargs=1, type=str,   help="device file to use for SES Page access")
+parser.add_argument("--verbose"    , action="store_true", help="Print some things not normally printed.")
+parser.add_argument("--notclear"   , action="store_true", help="Don't clear the screen before printing menus and data.")
+parser.add_argument("--byteoffsets", action="store_true", help="Print data offsets from beginnings of SES pages.")
+parser.add_argument("--shortcuts"  , action="store_true", help="Print command-line shortcuts on menus.")
 params, commands = parser.parse_known_args()
 params = vars(params)
 
@@ -965,6 +968,11 @@ verbose = params["verbose"]
 
 # If we passed keyword parameters, don't clear the screen or wait.
 Configuration.setInteractive(not commands)
+
+# Set more configuration elements based on command-line options.
+if params["notclear"   ]: Configuration.setClear      (False)
+if params["byteoffsets"]: Configuration.setByteoffsets(True)
+if params["shortcuts"  ]: Configuration.setShortcuts  (True)
 
 # Configure accessors.
 if params["probe"]:

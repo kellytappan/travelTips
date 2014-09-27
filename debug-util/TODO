@@ -7,7 +7,6 @@ better help
   add optional item field for parameters
   add optional item field for additional help
   add field for overall help
-command-line parameters for configuration options
 save and restore default configuration
 optional bread crumbs in menu headings
 serial on MSWin?
@@ -19,9 +18,3 @@ expand REQUIREMENTS
 create README
 create manual or fix specification
 add sas ses dump <filename>
-
-status on:
-  enclosure
-x drive
-x fan
-x power
