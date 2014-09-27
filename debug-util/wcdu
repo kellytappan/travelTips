@@ -575,11 +575,7 @@ def drive_status(p):
             return ""
         elif info[elnum]:
             pt = ScsiPT(info[elnum])
-            cmd = Cmd("inq", {"evpd":0, "alloc":0xa4})
-            cdb = CDB(cmd.cdb)
-            cdb.set_data_in(0xa4)
-            pt.sendcdb(cdb)
-            inq = Cmd.extract(cdb.buf, Cmd.data_inquiry)
+            inq = Cmd.inq(pt)
             del pt
             return ("%-16s" % inq.pid.val) + " " + ("%-8s" % inq.sn.val)
         else:
@@ -855,8 +851,16 @@ drive_menu       = \
 
 def enclosure_status     (p):
     Menu.clear()
-    if not cli: return
-    print cli.execute("info")
+#     if not cli: return
+#     print cli.execute("info")
+    if not sp_short: return
+    page01 = sp_short.parse(sp_short.readpage(0x01))
+    for enclist in page01["data"].enclosures.val:
+        pbo(enclist.subid   ); print "Enclosure #" + str(enclist.subid.val)
+        pbo(enclist.logid   ); print "    %-31s:" % enclist.logid   .desc, "%X" % enclist.logid   .val
+        pbo(enclist.vendor  ); print "    %-31s:" % enclist.vendor  .desc, enclist.vendor  .val
+        pbo(enclist.product ); print "    %-31s:" % enclist.product .desc, enclist.product .val
+        pbo(enclist.revision); print "    %-31s:" % enclist.revision.desc, enclist.revision.val
     Menu.wait()
 
 fan_menu         = \
@@ -921,21 +925,21 @@ sas_menu = \
     Menu("SAS",
          [
           ['Exit'                 , Menu.stop           , "help"               ],
-          [        'CPLD Menu'    ,        cpld_menu.run, "cpld"               ],
-          [           'Drive Menu',       drive_menu.run, "drive"              ],
+          [        '(X)CPLD Menu'    ,        cpld_menu.run, "cpld"               ],
+          [       'Drive Menu'    ,       drive_menu.run, "drive"              ],
           ['Enclosure Status'     , enclosure_status    , "enclosure"          ],
           [         'FAN Menu'    ,         fan_menu.run, "fan"                ],
-          ['Flash Expander Image' , flash_expander_image, "flashexpanderimage" ],
-          [         'LCD Menu'    ,         lcd_menu.run, "lcd"                ],
-          [         'LED Menu'    ,         led_menu.run, "led"                ],
-          [         'LOG Menu'    ,         log_menu.run, "log"                ],
-          [         'PHY Menu'    ,         phy_menu.run, "phy"                ],
+          ['(X)Flash Expander Image' , flash_expander_image, "flashexpanderimage" ],
+          [         '(X)LCD Menu'    ,         lcd_menu.run, "lcd"                ],
+          [         '(X)LED Menu'    ,         led_menu.run, "led"                ],
+          [         '(X)LOG Menu'    ,         log_menu.run, "log"                ],
+          [         '(X)PHY Menu'    ,         phy_menu.run, "phy"                ],
           ['Power Supply Menu'    , powersupply_menu.run, "powersupply"        ],
-          ['Reboot/Reset Expander', rebootreset_expander, "reboot"             ],
-          [      'Sensor Menu'    ,      sensor_menu.run, "sensor"             ],
+          ['(X)Reboot/Reset Expander', rebootreset_expander, "reboot"             ],
+          [      '(X)Sensor Menu'    ,      sensor_menu.run, "sensor"             ],
           ['SES Page Dump'        , sespages            , "ses"                ],
-          [         'TWI Menu'    ,         twi_menu.run, "twi"                ],
-          [         'VPD Menu'    ,         vpd_menu.run, "vpd"                ],
+          [         '(X)TWI Menu'    ,         twi_menu.run, "twi"                ],
+          [         '(X)VPD Menu'    ,         vpd_menu.run, "vpd"                ],
           ])
 
 utility_menu = \
@@ -943,8 +947,8 @@ utility_menu = \
          [
           ['Exit'              , Menu.stop        , "help"     ],
           ['Configuration Menu', configure        , "configure"],
-          ['BMC Menu'          , bmc_menu     .run, "bmc"      ],
-          ['Platform Menu'     , platform_menu.run, "platform" ],
+          ['(X)BMC Menu'          , bmc_menu     .run, "bmc"      ],
+          ['(X)Platform Menu'     , platform_menu.run, "platform" ],
           ['SAS Menu'          , sas_menu     .run, "sas"      ],
           ])
 
