@@ -925,21 +925,21 @@ sas_menu = \
     Menu("SAS",
          [
           ['Exit'                 , Menu.stop           , "help"               ],
-          [        '(X)CPLD Menu'    ,        cpld_menu.run, "cpld"               ],
+          #[        '(X)CPLD Menu'    ,        cpld_menu.run, "cpld"               ],
           [       'Drive Menu'    ,       drive_menu.run, "drive"              ],
           ['Enclosure Status'     , enclosure_status    , "enclosure"          ],
           [         'FAN Menu'    ,         fan_menu.run, "fan"                ],
-          ['(X)Flash Expander Image' , flash_expander_image, "flashexpanderimage" ],
-          [         '(X)LCD Menu'    ,         lcd_menu.run, "lcd"                ],
-          [         '(X)LED Menu'    ,         led_menu.run, "led"                ],
-          [         '(X)LOG Menu'    ,         log_menu.run, "log"                ],
-          [         '(X)PHY Menu'    ,         phy_menu.run, "phy"                ],
+          #['(X)Flash Expander Image' , flash_expander_image, "flashexpanderimage" ],
+          #[         '(X)LCD Menu'    ,         lcd_menu.run, "lcd"                ],
+          #[         '(X)LED Menu'    ,         led_menu.run, "led"                ],
+          #[         '(X)LOG Menu'    ,         log_menu.run, "log"                ],
+          #[         '(X)PHY Menu'    ,         phy_menu.run, "phy"                ],
           ['Power Supply Menu'    , powersupply_menu.run, "powersupply"        ],
-          ['(X)Reboot/Reset Expander', rebootreset_expander, "reboot"             ],
-          [      '(X)Sensor Menu'    ,      sensor_menu.run, "sensor"             ],
+          #['(X)Reboot/Reset Expander', rebootreset_expander, "reboot"             ],
+          #[      '(X)Sensor Menu'    ,      sensor_menu.run, "sensor"             ],
           ['SES Page Dump'        , sespages            , "ses"                ],
-          [         '(X)TWI Menu'    ,         twi_menu.run, "twi"                ],
-          [         '(X)VPD Menu'    ,         vpd_menu.run, "vpd"                ],
+          #[         '(X)TWI Menu'    ,         twi_menu.run, "twi"                ],
+          #[         '(X)VPD Menu'    ,         vpd_menu.run, "vpd"                ],
           ])
 
 utility_menu = \
@@ -947,8 +947,8 @@ utility_menu = \
          [
           ['Exit'              , Menu.stop        , "help"     ],
           ['Configuration Menu', configure        , "configure"],
-          ['(X)BMC Menu'          , bmc_menu     .run, "bmc"      ],
-          ['(X)Platform Menu'     , platform_menu.run, "platform" ],
+          #['(X)BMC Menu'          , bmc_menu     .run, "bmc"      ],
+          #['(X)Platform Menu'     , platform_menu.run, "platform" ],
           ['SAS Menu'          , sas_menu     .run, "sas"      ],
           ])
 
@@ -975,6 +975,11 @@ if params["byteoffsets"]: Configuration.setByteoffsets(True)
 if params["shortcuts"  ]: Configuration.setShortcuts  (True)
 
 # Configure accessors.
+cli      = None
+sp       = None
+sp_short = None
+if not params["probe"] and not params["cli"] and not params["sespage"]:
+    params["probe"] = True
 if params["probe"]:
     auto_configure()
 # "cli" and "sespage" can override the results of "probe".

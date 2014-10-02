@@ -76,9 +76,9 @@ class CliCmdSerial(CliCmd):
 
     def _flush(self):
         # Kludge to clear out self.proc.before.
-        self.proc.expect("$")
-        self.proc.expect("$")
-        assert(self.proc.before == "")
+        self.proc.expect(["$", pexpect.TIMEOUT])
+        self.proc.expect(["$", pexpect.TIMEOUT])
+        #assert(self.proc.before == "")
         #print "len before =", len(self.proc.before)
         #if len(self.proc.before) > 4: print "before =", self.proc.before
 
