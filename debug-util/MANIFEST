@@ -9,10 +9,9 @@ SesPageCli.py
 SesPageFile.py
 SesPageSas.py
 configuration.py
+discovery-test
 discovery.py
 setup.py
-slowfan
-slowfan2
 slowfan3
 wcdu
 wcdu-cli
