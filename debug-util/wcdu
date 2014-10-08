@@ -582,6 +582,7 @@ def drive_status(p):
             return ""
 
     Menu.clear()
+    if not sp: return
     # Read SAS addresses from SES page 0x0a.
     page01 = sp.parse(sp.readpage(0x01))
     page0a = sp.parse(sp.readpage(0x0a))
@@ -688,6 +689,7 @@ def drive_pwroff(p):
 # items in the SAS Fan menu
 def fan_status(p):
     Menu.clear()
+    if not sp: return
     print_status(0x03)
     Menu.wait()
 
@@ -777,6 +779,7 @@ def fan_speed(p):
 # items in the SAS Power Supply menu
 def powersupply_status(p):
     Menu.clear()
+    if not sp: return
     print_status(0x02)
     Menu.wait()
 
@@ -792,6 +795,7 @@ def powersupply_longstatus(p):
             return "\n" + indentedtext("             ", typelist[elnum+1].text.val, "")
 
     Menu.clear()
+    if not sp: return
     # Retrieve the element descriptors so we can print them.
     page01 = sp.parse(sp.readpage(0x01))
     page07 = sp.parse(sp.readpage(0x07))
