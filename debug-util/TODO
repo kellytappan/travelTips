@@ -18,3 +18,4 @@ expand REQUIREMENTS
 create README
 create manual or fix specification
 add sas ses dump <filename>
+add SES page write capability to discovery

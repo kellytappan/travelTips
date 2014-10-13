@@ -963,8 +963,8 @@ parser.add_argument("--cli"        , nargs=1, type=str,   help="device file to u
 parser.add_argument("--sespage"    , nargs=1, type=str,   help="device file to use for SES Page access")
 parser.add_argument("--verbose"    , action="store_true", help="Print some things not normally printed.")
 parser.add_argument("--notclear"   , action="store_true", help="Don't clear the screen before printing menus and data.")
-parser.add_argument("--byteoffsets", action="store_true", help="Print data offsets from beginnings of SES pages.")
-parser.add_argument("--shortcuts"  , action="store_true", help="Print command-line shortcuts on menus.")
+parser.add_argument("--byteoffsets", action="store_true", help="Include data offsets from beginnings of SES pages.")
+parser.add_argument("--shortcuts"  , action="store_true", help="Include command-line shortcuts on menus.")
 params, commands = parser.parse_known_args()
 params = vars(params)
 
