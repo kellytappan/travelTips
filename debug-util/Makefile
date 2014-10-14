@@ -6,9 +6,13 @@
 #   /usr/local/bin/
 # so usually install and uninstall as root.
 
-.PHONY:	build install uninstall
+soffice = libreoffice
 
-build:
+.PHONY:	all build install uninstall clean clobber
+
+all:	build
+
+build:	wcdu-guide.pdf
 	python setup.py sdist
 
 install:
@@ -16,3 +20,15 @@ install:
 
 uninstall:
 	pip uninstall wcdu
+
+convdir = /tmp/LibO_Conversion-$$$$
+wcdu-guide.pdf :   wcdu-guide.odt
+	$(soffice) --writer -env:UserInstallation=file://$(convdir) --invisible --headless --convert-to pdf  wcdu-guide.odt
+	rm -rf $(convdir)
+
+clean:
+	-rm -rf *.pyc *~ MANIFEST build wcdu-guide.pdf
+
+clobber:	clean
+	-rm -rf dist
+

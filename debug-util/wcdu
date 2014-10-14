@@ -363,7 +363,7 @@ def sespage0a(p):
         if addel.eip.val:
             leftline += "%3d: %.2X:%3d " % addel.index.val
         else:
-            leftline += "    "
+            leftline += "           "
         leftline += "invalid" if addel.invalid.val else "  valid"
         leftline += " "
         leftline += "notall" if addel.notall.val else "   all"
@@ -433,7 +433,7 @@ def sespagee8(p):
     Menu.wait()
 
 def sespages(p):
-    if Configuration.interactive:
+    if Configuration.interactive or not p:
         # We're running interactive menus; continue on this way.
         ses_menu.run(p)
     else:
