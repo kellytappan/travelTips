@@ -7,4 +7,8 @@ print Discovery.discover_serial()
 
 print
 Discovery.probe()
-print Discovery.capabilities
+#print Discovery.capabilities
+for cap,val in Discovery.capabilities.items():
+    print "capability:", Discovery.description[cap]
+    for ad in sorted(val, key=lambda a: a[0]):
+        print "   ", ad[0], ad[2]
