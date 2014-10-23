@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
-version = "0.0.1"
+version = "0.0.1+"
 
 import serial
 from xmodem import XMODEM
 from time import sleep
-#import pexpect
 import pexpect.fdpexpect
 import sys
 import os.path
@@ -27,7 +26,7 @@ class FirmwareCli:
         self.logfile = open("/tmp/serial-log-"+tty[-1], "w")
         self.proc = pexpect.fdpexpect.fdspawn(self.sport, logfile=self.logfile, timeout=.4)
         
-        self.ruthere = None
+        self.ruthere = None   # unknown
         
         #self._interrupt_xmodem()
 
@@ -48,7 +47,7 @@ class FirmwareCli:
             print message
     
     def _flush(self):
-        # Kludge to clear out self.proc.before.
+        """ Kludge to clear out self.proc.before. """
         self.proc.expect(["$", pexpect.TIMEOUT])
         self.proc.expect(["$", pexpect.TIMEOUT])
 
@@ -195,37 +194,40 @@ class FirmwareCli:
 
 
 
-
-#tty  = '/dev/ttyUSB1'
-#filename = 'firmware/2.04/pinot_grigio_fem_sas_update_02_04.bin'
-#filename = 'firmware/Skytree_SAS_Release_02_87/skytree_fem_sas_update_02_87.bin'
-
-#tty = '/dev/ttyUSB2'
-#filename = 'firmware/Skytree_SAS_Release_02_87/bluemoon_sas_update_02.87.bin'
-
-#tty = '/dev/ttyUSB0'
-#fw = FirmwareCli(tty, filename, verbosity=2)
-#fw.update()
-
-#fw = FirmwareCli(tty, sys.argv[1], verbosity=2)
-#fw.identifyfile()
-
-#fw = FirmwareCli(sys.argv[1], None, verbosity=2)
-#fw.identifydevice()
-
-tty      = sys.argv[1]
-filename = sys.argv[2]
-
-print "program version =", version
-
-fw = FirmwareCli(tty, filename, verbosity=2)
-fid = fw.identifyfile()
-did = fw.identifydevice()
-if not did:
-    sys.exit()
-if fid[1] != did[1]:
-    print "product IDs don't match; aborting"
-    print fid[1], "!=", did[1]
-    sys.exit()
-fw.update()
-fw.identifydevice()
+if __name__ == "__main__":
+    #tty  = '/dev/ttyUSB1'
+    #filename = 'firmware/2.04/pinot_grigio_fem_sas_update_02_04.bin'
+    #filename = 'firmware/Skytree_SAS_Release_02_87/skytree_fem_sas_update_02_87.bin'
+    
+    #tty = '/dev/ttyUSB2'
+    #filename = 'firmware/Skytree_SAS_Release_02_87/bluemoon_sas_update_02.87.bin'
+    
+    #tty = '/dev/ttyUSB0'
+    #fw = FirmwareCli(tty, filename, verbosity=2)
+    #fw.update()
+    
+    #fw = FirmwareCli(tty, sys.argv[1], verbosity=2)
+    #fw.identifyfile()
+    
+    #fw = FirmwareCli(sys.argv[1], None, verbosity=2)
+    #fw.identifydevice()
+    
+    if len(sys.argv) != 3:
+        print "usage:", sys.argv[0].split('/')[-1], "<tty device file> <firmware file>"
+        sys.exit(-1)
+    tty      = sys.argv[1]
+    filename = sys.argv[2]
+    
+    print "program version =", version
+    
+    fw = FirmwareCli(tty, filename, verbosity=2)
+    fid = fw.identifyfile()
+    did = fw.identifydevice()
+    if not did:
+        sys.exit(-1)
+    if fid[1] != did[1]:
+        print "product IDs don't match; aborting"
+        print fid[1], "!=", did[1]
+        sys.exit(-1)
+    fw.update()
+    fw.identifydevice()
