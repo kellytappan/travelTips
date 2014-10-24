@@ -9,6 +9,8 @@ import pexpect.fdpexpect
 import sys
 import os.path
 
+from firmwarefile import FirmwareFile
+
 class FirmwareCli:
     """
     Update firmware on one device.
@@ -29,13 +31,23 @@ class FirmwareCli:
         self.ruthere = None   # unknown
         
         #self._interrupt_xmodem()
+    
+    def set_filename(self, filename):
+        self.filename = filename
+    
+    def get_prompt(self):
+        self.ruthere = None
+        if self._ruthere():
+            return self._appmode()
+        else:
+            return None
 
-    def update(self):
+    def update(self, callback=None):
         if not self._ruthere():
             self._log(0, 'Device does not respond: '+self.tty)
             return
         self._bootmode()
-        self._sendfile(self.filename)
+        self._sendfile(self.filename, callback)
         self._appmode()
         
         # Done. Shut things down.
@@ -110,8 +122,9 @@ class FirmwareCli:
         prompt = self.proc.before.rsplit('\r\n')[-1]
         self._log(2, "prompt = "+prompt+", length = "+str(len(prompt)))
         self.proc.expect('>')
+        return prompt
     
-    def _sendfile(self, filename):
+    def _sendfile(self, filename, callback=None):
         """ Send a file to the device using xmodem. """
         def getc(size, timeout=1):
             self.sport.timeout = timeout
@@ -139,10 +152,13 @@ class FirmwareCli:
         self.sport = serial.Serial(port=self.tty, baudrate=self.baudrate, bytesize=8, parity='N', stopbits=1, timeout=None, xonxoff=0, rtscts=0)
         modem = XMODEM(getc, putc)
 
-        if self.verbosity >= 1:
-            cb = statuscallback
+        if callback:
+            cb = callback
         else:
-            cb = None        
+            if self.verbosity >= 1:
+                cb = statuscallback
+            else:
+                cb = None        
         file_packets = (os.path.getsize(self.filename)-1)/128+1
         result = modem.send(open(filename, 'rb'), callback=cb)
         self._log(2, "xmodem result = " + str(result))
@@ -150,25 +166,7 @@ class FirmwareCli:
         
     def identifyfile(self):
         """ Attempt to determine version and productid of a firmware file. """
-        f = open(self.filename, 'rb')
-
-        f.seek(0x00)
-        magic = f.read(8)
-        if magic != "JBL_ISTR":
-            self._log(2, "file has bad magic number")
-            return None
-
-        f.seek(0x0c)
-        version = f.read(2)
-        version = (ord(version[0]) << 8) + (ord(version[1]) << 0)
-        version = "%04X" % version
-        self._log(2, "file version   = "+version)
-
-        f.seek(0x2b)
-        productid = f.read(16)
-        self._log(2, "file productid = "+productid)
-
-        return (version, productid)
+        return FirmwareFile(self.filename).identifyfile()
     
     def identifydevice(self):
         """ Attempt to determine version and productid of a device. """

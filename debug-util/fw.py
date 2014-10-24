@@ -11,11 +11,21 @@ from time import sleep
 from firmwarecli import FirmwareCli
 from discovery   import Discovery
 
+verbosity = 0
+
 display_que = Queue.Queue()
 main_que    = Queue.Queue()
 
+POLL_DELAY = 5  # seconds
+CMD_SET          = 'set'
+CMD_MESSAGE      = 'message'
+CMD_STOP         = 'stop'
+CMD_DISCONNECTED = 'disconnected'
+CMD_CONNECTED    = 'connected'
+
 def display(scr):
     curses.curs_set(0)
+    curses.cbreak()
     
     cans = {}
 
@@ -97,13 +107,29 @@ def display(scr):
 #             if op:
 #                 break
         op = display_que.get()
-        if   op[0] == 'set':
+        if   op[0] == CMD_SET:
             cans[op[1]][op[2]][op[3]] = op[4]
-        elif op[0] == 'msg':
+        elif op[0] == CMD_MESSAGE:
             messages = op[1]
-        elif op[0] == 'stop':
+        elif op[0] == CMD_STOP:
             return
         #curses.napms(1000)
+
+def watch_port(port):
+    fw = FirmwareCli(port, None, verbosity)
+    while cansleft:
+        prompt = fw.get_prompt()
+        if prompt:
+            main_que.put((CMD_CONNECTED,port,prompt))
+            if prompt in cansleft:
+                dev_vers, dev_prod = fw.identifydevice()
+                # TODO
+                pass
+            else:
+                sleep(POLL_DELAY)
+        else:
+            main_que.put((CMD_DISCONNECTED,port))
+            sleep(POLL_DELAY)
 
 
 display_thr = threading.Thread(
@@ -117,32 +143,52 @@ display_thr.start()
 try:
     if False:
         sleep(1)
-        display_que.put(('set','A' ,'plug',0,2))
+        display_que.put((CMD_SET,'A' ,'plug',0,2))
         sleep(1)
-        display_que.put(('set','Bx','plug',1,3))
+        display_que.put((CMD_SET,'Bx','plug',1,3))
         sleep(1)
-        display_que.put(('msg',("Please plug in serial cables.",)))
+        display_que.put((CMD_MESSAGE,("Please plug in serial cables.",)))
         sleep(1)
-        display_que.put(('set', 'Ax', 'version', 0, '0278'))
+        display_que.put((CMD_SET, 'Ax', 'version', 0, '0278'))
         sleep(1)
-        display_que.put(('stop',))
+        display_que.put((CMD_STOP,))
         sleep(1)
     ports = Discovery.discover_serial()
     if not ports:
         print "Cannot discover any serial ports. Aborting."
         sys.exit(-2)
     cansleft = set(('A','B','A0','A1','B0','B1'))
-    
+    port_threads = set()
+    for port in ports:
+        thr = threading.Thread(
+            name=port,
+            target=watch_port,
+            args=(port,))
+        port_threads.add(thr)
+        thr.start()
     # TODO
-    #while cansleft:
-    #    op = main_que.get()
+    while cansleft:
+        #print "waiting for main_que"
+        try:
+            # Must have a timeout to make it interruptible.
+            op = main_que.get(True, 10000)
+        except Queue.Empty:
+            continue
+        if   op[0] == CMD_DISCONNECTED:
+            pass
+        elif op[0] == CMD_CONNECTED:
+            pass
 
 except KeyboardInterrupt:
     pass
 
-display_que.put(('stop',))
+display_que.put((CMD_STOP,))
 display_thr.join()
     
 if cansleft:
     print "The following canisters have not been programmed:"
-    print " ".join(sorted(list(cansleft))) 
+    print " ".join(sorted(list(cansleft)))
+    cansleft = None
+for thr in port_threads:
+    thr.join()
+
