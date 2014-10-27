@@ -116,12 +116,15 @@ class FirmwareCli:
             self._log(2, "boot")
             self.proc.sendline('boot')
 
-        self.proc.expect('>')
-        self.proc.sendline('')
-        self.proc.expect('@')
-        prompt = self.proc.before.rsplit('\r\n')[-1]
-        self._log(2, "prompt = "+prompt+", length = "+str(len(prompt)))
-        self.proc.expect('>')
+        try:
+            self.proc.expect('>')
+            self.proc.sendline('')
+            self.proc.expect('@')
+            prompt = self.proc.before.rsplit('\r\n')[-1]
+            self._log(2, "prompt = "+prompt+", length = "+str(len(prompt)))
+            self.proc.expect('>')
+        except:
+            prompt = ''
         return prompt
     
     def _sendfile(self, filename, callback=None):
@@ -170,20 +173,24 @@ class FirmwareCli:
     
     def identifydevice(self):
         """ Attempt to determine version and productid of a device. """
-        if not self._ruthere():
-            self._log(0, 'Device does not respond: '+self.tty)
-            return
-        self._appmode()
-        self.proc.sendline('info')
-        self.proc.expect('Product ID: ')
-        self.proc.expect('\r\n')
-        productid = self.proc.before
-        self._log(2, "device productid = "+productid)
-
-        self.proc.expect('\tActive Expander FW Revision: ')
-        self.proc.expect(' ')
-        version = self.proc.before
-        self._log(2, "device version   = "+version)
+        try:
+            if not self._ruthere():
+                self._log(0, 'Device does not respond: '+self.tty)
+                return
+            self._appmode()
+            self.proc.sendline('info')
+            self.proc.expect('Product ID: ')
+            self.proc.expect('\r\n')
+            productid = self.proc.before
+            self._log(2, "device productid = "+productid)
+    
+            self.proc.expect('\tActive Expander FW Revision: ')
+            self.proc.expect(' ')
+            version = self.proc.before
+            self._log(2, "device version   = "+version)
+        except:
+            version   = ''
+            productid = ''
 
         return (version, productid)
     
