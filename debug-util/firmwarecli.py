@@ -169,7 +169,7 @@ class FirmwareCli:
         
     def identifyfile(self):
         """ Attempt to determine version and productid of a firmware file. """
-        return FirmwareFile(self.filename).identifyfile()
+        return FirmwareFile("").identifyfile(self.filename)
     
     def identifydevice(self):
         """ Attempt to determine version and productid of a device. """
