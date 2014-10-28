@@ -24,7 +24,7 @@ class FirmwareFile():
         if os.path.isfile(name):
             self.tmpdir = tempfile.mkdtemp("", "fw-")
             result = subprocess.call(['7za','x','-o'+self.tmpdir,self.name], stdout=open("/dev/null","w"))
-            print "result =", result
+            #print "result =", result
             if   result is 0:
                 self._populate_from_dir(self.tmpdir)
             elif result is 2:

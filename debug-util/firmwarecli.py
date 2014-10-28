@@ -135,9 +135,13 @@ class FirmwareCli:
         def putc(data, timeout=1):
             self.sport.writeTimeout = timeout
             return self.sport.write(data)
+        
+        def mycallback(total_packets, success_count, error_count):
+            if cb:
+                cb(total_packets, success_count, error_count, file_packets)
 
         self.previous_line = ''
-        def statuscallback(total_packets, success_count, error_count):
+        def statuscallback(total_packets, success_count, error_count, file_packets):
             #global previous_line
             this_line = " %d%%  %d err\r" % (total_packets*100/file_packets, error_count)
             if this_line != self.previous_line:
@@ -163,7 +167,7 @@ class FirmwareCli:
             else:
                 cb = None        
         file_packets = (os.path.getsize(self.filename)-1)/128+1
-        result = modem.send(open(filename, 'rb'), callback=cb)
+        result = modem.send(open(filename, 'rb'), callback=mycallback)
         self._log(2, "xmodem result = " + str(result))
         self.proc = pexpect.fdpexpect.fdspawn(self.sport, logfile=self.logfile)
         
