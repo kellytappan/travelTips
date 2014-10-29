@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-version = "0.0.0+"
+version = "0.1.0"
 
 import sys
 import curses.wrapper
@@ -121,6 +121,14 @@ def display(scr):
                 can['win'].addstr(verpos[0]+1, verpos[1], "status: " +can['status' ])
                 can['win'].addstr(verpos[0]+2, verpos[1], "tty: "    +can['tty'    ])
             can['win'].noutrefresh()
+        for name in ('A','B','A0','B0'):
+            y,x = cans[name]['plugpos']
+            cans[name]['win'].addstr(y,x-len(name),name)
+            cans[name]['win'].noutrefresh()
+        for name in ('A1','B1'):
+            y,x = cans[name]['plugpos']
+            cans[name]['win'].addstr(y,x+3,name)
+            cans[name]['win'].noutrefresh()
         for name in ('PS0','PS1','PS2','PS3'):
             cans[name]['win'].addstr(1,1,"Power Supply")
             cans[name]['win'].noutrefresh()
@@ -250,7 +258,7 @@ else:
 connections = {}  # port:prompt
 versions    = {}  # prompt:version
 cansleft = set(('A','B','A0','A1','B0','B1'))
-cansleft = set(('A','B',     'A1','B0',    ))
+#cansleft = set(('A','B',     'A1','B0',    ))
 status = {prompt:STATUS_UNKNOWN for prompt in cansleft}  # prompt:status
 
 # Status transitions:
