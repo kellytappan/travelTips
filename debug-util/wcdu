@@ -309,21 +309,31 @@ def sespage05(p):
     if not page05["data"]:
         page01 = sp.parse(sp.readpage(0x01))
         page05 = sp.parse(sp.readpage(0x05))
+    page07 = sp.parse(sp.readpage(0x07))
+    if not page07["data"]:
+        page01 = sp.parse(sp.readpage(0x01))
+        page07 = sp.parse(sp.readpage(0x07))
 
+    labels = []
+    for enclosure in page07["data"].enclosures.val:
+        for typ in enclosure:
+            for element in typ["elements"]:
+                labels.append(element.text.val)
+    
     for enclosure in page05["data"].enclosures.val:
         for typ in enclosure:
             pbob(); print "type:", "%.2X" % typ["type"], typ["text"]
+            pbob(); print "    " + "ele HiC HiW LoW LoC"
             elnum = -1
             for element in typ["elements"]:
                 elnumstr = "%.3d" % elnum if elnum >= 0 else "all"
-                pbo(element.hicrit)
-                print "    " + elnumstr, "%3d %3d %3d %3d" % \
+                print indentedtext(pbo(element.hicrit,False) + "    " + elnumstr + " "+ ("%3d %3d %3d %3d  " % \
                 (
-                 element.hicrit.val,
-                 element.hiwarn.val,
-                 element.lowarn.val,
-                 element.locrit.val,
-                 )
+                 element.hicrit.val-20,
+                 element.hiwarn.val-20,
+                 element.lowarn.val-20,
+                 element.locrit.val-20,
+                 )), labels.pop(0), "")
                 elnum += 1
     Menu.wait()
 

@@ -19,3 +19,10 @@ create README
 create manual or fix specification
 add sas ses dump <filename>
 add SES page write capability to discovery
+fix CLI SES pages for Pinot Grigio 02.05
+detect attempted non-root access to ScsiPT
+insulate __del__ routines from non-initialized objects
+add option to specify password to unpack protected 7z firmware files
+detect password-protected 7z firmware files
+add firmware.py and fw.py to wcdu-guide
+split out command line code from classes in firmware.py and fw.py
