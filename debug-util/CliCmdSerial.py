@@ -4,7 +4,7 @@ import pexpect
 
 class CliCmdSerial(CliCmd):
 
-    timeout= .4   # seconds  # .3 works for 424 bytes
+    timeout= .1   # seconds
 
     def __init__(self, tty, baud=115200):
         self.tty  = tty
@@ -64,9 +64,27 @@ class CliCmdSerial(CliCmd):
         TODO: Expect one line at a time with a shorter timeout.
         """
         self.proc.sendline(cmd)
-        self.proc.expect(pexpect.TIMEOUT)
-        # Strip carriage-returns from the output text.
-        retval = self.proc.before.replace("\r", "")
+        if False:
+            self.proc.expect(pexpect.TIMEOUT)
+            # Strip carriage-returns from the output text.
+            retval = self.proc.before.replace("\r", "")
+        else:
+            retval = ""
+            slowlines = 10
+            while True:
+                if slowlines > 0:
+                    slowlines -= 1
+                    timeout = 1
+                else:
+                    timeout = .1
+                match = self.proc.expect(["\r", pexpect.TIMEOUT], timeout=timeout)
+                if slowlines > 0:
+                    words = self.proc.before.split()
+                    if len(words) > 0 and words[0] == "0000":
+                        slowlines = 0
+                retval += self.proc.before.replace("\r", "")
+                if match == 1:
+                    break
         # Something is adding two newlines before and one after the data, compared to the SES page 0xe8 interface.
         if retval[0] == "\n": retval = retval[1:]
         if retval[0] == "\n": retval = retval[1:]

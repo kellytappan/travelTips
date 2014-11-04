@@ -58,7 +58,10 @@ class SesPageCli(SesPage):
                             page += chr(int(word,16))
                             expected_index += 1
                     else:
-                        return None
+                        if length and len(page) == length:
+                            return page
+                        if "@" not in words[0]:
+                            return None
         return page
 
     def writepage(self, data):
