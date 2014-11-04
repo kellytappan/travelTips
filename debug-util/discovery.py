@@ -86,19 +86,24 @@ class Discovery(object):
 
         Returns a list of capabilities.
         """
-        try:
-            page_02 = sp.readpage(0x02)
-        except:
-            return []
+#         try:
+#             page_02 = sp.readpage(0x02)
+#         except:
+#             return []
+#         else:
+#             if page_02:
+#                 #print "page 02 length =", len(page_02)
+#                 if len(page_02) <= 424:
+#                     return [Discovery.CAP_SES_SHORT]
+#                 else:
+#                     return [Discovery.CAP_SES_SHORT, Discovery.CAP_SES]
+#             else:
+#                 return []
+        page_02 = sp.readpage(0x02)
+        if page_02:
+            return [Discovery.CAP_SES_SHORT, Discovery.CAP_SES]
         else:
-            if page_02:
-                #print "page 02 length =", len(page_02)
-                if len(page_02) <= 424:
-                    return [Discovery.CAP_SES_SHORT]
-                else:
-                    return [Discovery.CAP_SES_SHORT, Discovery.CAP_SES]
-            else:
-                return []
+            return []
 
     @staticmethod
     def probe():

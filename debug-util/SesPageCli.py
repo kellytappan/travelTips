@@ -15,7 +15,24 @@ class SesPageCli(SesPage):
             self.cli_interface = None
 
     def readpage(self, pagenum):
-        raw = self.cli_interface.execute("ses rcv " + str(pagenum))
+        """
+        Read the SES page specified by integer pagenum, returning a string.
+        """
+        data = self._getsespage(pagenum, 4)
+        if pagenum == 0x80:
+            data = self._getsespage(pagenum, 5)
+        if len(data) < 4:
+            return self._getsespage(pagenum)
+        length = 4 + \
+            (ord(data[2]) << 8) + \
+            (ord(data[3]) << 0)
+        return self._getsespage(pagenum, length)
+
+    def _getsespage(self, pagenum, length=None):
+        cmd = "ses rcv " + str(pagenum)
+        if length:
+            cmd += " " + str(length)
+        raw = self.cli_interface.execute(cmd)
         expected_index = 0  # The first line of data starts with "0000".
         page = ""  # No data yet.
         state = "before"  # We're not yet looking at a line with data.
