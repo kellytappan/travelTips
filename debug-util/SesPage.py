@@ -532,7 +532,7 @@ class SesPage(object):
             typelist05 = []
             for typedef01 in enclosure01.typedesc.val:
                 ellist05 = []
-                for elnum in range(1+typedef01.possible.val):
+                for elnum in range(1+typedef01.possible.val):  # @UnusedVariable
                     ellist05.append(Cmd.extract(data[bo:], threshold_descriptor, bo))
                     bo += 4
                 typelist05.append({
@@ -578,7 +578,7 @@ class SesPage(object):
             typelist07 = []
             for typedef01 in enclosure01.typedesc.val:
                 ellist07 = []
-                for elnum in range(1+typedef01.possible.val):
+                for elnum in range(1+typedef01.possible.val):  # @UnusedVariable
                     length = Cmd.extract(data[bo:], descriptor_head, bo).length.val
                     bo += 4
                     descriptor_text[0][1] = length*8
@@ -688,7 +688,7 @@ class SesPage(object):
 
             phylist = []
             phybo = bo
-            for phynum in range(sas_specific.numphys.val):
+            for phynum in range(sas_specific.numphys.val):  # @UnusedVariable
                 phylist.append(Cmd.extract(data[bo:], phy_descriptor, bo))
                 bo += 28
             sas_specific.append(Cmd.Field(phylist, phybo, "phydescriptors", "phy descriptor list"), "phydescriptors")
@@ -744,7 +744,7 @@ class SesPage(object):
         bo += 8
 
         descriptors = []
-        for encidx in range(1+head.secondaries.val):
+        for encidx in range(1+head.secondaries.val):  # @UnusedVariable
             descriptor = Cmd.extract(data[bo:], descriptor_format, bo)
             bo += 16
             descriptor.append(Cmd.Field(status_text[descriptor.status.val], -1, "status_text", "status meaning"), "status_text")
@@ -752,6 +752,67 @@ class SesPage(object):
 
         head.descriptors.val = descriptors
         return head
+
+
+#    def page_0e_fill(self, sub_id, mode, buf_id, buf_offset, data_len, microcode):
+    def page_0e_fill(self, dat_defs, microcode):
+        # dat_defs must include mode, buf_offset, data_len, sas_expander_id.
+        # Pass in the entire microcode buffer because we need the length.
+        download_microcode = \
+        {
+         "page_code" :(  0   , 1*8, 0x0e),
+         "sub_id"    :(  1   , 1*8, 0x00),
+         "page_len"  :(  2   , 2*8, 0),
+         "gen_code"  :(  4   , 4*8, 0),
+         "mode"      :(  8   , 1*8, 0),
+        #"buf_id"    :( 11   , 1*8, 0),
+         "firmware_image_id":((11,7), 4  , 1),
+         "sas_expander_id"  :((11,3), 4  , 0),
+         "buf_offset":( 12   , 4*8, 0),
+         "image_len" :( 16   , 4*8, 0),
+         "data_len"  :( 20   , 4*8, 0),
+         "data"      :[ 24   , 0  , 0],
+         }
+        data_len   = dat_defs["data_len"]
+        buf_offset = dat_defs["buf_offset"]
+
+        page0e = self.parse(self.readpage(0x0e))["data"]
+        desc = page0e.descriptors.val[0]
+        #TODO
+        if buf_offset != desc.expected_offset.val:
+            print "buf_offset =", buf_offset, " expected", desc.expected_offset.val
+        if (dat_defs["firmware_image_id"]<<4)+dat_defs["sas_expander_id"] != desc.expected_id.val:
+            print "id = 0x%x%x, expected 0x%.2x" % (dat_defs["firmware_image_id"], dat_defs["sas_expander_id"], desc.expected_id.val)
+        if desc.status.val is not 0x01:
+            print "status =", desc.status.val
+
+        download_microcode["data"][1] = 8*data_len
+        padded_len = (data_len+3) / 4 * 4
+        dat = [0] * (24 + padded_len)
+#         Cmd.fill(dat,
+#                  download_microcode,
+#                  {
+#                   "sub_id"    : sub_id,
+#                   "page_len"  : len(dat) - 4,
+#                   "mode"      : mode,
+#                   "buf_id"    : buf_id,
+#                   "buf_offset": buf_offset,
+#                   "image_len" : len(microcode),
+#                   "data_len"  : data_len,
+#                   "data"      : microcode[buf_offset:buf_offset+data_len],
+#                   })
+        more_defs = {
+            "page_len"  : len(dat) - 4,
+            "image_len" : len(microcode),
+            "data"      : microcode[buf_offset:buf_offset+data_len],
+            "gen_code"  : page0e.gen.val,
+            }
+        more_defs.update(dat_defs)
+        Cmd.fill(
+            dat,
+            download_microcode,
+            more_defs)
+        return dat
 
 
     def parse_80(self, data):
@@ -897,33 +958,3 @@ class SesPage(object):
                     "data"    : data,
                     }
 
-    def create_0e(self, sub_id, mode, buf_id, buf_offset, data_len, microcode):
-        download_microcode = \
-        {
-         "page_code" :(  0   , 1*8, 0x0e),
-         "sub_id"    :(  1   , 1*8, 0x00),
-         "page_len"  :(  2   , 2*8, 0),
-         "gen_code"  :(  4   , 4*8, 0),
-         "mode"      :(  8   , 1*8, 0),
-         "buf_id"    :( 11   , 1*8, 0),
-         "buf_offset":( 12   , 4*8, 0),
-         "image_len" :( 16   , 4*8, 0),
-         "data_len"  :( 20   , 4*8, 0),
-         "data"      :[ 24   , 0  , 0],
-         }
-        download_microcode["data"][1] = 8*data_len
-        padded_len = (data_len+3) / 4 * 4
-        dat = [0] * (24 + padded_len)
-        Cmd.fill(dat,
-                 download_microcode,
-                 {
-                  "sub_id"  : sub_id,
-                  "page_len": len(dat) - 4,
-                  "mode"    : mode,
-                  "buf_id"  : buf_id,
-                  "buf_offset": buf_offset,
-                  "image_len" : len(microcode),
-                  "data_len"  : data_len,
-                  "data"      : microcode[buf_offset:buf_offset+data_len],
-                  })
-        return dat

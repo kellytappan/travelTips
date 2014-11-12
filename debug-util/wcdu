@@ -17,14 +17,14 @@ from SesPageFile   import SesPageFile
 from SesPageCli    import SesPageCli
 from CliCmdSerial  import CliCmdSerial
 from CliCmdSas     import CliCmdSas
-from CliCmd        import CliCmd
-from SesPage       import SesPage
+#from CliCmd        import CliCmd
+#from SesPage       import SesPage
 from configuration import Configuration
 from discovery     import Discovery
 
 from ScsiPT import ScsiPT
 from Cmd    import Cmd
-from CDB    import CDB
+#from CDB    import CDB
 
 # Set up communication paths.
 #sp = SesPageSas("/dev/sg4")
@@ -149,7 +149,7 @@ def print_status(pagenum, extras_func=None, param=None):
     if not sp: return
     page02 = sp.parse(sp.readpage(0x02))
     if not page02["data"]:
-        page01 = sp.parse(sp.readpage(0x01))
+        page01 = sp.parse(sp.readpage(0x01))  # @UnusedVariable
         page02 = sp.parse(sp.readpage(0x02))
 
     for enclosure in page02["data"].enclosures.val:
@@ -282,7 +282,7 @@ def sespage02(p):
     if not sp: return
     page02 = sp.parse(sp.readpage(0x02))
     if not page02["data"]:
-        page01 = sp.parse(sp.readpage(0x01))
+        page01 = sp.parse(sp.readpage(0x01))  # @UnusedVariable
         page02 = sp.parse(sp.readpage(0x02))
 
     for enclosure in page02["data"].enclosures.val:
@@ -307,11 +307,11 @@ def sespage05(p):
     if not sp: return
     page05 = sp.parse(sp.readpage(0x05))
     if not page05["data"]:
-        page01 = sp.parse(sp.readpage(0x01))
+        page01 = sp.parse(sp.readpage(0x01))  # @UnusedVariable
         page05 = sp.parse(sp.readpage(0x05))
     page07 = sp.parse(sp.readpage(0x07))
     if not page07["data"]:
-        page01 = sp.parse(sp.readpage(0x01))
+        page01 = sp.parse(sp.readpage(0x01))  # @UnusedVariable
         page07 = sp.parse(sp.readpage(0x07))
 
     labels = []
@@ -342,7 +342,7 @@ def sespage07(p):
     if not sp: return
     page07 = sp.parse(sp.readpage(0x07))
     if not page07["data"]:
-        page01 = sp.parse(sp.readpage(0x01))
+        page01 = sp.parse(sp.readpage(0x01))  # @UnusedVariable
         page07 = sp.parse(sp.readpage(0x07))
 
     for enclosure in page07["data"].enclosures.val:
@@ -361,7 +361,7 @@ def sespage0a(p):
     if not sp: return
     page0a = sp.parse(sp.readpage(0x0a))
     if not page0a["data"]:
-        page01 = sp.parse(sp.readpage(0x01))
+        page01 = sp.parse(sp.readpage(0x01))  # @UnusedVariable
         page0a = sp.parse(sp.readpage(0x0a))
 
     addelpage = page0a["data"]
@@ -594,7 +594,7 @@ def drive_status(p):
     Menu.clear()
     if not sp: return
     # Read SAS addresses from SES page 0x0a.
-    page01 = sp.parse(sp.readpage(0x01))
+    page01 = sp.parse(sp.readpage(0x01))  # @UnusedVariable
     page0a = sp.parse(sp.readpage(0x0a))
     #print "page0a =", "%X" % page0a["data"].descriptors.val[6].phydescriptors.val[0].sas_addr.val
     descriptors = page0a["data"].descriptors.val
@@ -807,7 +807,7 @@ def powersupply_longstatus(p):
     Menu.clear()
     if not sp: return
     # Retrieve the element descriptors so we can print them.
-    page01 = sp.parse(sp.readpage(0x01))
+    page01 = sp.parse(sp.readpage(0x01))  # @UnusedVariable
     page07 = sp.parse(sp.readpage(0x07))
     for typ in page07["data"].enclosures.val[0]:
         if typ["type"] == 0x02:

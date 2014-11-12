@@ -167,7 +167,7 @@ class Discovery(object):
                 #print "create_accessor: returning existing accessor for", definition, ":", retval  # DEBUG
                 return retval
 
-        quality, funcs, param = definition
+        quality, funcs, param = definition  # @UnusedVariable
         try:
             funcs[0]
         except:

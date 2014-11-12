@@ -22,6 +22,7 @@ class SesPageSas(SesPage):
 
     def __del__(self):
         self.close()
+        super(SesPageSas, self).__del__()
 
     def readpage(self, pagenum):
         """

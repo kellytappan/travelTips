@@ -33,6 +33,8 @@ class FirmwareFile():
                 print "7z error", result
         elif os.path.isdir(name):
             self._populate_from_dir(self.name)
+        elif name == "":
+            pass
         else:
             print "path not found:", self.name
             
@@ -45,13 +47,31 @@ class FirmwareFile():
 
     def identifyfile(self, filename):
         """ Attempt to determine version and productid of a firmware file. """
+        
+        # key is bytes 8, 9, 10 of file, i.e. product id, hardware rev, destination partition
+        # value is tuple of expanders, firmware image id, type string
+        keymap = {
+            "\x02\xa0\x02": (("A" , "B"             ), 1, "app" , "BLUE MOON       "),
+            "\x03\xa0\x02": (("A0", "A1", "B0", "B1"), 1, "app" , "TRINIDAD        "),
+            "\x02\x0b\xff": (("A" , "B"             ), 1, "boot", "BLUE MOON       "),
+            "\x03\x0b\xff": (("A0", "A1", "B0", "B1"), 1, "boot", "TRINIDAD        "),
+            "\x02\xa0\x08": (("A" , "B"             ), 2, "cpld", "BLUE MOON       "),
+            "\x03\x0b\x08": (("A0"                  ), 2, "cpld", "TRINIDAD        "),
+            "\x02\x0b\x09": (("A" , "B"             ), 3, "cpld", "BLUE MOON       "),
+            "\x03\x0b\x09": (("A0"                  ), 3, "cpld", "TRINIDAD        "),
+            }
+
         f = open(filename, 'rb')
 
         f.seek(0x00)
         magic = f.read(8)
-        if magic != "JBL_ISTR":
+        if "JBL" not in magic:
             self._log(2, "file has bad magic number")
             return None
+        
+        f.seek(0x08)
+        key = f.read(3)  # product id, hardware rev, destination partition
+        mapped = keymap[key] if key in keymap else None
 
         f.seek(0x0c)
         version = f.read(2)
@@ -61,14 +81,15 @@ class FirmwareFile():
 
         f.seek(0x2b)
         productid = f.read(16)
+        productid = mapped[3] if mapped else None
         self._log(2, "file productid = "+productid)
 
-        return (version, productid)
+        return (version, productid, mapped)
     
     def _populate_from_file(self, filename):
         identity = self.identifyfile(filename)
         if identity:
-            version, productid = identity
+            version, productid, more = identity  # @UnusedVariable
             if version not in self.fwdict:
                 self.fwdict[version] = {}
             self.fwdict[version][productid] = filename
