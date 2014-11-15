@@ -65,9 +65,15 @@ class FirmwareSes:
                 "sas_expander_id":self.expanderid,
                 }, microcode)
             result = self.sp.writepage(sesdat)
-            if result is not 0:
+            if result != 0:
                 print "aborting; result =", result
                 break
+            page0e_desc = self.sp.parse(self.sp.readpage(0x0e))["data"].descriptors.val[0]
+            if page0e_desc.status.val not in (0x01, 0x10):
+                print "aborting; status =", page0e_desc.status.val
+                break
+            if page0e_desc.status.val == 0x10:
+                print "done? status =", 0x10
         page0e = self.sp.parse(self.sp.readpage(0x0e))["data"]
         for descriptor in page0e.descriptors.val:
             print "Enclosure #" + str(descriptor.subid.val)

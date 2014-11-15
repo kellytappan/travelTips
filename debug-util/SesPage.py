@@ -11,6 +11,9 @@ class SesPage(object):
     def __init__(self):
         self.page01 = None
         self.page02 = None
+    
+    def __del__(self):
+        pass
 
     @abc.abstractmethod
     def close(self):
