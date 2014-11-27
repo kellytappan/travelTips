@@ -9,7 +9,7 @@ import pexpect.fdpexpect
 import sys
 import os.path
 
-from firmwarefile import FirmwareFile
+from firmwarefile import FirmwareFile, FirmwareTypes
 
 class FirmwareCli:
     """
@@ -176,51 +176,64 @@ class FirmwareCli:
         return FirmwareFile("").identifyfile(self.filename)
     
     def identifydevice(self):
-        """ Attempt to determine version and productid of a device. """
+        """ Attempt to determine version, expander id, and productid of a device. """
+        """
+        Return a tuple with
+          version dictionary,
+          expander id (prompt)
+        version dictionary is indexed by type from FirmwareTypes, value
+          firmware version string
+        
+        productid is currently unused.
+        """
         try:
+            versions = {}
             if not self._ruthere():
                 self._log(0, 'Device does not respond: '+self.tty)
-                return
-            self._appmode()
+                return None
+            prompt = self.get_prompt()  # does self._appmode()
+            #self._appmode()
             self.proc.sendline('info')
+
             self.proc.expect('Product ID: ')
             self.proc.expect('\r\n')
             productid = self.proc.before
             self._log(2, "device productid = "+productid)
-    
-            self.proc.expect('\tActive Expander FW Revision: ')
-            self.proc.expect(' ')
-            version = self.proc.before
-            self._log(2, "device version   = "+version)
+
+            while True:
+                match = self.proc.expect([
+                    'Hardware Information:',
+                    '\tActive Expander FW Revision: ',
+                    '\tBoot Loader FW Revision: ',
+                    '\tSBBMI CPLD FW Revision: ',
+                    '\tSASCONN CPLD FW Revision: ',
+                    '\tCPLD \(0xd8\) FW Revision: ',
+                    '\tDAP CPLD FW Revision: ',
+                    ])
+                typ = (
+                    -1,
+                    FirmwareTypes.APP,
+                    FirmwareTypes.BOOT,
+                    FirmwareTypes.SBBMI,
+                    FirmwareTypes.SASCONN,
+                    FirmwareTypes.BB,
+                    FirmwareTypes.DAP,
+                    )[match]
+                if typ is -1:
+                    break
+                self.proc.expect([' ', '\r\n'])
+                versions[typ] = self.proc.before
+                self._log(2, typ+" = "+versions[typ])
         except:
-            version   = ''
+            versions  = None
             productid = ''
+            prompt    = None
 
-        return (version, productid)
+        return (versions, prompt)
     
-    def find_matches_directory(self, directory):
-        pass
-
 
 
 if __name__ == "__main__":
-    #tty  = '/dev/ttyUSB1'
-    #filename = 'firmware/2.04/pinot_grigio_fem_sas_update_02_04.bin'
-    #filename = 'firmware/Skytree_SAS_Release_02_87/skytree_fem_sas_update_02_87.bin'
-    
-    #tty = '/dev/ttyUSB2'
-    #filename = 'firmware/Skytree_SAS_Release_02_87/bluemoon_sas_update_02.87.bin'
-    
-    #tty = '/dev/ttyUSB0'
-    #fw = FirmwareCli(tty, filename, verbosity=2)
-    #fw.update()
-    
-    #fw = FirmwareCli(tty, sys.argv[1], verbosity=2)
-    #fw.identifyfile()
-    
-    #fw = FirmwareCli(sys.argv[1], None, verbosity=2)
-    #fw.identifydevice()
-    
     if len(sys.argv) != 3:
         print "usage:", sys.argv[0].split('/')[-1], "<tty device file> <firmware file>"
         sys.exit(-1)
@@ -232,11 +245,18 @@ if __name__ == "__main__":
     fw = FirmwareCli(tty, filename, verbosity=2)
     fid = fw.identifyfile()
     did = fw.identifydevice()
-    if not did:
+    if not fid:
+        print "Aborting; cannot get version string from file, '" + filename +"'."
         sys.exit(-1)
-    if fid[1] != did[1]:
-        print "product IDs don't match; aborting"
-        print fid[1], "!=", did[1]
+    if not did:
+        print "Aborting; cannot get version string from device at " + tty + "'."
+        sys.exit(-1)
+    fver, mapped      = fid
+    expanders, imageid, typ = mapped
+    dvers, expanderid = did
+    if expanderid not in expanders:
+        print "Aborting; mismatch between expander type and firmware type."
+        print expanderid, "not in", expanders
         sys.exit(-1)
     fw.update()
     fw.identifydevice()

@@ -240,7 +240,7 @@ if params["version"]:
     else:
         # The requested version is not available. Abort.
         print "Requested version,", params["version"][0]+", does not exist in specified firmware path,", params["firmware"][0]
-        print "Possibilities are:", possible.join(" ")
+        print "Possibilities are:", " ".join(possible)
         sys.exit(-1)
 else:
     # No version was requested on the command line.
@@ -258,7 +258,20 @@ else:
 connections = {}  # port:prompt
 versions    = {}  # prompt:version
 cansleft = set(('A','B','A0','A1','B0','B1'))
-#cansleft = set(('A','B',     'A1','B0',    ))
+# For each canister type, what firmware files does it need?
+firmleft = {}
+for prompt in cansleft:
+    firmleft[prompt] = {}
+    for typ in FirmwareType.affect[prompt]:
+        files = fw_file.get_filename(prompt, typ)
+        if len(files) > 1:
+            # Too many versions of this type of file.
+            pass  #TODO
+        elif len(files) == 0:
+            # No firmware files for this type.
+            pass  #TODO
+        else:
+            firmleft[prompt][typ] = files[0]
 status = {prompt:STATUS_UNKNOWN for prompt in cansleft}  # prompt:status
 
 # Status transitions:
