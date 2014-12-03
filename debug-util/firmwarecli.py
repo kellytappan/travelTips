@@ -181,8 +181,8 @@ class FirmwareCli:
         Return a tuple with
           version dictionary,
           expander id (prompt)
-        version dictionary is indexed by type from FirmwareTypes, value
-          firmware version string
+        version dictionary is indexed by type from FirmwareTypes,
+          value is firmware version string
         
         productid is currently unused.
         """

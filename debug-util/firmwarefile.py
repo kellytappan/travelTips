@@ -48,10 +48,11 @@ class FirmwareFile():
         self.name = name
 
         self.tmpdir = None
-        # dictionary indexed by expander type ("A", "A0", etc.) of
-        # dictionary indexed by firmware type of
-        # dictionary indexed by version string of
-        # file name string
+        # fwdict is
+        #   dictionary indexed by expander type ("A", "A0", etc.) of
+        #     dictionary indexed by firmware type of
+        #       dictionary indexed by version string of
+        #         file name string
         self.fwdict = {}
 #         self.fwlist = []
         
