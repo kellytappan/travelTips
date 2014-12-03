@@ -10,7 +10,7 @@ from time import sleep
 import argparse
 
 from firmwarecli  import FirmwareCli
-from firmwarefile import FirmwareFile
+from firmwarefile import FirmwareFile, FirmwareTypes
 from discovery    import Discovery
 
 verbosity = 0
@@ -176,27 +176,27 @@ def watch_port(port):
             main_que.put((CMD_CONNECTED,port,prompt))
             if status[prompt] == STATUS_UNKNOWN:
                 # This canister is not known to have the right firmware.
-                dev_vers, dev_prod = fw_cli.identifydevice()
+                dev_vers, dev_prompt = fw_cli.identifydevice()
                 if prompt not in versions:
                     # We haven't displayed this version yet.
-                    versions[prompt] = dev_vers
-                    display_que.put((CMD_SET, prompt, 'version', dev_vers))
-                if force or dev_vers != requested_version:
+                    versions[prompt] = dev_vers[FirmwareTypes.APP] if dev_vers else "????"  #TODO How can dev_vers be None?
+                    display_que.put((CMD_SET, prompt, 'version', dev_vers[FirmwareTypes.APP]))
+                if force or dev_vers[FirmwareTypes.APP] != requested_version:
                     # Do the update, if we can.
-                    f = fw_file.get_filename(dev_prod, requested_version)
+                    f = fw_file.get_filename(dev_prompt, FirmwareTypes.APP, requested_version)
                     if f:
                         main_que.put((CMD_PROGRESS, port, prompt))
                         display_que.put((CMD_SET, prompt, 'status', 'starting'))
                         fw_cli.set_filename(f)
                         fw_cli.update(update_callback)
-                        dev_vers, dev_prod = fw_cli.identifydevice()
-                        versions[prompt] = dev_vers
-                        display_que.put((CMD_SET, prompt, 'version', dev_vers))
+                        dev_vers, dev_prompt = fw_cli.identifydevice()
+                        versions[prompt] = dev_vers[FirmwareTypes.APP] if dev_vers else "????"  #TODO
+                        display_que.put((CMD_SET, prompt, 'version', dev_vers[FirmwareTypes.APP]))  #TODO
                     else:
                         main_que.put((CMD_NOFW, port, prompt))
                         status[prompt] = STATUS_NOFW
                 if status[prompt] != STATUS_NOFW:
-                    if dev_vers == requested_version:
+                    if dev_vers[FirmwareTypes.APP] == requested_version:
                         display_que.put((CMD_SET, prompt, 'status', 'good'))
                         main_que.put((CMD_PASS, port, prompt))
                     else:
@@ -231,7 +231,13 @@ force = params["force"]
 fw_file = FirmwareFile(params["firmware"][0])
 
 # Find appropriate version.
-possible = fw_file.get_versions()
+all_versions = set()
+for prompt in FirmwareTypes.all_set:
+    this_versions = fw_file.get_filename(prompt, FirmwareTypes.APP)
+    if this_versions:
+        all_versions |= set(this_versions.keys())
+
+possible = sorted(all_versions)
 if params["version"]:
     # A version was requested on the command line.
     if params["version"][0] in possible:
@@ -262,16 +268,17 @@ cansleft = set(('A','B','A0','A1','B0','B1'))
 firmleft = {}
 for prompt in cansleft:
     firmleft[prompt] = {}
-    for typ in FirmwareType.affect[prompt]:
-        files = fw_file.get_filename(prompt, typ)
-        if len(files) > 1:
-            # Too many versions of this type of file.
-            pass  #TODO
-        elif len(files) == 0:
+    for typ in FirmwareTypes.affect[prompt]:
+        files = fw_file.get_filename(prompt, typ)  # {version:filename, ...}
+        print "files =", files  #DEBUG
+        if not files:
             # No firmware files for this type.
             pass  #TODO
+        elif len(files) > 1:
+            # Too many versions of this type of file.
+            firmleft[prompt][typ] = files[requested_version]
         else:
-            firmleft[prompt][typ] = files[0]
+            firmleft[prompt][typ] = files[files.keys()[0]]
 status = {prompt:STATUS_UNKNOWN for prompt in cansleft}  # prompt:status
 
 # Status transitions:
