@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
 from discovery import Discovery
+from firmwarecli import FirmwareCli
+
+print_prompt = True
 
 print Discovery.discover_sas()
 print Discovery.discover_serial()
@@ -11,4 +14,9 @@ Discovery.probe()
 for cap,val in Discovery.capabilities.items():
     print "capability:", Discovery.description[cap]
     for ad in sorted(val, key=lambda a: a[0]):
-        print "   ", ad[0], ad[2]
+        prompt = ""
+        if print_prompt:
+            if ad[0] == 3:
+                prompt = FirmwareCli(ad[2], None).get_prompt()
+            prompt = "%-2s" % prompt
+        print "   ", ad[0], prompt, ad[2]
