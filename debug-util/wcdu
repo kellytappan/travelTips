@@ -274,6 +274,13 @@ def sespage02_specific(typ, elnum=None, element=None):
                  "X" if element.off.val   else "" ,
                  "X" if element.fail.val  else "" ,
                  )
+    elif typ == 0x04:
+        if elnum == None:
+            return ""  #TODO
+        elif elnum < 0:
+            return ""
+        else:
+            return ""  #TODO
     else:
         return ""
 
