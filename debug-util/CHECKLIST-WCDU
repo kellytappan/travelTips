@@ -1,0 +1,33 @@
+checklist matching Wolf Creek debug utility v06 document
+
+  BMC Menu (I need access to a system with a BMC.)
+? Platform Menu
+    BPM Menu
+    Ethernet Menu
+    GPIO Menu
+    HDD Menu
+    Memory Menu
+    PCI Menu
+    Processor Menu
+    Reset the System
+    SMBUS Menu
+    TPM Menu
+    USB Menu
+  SAS Menu
+1   CPLD Menu
+X   Drive Status
+x   Enclosure Status (not all information is present; add info from SES page 82 (PG only), page 01 for FRU Capability, page 02 for temperature; where are SAS information and SAS Statuses?)
+X   Fan Menu
+x   Flash Expander Image (uses external program, fw.py or firmware.py)
+1   LCD Menu (need to use SES page 04 (WC only), can't test without LCD)
+1   LED Menu
+    LOG Menu (is this SES page 80? not much there)
+1   PHY Menu (is this SES pages e0-e5? not in PG; how to write?)
+x   Power Supply Menu
+1   Reboot/Reset Expander
+    Sensor Menu (is this temperature sensors? SES page 02 type 04)
+x   SES Page Dump (need to implement page 04 commands and subcommands (WC only))
+1   TWI Menu (what's a TWI?)
+1   VPD Menu
+
+Note 1: I don't know how to access this functionality through SAS.
