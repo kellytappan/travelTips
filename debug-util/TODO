@@ -27,3 +27,6 @@ detect password-protected 7z firmware files
 add firmware.py and fw.py to wcdu-guide
 split out command line code from classes in firmware.py and fw.py
 add an output pager and configuration for it
+finish fw.py with multiple firmware types
+finish firmwareses.py, try write_buffer, since SES 0e doesn't seem to work
+wcdu persistent configuration (save and restore configuration)
