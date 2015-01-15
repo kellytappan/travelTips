@@ -10,7 +10,7 @@ setup(
     ],
     scripts=['wcdu', 'wcdu-cli', 'slowfan3', 'discovery-test', 'firmwarecli.py', 'fw.py', ],
     data_files=[('/usr/local/share/wcdu', ['wcdu-guide.pdf']), ],
-    install_requires=['scsi_pt>=0.1.3', 'argparse', 'pexpect', 'pyserial', ],
+    install_requires=['scsi_pt>=0.1.3', 'argparse', 'pexpect', 'pyserial', 'xmodem', ],
     author='Larry Fenske',
     author_email='jabil@towanda.com',
     url='http://jabil.com',

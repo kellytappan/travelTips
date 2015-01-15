@@ -12,4 +12,5 @@ from PyPI (pip install <name>):
   argparse  (probably comes with python)
   pexpect   (also as Ubuntu python-pexpect)
   pyserial  (also as Ubuntu python-serial)
+  xmodem
 
