@@ -8,8 +8,8 @@ import sys
 import argparse
 import re
 import subprocess
-try:    from cStringIO import StringIO
-except: from  StringIO import StringIO
+try:    from cStringIO import StringIO  # @UnusedImport
+except: from  StringIO import StringIO  # @Reimport
 
 from Menu          import Menu
 from SesPageSas    import SesPageSas
@@ -665,7 +665,7 @@ def drive_identify(p):
         return
 
     dat = sp.page_02_fill(drive_identify_filter, drive_id)
-    result = sp.writepage(dat)
+    result = sp.writepage(dat)  # @UnusedVariable
 
     Menu.wait()
 
@@ -699,7 +699,7 @@ def drive_pwroff(p):
         return
 
     dat = sp.page_02_fill(drive_pwroff_filter, drive_id)
-    result = sp.writepage(dat)
+    result = sp.writepage(dat)  # @UnusedVariable
 
     Menu.wait()
 
@@ -740,7 +740,7 @@ def fan_identify(p):
 
     #print cli.execute("fan identify " + fan_id)
     dat = sp.page_02_fill(fan_identify_filter, fan_id)
-    result = sp.writepage(dat)
+    result = sp.writepage(dat)  # @UnusedVariable
 
     Menu.wait()
 
@@ -783,7 +783,7 @@ def fan_speed(p):
         return
 
     dat = sp.page_02_fill(fan_speed_filter, (speed, fan_id))
-    result = sp.writepage(dat)
+    result = sp.writepage(dat)  # @UnusedVariable
 
     #if fan_id == "all" or fan_id == "":
     #    fan_selection = 0xffff
@@ -852,7 +852,7 @@ def powersupply_identify(p):
 
     #print cli.execute("fan identify " + fan_id)
     dat = sp.page_02_fill(powersupply_identify_filter, psu_id)
-    result = sp.writepage(dat)
+    result = sp.writepage(dat)  # @UnusedVariable
 
     Menu.wait()
 
