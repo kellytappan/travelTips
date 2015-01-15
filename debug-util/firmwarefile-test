@@ -12,7 +12,7 @@ from firmwarefile import FirmwareFile
 # for f in FirmwareFile(sys.argv[1]).get_list():
 #     print "%-14s %d %-4s %-11s %s" % (f[2][2], f[2][1], f[1], ','.join(f[2][0]), f[0].split('/')[-1])
 
-filenames = FirmwareFile(sys.argv[1]).get_filename()
+filenames = FirmwareFile(sys.argv[1], verbosity=3).get_filename()
 for expander in filenames:
     print "expander:", expander
     for typ in filenames[expander]:

@@ -38,7 +38,7 @@ class FirmwareFile():
     operations pertaining to firmware files
     """
     
-    def __init__(self, name):
+    def __init__(self, name, verbosity=0):
         """
         "name" can be either
           a single firmware file,
@@ -46,6 +46,7 @@ class FirmwareFile():
           or a directory of firmware files.
         """
         self.name = name
+        self.verbosity = verbosity
 
         self.tmpdir = None
         # fwdict is
@@ -78,6 +79,8 @@ class FirmwareFile():
             shutil.rmtree(self.tmpdir, ignore_errors=True)
 
     def _log(self, level, message):
+        if self.verbosity >= level:
+            print message
         pass
 
     def identifyfile(self, filename):
@@ -106,11 +109,12 @@ class FirmwareFile():
         f.seek(0x00)
         magic = f.read(8)
         if "JBL" not in magic:
-            self._log(2, "file has bad magic number")
+            self._log(2, "file has bad magic number: "+filename)
             return None
         
         f.seek(0x08)
         key = f.read(3)  # product id, hardware rev, destination partition
+        self._log(3, "key = %.2x,%.2x,%.2x %s" % (ord(key[0]), ord(key[1]), ord(key[2]), filename))
         mapped = keymap[key] if key in keymap else None
 
         f.seek(0x0c)
@@ -136,6 +140,8 @@ class FirmwareFile():
         identity = self.identifyfile(filename)
         if identity:
             version, mapped = identity
+            if not mapped:
+                return
             expanders, image, typ = mapped  # @UnusedVariable
             for expander in expanders:
                 if expander not in self.fwdict:
