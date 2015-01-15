@@ -11,7 +11,7 @@ import os.path
 
 from firmwarefile import FirmwareFile, FirmwareTypes
 
-class FirmwareCli:
+class FirmwareCli(object):
     """
     Update firmware on one device.
     """
