@@ -1,0 +1,269 @@
+; ************************************************************************************
+; This script was written by "Jabil Shanghai JTS-CS software Team",
+; Author: Pollux Su
+; Email:  Pollux_Su1@jabil.com
+; Date:	  2012.12.07
+; All right reserved.
+; ************************************************************************************
+
+
+show -1
+timeout = 10 ; connection timeout in seconds
+
+messagebox "Please make sure HotKey is Disabled and Uart port has switched to primary expander!" "Warning!"
+
+inputbox 'Please input COM Port number :' 'Login'
+
+;connect param2
+sprintf2 comport "/C=%s" inputstr
+connect comport
+if result = 0 then
+  sprintf2 msg "Cannot link Tera Term with parameter %s. Click Ok to exit." comport
+  messagebox msg "Connection Error"
+  closett
+  end
+elseif result = 1 then
+  sprintf2 msg "Failed to connect to serial port. Please check if the input com port number:%s is correct. Click Ok to exit." inputstr
+  messagebox msg "Connection Error"
+  closett
+  end
+endif
+setbaud 115200
+
+
+ 
+;send #0x1E #0x63
+;send #30 99   ;ctrl+shift+6 c
+send #13 ; carriage return
+waitregex "[A|B]0@.*>"  "=>"
+if result = 0 then ; Timeout
+  sprintf "Script waited %d seconds but did not receive sas FW prompt or boot loader prompt. Please program boot loader to revision 0101 first!... Click Ok to exit." timeout
+  messagebox inputstr "Can not access to remote host..."
+  closett
+  end
+endif
+
+
+getdir rootDir
+makepath bin_path rootDir "bin"
+
+timeout=120
+sendln "reset"
+wait "Hit"
+if result = 0 then ; Timeout
+  sprintf "Script waited %d seconds but did not receive Hit ^d ... Click Ok to exit." timeout
+  messagebox "CAN NOT change to bootloader..." "Bootloader"
+  closett
+  end
+endif
+send #4
+
+waitregex  "=>"
+
+timeout = 3
+sendln 'ver'
+wait 'Jabil Boot Loader, Revision 0101'
+if result != 1 then
+  messagebox  "Primary expander boot Loader FW Revision is not 0101, please update it to revision 0101 first!" "Error" 
+  closett
+  end
+endif
+
+sendln 'eep port 5 addr 0xc2 wd 1'
+pause 1
+sendln 'eep rd 0x03 1'
+wait 'Fail to read'
+if result=1 then  
+  messagebox  "MI CPLD is not programmed, please program it first!" "Error"
+  closett
+  end
+endif
+
+
+sendln 'eep port 1 addr 0xC2 wd 1'
+pause 1
+sendln 'eep rd 0x03 1'
+wait 'Fail to read'
+if result=1 then  
+  messagebox  "BB CPLD 1 is not programmed, please program it first!" "Error"
+  closett
+  end
+endif
+
+
+sendln 'eep port 1 addr 0xC4 wd 1'
+pause 1
+sendln 'eep rd 0x03 1'
+wait 'Fail to read'
+if result=1 then  
+  messagebox  "BB CPLD 2 is not programmed, please program it first!" "Error"
+  closett
+  end
+endif
+
+sendln 'eep port 4 addr 0xC2 wd 1'
+pause 1
+sendln 'eep rd 0x03 1'
+wait 'Fail to read'
+if result=1 then  
+  messagebox  "SSM CPLD is not programmed, please program it first!" "Error"
+  closett
+  end
+endif
+
+
+sendln "xmdm"
+wait "CC"
+if result = 0 then ; Timeout
+  sprintf "Script waited %d seconds but did not receive CCCC.... from the host. Click Ok to exit." timeout
+  messagebox "Could NOT start sending image bin file" "FW update fail"
+  closett
+  end
+endif
+makepath fem_bootloader_bin_path bin_path "wc_trinidad_fem_boot_loader_01_01.bin"
+xmodemsend fem_bootloader_bin_path 1
+if result = 0 then ; transfer file fail
+  messagebox "You Canceled or Couldn't find the image bin file" "FW update fail"
+  closett
+  end
+endif
+
+timeout=120
+sendln "reset"
+wait "Hit"
+if result = 0 then ; Timeout
+  sprintf "Script waited %d seconds but did not receive Hit ^d ... Click Ok to exit." timeout
+  messagebox "CAN NOT change to bootloader..." "Bootloader"
+  closett
+  end
+endif
+send #4
+
+waitregex  "=>"
+
+timeout = 3
+sendln 'ver'
+wait 'Jabil Boot Loader, Revision 0101'
+if result != 1 then
+  messagebox  "Primary expander boot Loader FW Revision is not 0101, please update it to revision 0101 first!" "Error" 
+  closett
+  end
+endif
+
+sendln 'eep port 5 addr 0xc2 wd 1'
+pause 3
+sendln 'eep rd 0x03 1'
+wait 'Fail to read'
+if result=1 then  
+  messagebox  "MI CPLD is not programmed, please program it first!" "Error"
+  closett
+  end
+endif
+
+
+timeout = 120
+sendln "xmdm"
+wait "CC"
+if result = 0 then ; Timeout
+  sprintf "Script waited %d seconds but did not receive CCCC.... from the host. Click Ok to exit." timeout
+  messagebox "Could NOT start sending image bin file" "FW update fail"
+  closett
+  end
+endif
+makepath fem_sas_bin_path bin_path "wc_trinidad_fem_sas_update_01_01.bin"
+xmodemsend fem_sas_bin_path 1
+if result = 0 then ; transfer file fail
+  messagebox "You Canceled or Couldn't find the image bin file" "FW update fail"
+  closett
+  end
+endif
+
+
+waitregex  "=>"
+;timeout = 600 ; connection t
+;sendln "boot"
+;waitregex "[A|B]0@.*>"
+;pause 4
+
+timeout = 120
+sendln "xmdm"
+wait "CC"
+if result = 0 then ; Timeout
+  sprintf "Script waited %d seconds but did not receive CCCC.... from the host. Click Ok to exit." timeout
+  messagebox "Could NOT start sending image bin file" "FW update fail"
+  closett
+  end
+endif
+sprintf2 cpld_fname "wc_baseboard_v01.02.bin"
+makepath BB_CPLD_bin_path bin_path cpld_fname 
+xmodemsend BB_CPLD_bin_path 1
+if result = 0 then ; transfer file fail
+  messagebox "You Canceled or Couldn't find the image bin file" "Baseboard CPLD update fail"
+  closett
+  end
+endif
+
+timeout = 120
+sendln "xmdm"
+wait "CC"
+if result = 0 then ; Timeout
+  sprintf "Script waited %d seconds but did not receive CCCC.... from the host. Click Ok to exit." timeout
+  messagebox "Could NOT start sending image bin file" "FW update fail"
+  closett
+  end
+endif
+sprintf2 cpld_fname "wc_midplane_v01.03.bin"
+makepath BB_CPLD_bin_path bin_path cpld_fname 
+xmodemsend BB_CPLD_bin_path 1
+
+if result = 0 then ; transfer file fail
+  messagebox "You Canceled or Couldn't find the image bin file" "Midplane CPLD update fail"
+  closett
+  end
+endif
+
+timeout = 120
+sendln "xmdm"
+wait "CC"
+if result = 0 then ; Timeout
+  sprintf "Script waited %d seconds but did not receive CCCC.... from the host. Click Ok to exit." timeout
+  messagebox "Could NOT start sending image bin file" "FW update fail"
+  closett
+  end
+endif
+sprintf2 cpld_fname "wc_status_v01.01.bin"
+makepath BB_CPLD_bin_path bin_path cpld_fname 
+xmodemsend BB_CPLD_bin_path 1
+if result = 0 then ; transfer file fail
+  messagebox "You Canceled or Couldn't find the image bin file" "SSM CPLD update fail"
+  closett
+  end
+endif
+
+
+;waitregex  "[A|B]0@.*>"
+;sendln "reset"
+;wait "Hit"
+;if result = 0 then ; Timeout
+;  sprintf "Script waited %d seconds but did not receive Hit ^d ... Click Ok to exit." timeout
+;  messagebox "CAN NOT change to bootloader..." "Bootloader"
+;  closett
+;  end
+;endif
+;send #4
+
+
+
+timeout = 420
+waitregex  "=>"
+sendln "boot"
+wait 'fail' 'Failed' 'error' 'SBB2.0/2.1 compatibility checking'
+if result=1 or result=2 or result=3 then
+	messagebox "SAS FW & CPLD update failed" "FW update"
+endif
+waitregex  "[A|B]0@.*>"
+messagebox "SAS FW & CPLD update finished!" "FW update"
+disconnect
+closett
+end
+; End of generated script

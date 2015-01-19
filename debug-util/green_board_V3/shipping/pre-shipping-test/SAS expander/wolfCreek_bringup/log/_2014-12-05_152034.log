@@ -1,0 +1,22 @@
+ItemName                            Result           Spent
+
+Unit:chk_BB0_CPLDFwVer              Passed           5s
+Unit:chk_BB1_CPLDFwVer              Passed           2s
+Unit:chk_MI_CPLDFwVer               Passed           1s
+Unit:chk_SSM_CPLDFwVer              Passed           2s
+Unit:chk_SAS_ActiveFwVer            Passed           1s
+Unit:chk_BootLoader_FWVer           Passed           1s
+Suite:chk_version_lowercanister     Passed           25s
+Unit:chk_MP_sensor                  Passed           5s
+Unit:chk_Inlet_sensor               Passed           5s
+Unit:chk_PSU_sensor                 Passed           5s
+Unit:chk_lower_sensor               Passed           5s
+Suite:lower_sensor                  Passed           29s
+phy return host:0, hdd:36, link: 12
+Unit:chk_PHY                        Passed           3s
+Suite:PHY                           Passed           5s
+Cluster:Wolfcreek_lower_pri         Passed           65s
+
+Loop Count:1 - Passed Loop Count:1 - Failed Loop Count:0
+######################################################
+

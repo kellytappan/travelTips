@@ -1,0 +1,190 @@
+
+B0@00:00de>
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y005|07|47|54|UF|CRIT[UpperCanister1]
+ 2]: 1Y005|07|48|55|UF|CRIT[UpperCanister2]
+ 3]: 2Y2905|07|45|52|OK[LowerCanister1]
+ 4]: 3Y3905|07|45|52|OK[LowerCanister2]
+ 5]: 4Y2705|07|46|53|OK[Midplane1]
+ 6]: 5Y2905|07|47|54|OK[Midplane2]
+ 7]: 6Y2805|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y30--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y30--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y30--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y001|10|45|50|UF|CRIT[PSUAHotspot]
+ 15]: 14Y2361601|10|45|50|UF|CRIT[PSUAInlet]
+ 16]: 15Y-2559001|10|45|50|UF|CRIT[PSUBHotspot]
+ 17]: 16Y1588801|10|45|50|UF|CRIT[PSUBInlet]
+ 18]: 17Y-1637501|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y-2094401|10|45|50|UF|CRIT[PSUCInlet]
+ 20]: 19Y3201|10|45|50|OK[PSUDHotspot]
+ 21]: 20Y2601|10|45|50|OK[PSUDInlet]
+
+Unit Result:chk_MP_sensor was Passed
+
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y005|07|47|54|UF|CRIT[UpperCanister1]
+ 2]: 1Y005|07|48|55|UF|CRIT[UpperCanister2]
+ 3]: 2Y2905|07|45|52|OK[LowerCanister1]
+ 4]: 3Y3905|07|45|52|OK[LowerCanister2]
+ 5]: 4Y2705|07|46|53|OK[Midplane1]
+ 6]: 5Y3005|07|47|54|OK[Midplane2]
+ 7]: 6Y2805|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y30--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y30--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y30--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y001|10|45|50|UF|CRIT[PSUAHotspot]
+ 15]: 14Y2361601|10|45|50|UF|CRIT[PSUAInlet]
+ 16]: 15Y-2559001|10|45|50|UF|CRIT[PSUBHotspot]
+ 17]: 16Y1588801|10|45|50|UF|CRIT[PSUBInlet]
+ 18]: 17Y-1637501|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y-2094401|10|45|50|UF|CRIT[PSUCInlet]
+ 20]: 19Y3201|10|45|50|OK[PSUDHotspot]
+ 21]: 20Y2601|10|45|50|OK[PSUDInlet]
+
+retry...
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y005|07|47|54|UF|CRIT[UpperCanister1]
+ 2]: 1Y005|07|48|55|UF|CRIT[UpperCanister2]
+ 3]: 2Y2905|07|45|52|OK[LowerCanister1]
+ 4]: 3Y3905|07|45|52|OK[LowerCanister2]
+ 5]: 4Y2705|07|46|53|OK[Midplane1]
+ 6]: 5Y3005|07|47|54|OK[Midplane2]
+ 7]: 6Y2805|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y30--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y30--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y30--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y001|10|45|50|UF|CRIT[PSUAHotspot]
+ 15]: 14Y2361601|10|45|50|UF|CRIT[PSUAInlet]
+ 16]: 15Y-2559001|10|45|50|UF|CRIT[PSUBHotspot]
+ 17]: 16Y1588801|10|45|50|UF|CRIT[PSUBInlet]
+ 18]: 17Y-1637501|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y-2094401|10|45|50|UF|CRIT[PSUCInlet]
+ 20]: 19Y3201|10|45|50|OK[PSUDHotspot]
+ 21]: 20Y2601|10|45|50|OK[PSUDInlet]
+
+retry...
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y005|07|47|54|UF|CRIT[UpperCanister1]
+ 2]: 1Y005|07|48|55|UF|CRIT[UpperCanister2]
+ 3]: 2Y2905|07|45|52|OK[LowerCanister1]
+ 4]: 3Y3905|07|45|52|OK[LowerCanister2]
+ 5]: 4Y2705|07|46|53|OK[Midplane1]
+ 6]: 5Y3005|07|47|54|OK[Midplane2]
+ 7]: 6Y2805|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y30--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y30--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y30--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y001|10|45|50|UF|CRIT[PSUAHotspot]
+ 15]: 14Y2361601|10|45|50|UF|CRIT[PSUAInlet]
+ 16]: 15Y-2559001|10|45|50|UF|CRIT[PSUBHotspot]
+ 17]: 16Y1588801|10|45|50|UF|CRIT[PSUBInlet]
+ 18]: 17Y-1637501|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y-2094401|10|45|50|UF|CRIT[PSUCInlet]
+ 20]: 19Y3201|10|45|50|OK[PSUDHotspot]
+ 21]: 20Y2601|10|45|50|OK[PSUDInlet]
+
+retry...
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y005|07|47|54|UF|CRIT[UpperCanister1]
+ 2]: 1Y005|07|48|55|UF|CRIT[UpperCanister2]
+ 3]: 2Y2905|07|45|52|OK[LowerCanister1]
+ 4]: 3Y3905|07|45|52|OK[LowerCanister2]
+ 5]: 4Y2705|07|46|53|OK[Midplane1]
+ 6]: 5Y3005|07|47|54|OK[Midplane2]
+ 7]: 6Y2905|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y30--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y30--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y30--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y001|10|45|50|UF|CRIT[PSUAHotspot]
+ 15]: 14Y2361601|10|45|50|UF|CRIT[PSUAInlet]
+ 16]: 15Y-2559001|10|45|50|UF|CRIT[PSUBHotspot]
+ 17]: 16Y1588801|10|45|50|UF|CRIT[PSUBInlet]
+ 18]: 17Y-1637501|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y-2094401|10|45|50|UF|CRIT[PSUCInlet]
+ 20]: 19Y3201|10|45|50|OK[PSUDHotspot]
+ 21]: 20Y2601|10|45|50|OK[PSUDInlet]
+
+Unit Result:chk_upper_sensor was Failed
+
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y005|07|47|54|UF|CRIT[UpperCanister1]
+ 2]: 1Y005|07|48|55|UF|CRIT[UpperCanister2]
+ 3]: 2Y2905|07|45|52|OK[LowerCanister1]
+ 4]: 3Y3905|07|45|52|OK[LowerCanister2]
+ 5]: 4Y2705|07|46|53|OK[Midplane1]
+ 6]: 5Y3005|07|47|54|OK[Midplane2]
+ 7]: 6Y2905|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y30--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y30--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y30--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y001|10|45|50|UF|CRIT[PSUAHotspot]
+ 15]: 14Y2361601|10|45|50|UF|CRIT[PSUAInlet]
+ 16]: 15Y-2559001|10|45|50|UF|CRIT[PSUBHotspot]
+ 17]: 16Y1588801|10|45|50|UF|CRIT[PSUBInlet]
+ 18]: 17Y-1637501|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y-2094401|10|45|50|UF|CRIT[PSUCInlet]
+ 20]: 19Y3201|10|45|50|OK[PSUDHotspot]
+ 21]: 20Y2601|10|45|50|OK[PSUDInlet]
+
+Unit Result:chk_Inlet_sensor was Passed
+
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y005|07|47|54|UF|CRIT[UpperCanister1]
+ 2]: 1Y005|07|48|55|UF|CRIT[UpperCanister2]
+ 3]: 2Y2905|07|45|52|OK[LowerCanister1]
+ 4]: 3Y3905|07|45|52|OK[LowerCanister2]
+ 5]: 4Y2705|07|46|53|OK[Midplane1]
+ 6]: 5Y3005|07|47|54|OK[Midplane2]
+ 7]: 6Y2905|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y30--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y30--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y30--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y001|10|45|50|UF|CRIT[PSUAHotspot]
+ 15]: 14Y2361601|10|45|50|UF|CRIT[PSUAInlet]
+ 16]: 15Y-2559001|10|45|50|UF|CRIT[PSUBHotspot]
+ 17]: 16Y1588801|10|45|50|UF|CRIT[PSUBInlet]
+ 18]: 17Y-1637501|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y-2094401|10|45|50|UF|CRIT[PSUCInlet]
+ 20]: 19Y3201|10|45|50|OK[PSUDHotspot]
+ 21]: 20Y2601|10|45|50|OK[PSUDInlet]
+
+Unit Result:chk_PSU_sensor was Passed
+
+Suite Result:upper_sensor was Failed
+
+Cluster Result:Wolfcreek_upper was Failed
+
+Loop Count:1 - Passed Loop Count:0 - Failed Loop Count:1
+######################################################
+Script ends at [11/11/2014-7:37:25PM]
+######################################################
+

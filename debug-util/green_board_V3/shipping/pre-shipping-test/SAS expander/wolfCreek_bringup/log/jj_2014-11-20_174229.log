@@ -1,0 +1,10 @@
+ItemName                            Result           Spent
+
+Unit:chk_BB0_CPLDFwVer              Passed           5s
+Unit:chk_BB1_CPLDFwVer              Passed           2s
+Unit:chk_MI_CPLDFwVer               Passed           1s
+Unit:chk_SSM_CPLDFwVer              Passed           2s
+Unit:chk_SAS_ActiveFwVer            Passed           1s
+Unit:chk_BootLoader_FWVer           Passed           1s
+Suite:chk_version_lowercanister     Passed           25s
+Unit:chk_MP_sensor                  Passed           4s

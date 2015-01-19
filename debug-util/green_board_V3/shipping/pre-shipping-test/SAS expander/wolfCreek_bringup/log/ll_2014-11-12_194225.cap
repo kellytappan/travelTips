@@ -1,0 +1,113 @@
+
+A0@00:001f>
+send command line: fan id 0xff
+ 0]: Fan[0]operate[SUCCESS]
+ 1]: Fan[1]operate[SUCCESS]
+ 2]: Fan[2]operate[SUCCESS]
+ 3]: Fan[3]operate[SUCCESS]
+ 4]: Fan[4]operate[SUCCESS]
+ 5]: Fan[5]operate[SUCCESS]
+ 6]: Fan[6]operate[SUCCESS]
+ 7]: Fan[7]operate[SUCCESS]
+
+Unit Result:ctrl_FAN_ID_LEDS_ON was Passed
+
+send command line: fan !id 0xff
+ 0]: Fan[0]operate[SUCCESS]
+ 1]: Fan[1]operate[SUCCESS]
+ 2]: Fan[2]operate[SUCCESS]
+ 3]: Fan[3]operate[SUCCESS]
+ 4]: Fan[4]operate[SUCCESS]
+ 5]: Fan[5]operate[SUCCESS]
+ 6]: Fan[6]operate[SUCCESS]
+ 7]: Fan[7]operate[SUCCESS]
+
+Unit Result:ctrl_FAN_ID_LEDS_OFF was Passed
+
+send command line: fan flt 0xff
+ 0]: Fan[0]operate[SUCCESS]
+ 1]: Fan[1]operate[SUCCESS]
+ 2]: Fan[2]operate[SUCCESS]
+ 3]: Fan[3]operate[SUCCESS]
+ 4]: Fan[4]operate[SUCCESS]
+ 5]: Fan[5]operate[SUCCESS]
+ 6]: Fan[6]operate[SUCCESS]
+ 7]: Fan[7]operate[SUCCESS]
+
+Unit Result:ctrl_FAN_FLT_LEDS_ON was Passed
+
+send command line: fan !flt 0xff
+ 0]: Fan[0]operate[SUCCESS]
+ 1]: Fan[1]operate[SUCCESS]
+ 2]: Fan[2]operate[SUCCESS]
+ 3]: Fan[3]operate[SUCCESS]
+ 4]: Fan[4]operate[SUCCESS]
+ 5]: Fan[5]operate[SUCCESS]
+ 6]: Fan[6]operate[SUCCESS]
+ 7]: Fan[7]operate[SUCCESS]
+
+Unit Result:ctrl_FAN_FLT_LEDS_OFF was Passed
+
+Suite Result:chk_fan_leds was Passed
+eep wr 4 0xC2 0x10 1  0x0
+Write Success!
+A0@00:0024>eep wr 4 0xC2 0x11 1  0x0
+Write Success!
+A0@00:0025>eep wr 4 0xC2 0x12 1  0x0
+Write Success!
+ 0@00:0026>eep wr 4 0xC2 0x12 1  0x0 ^M[0]: Fan[0]operate[SUCCESS]
+ 1]: Fan[1]operate[SUCCESS]
+ 2]: Fan[2]operate[SUCCESS]
+ 3]: Fan[3]operate[SUCCESS]
+ 4]: Fan[4]operate[SUCCESS]
+ 5]: Fan[5]operate[SUCCESS]
+ 6]: Fan[6]operate[SUCCESS]
+ 7]: Fan[7]operate[SUCCESS]
+
+Unit Result:ctrl_SSM_LED_OFF was Passed
+ 0]: Fan[0]operate[SUCCESS]
+ 1]: Fan[1]operate[SUCCESS]
+ 2]: Fan[2]operate[SUCCESS]
+ 3]: Fan[3]operate[SUCCESS]
+ 4]: Fan[4]operate[SUCCESS]
+ 5]: Fan[5]operate[SUCCESS]
+ 6]: Fan[6]operate[SUCCESS]
+ 7]: Fan[7]operate[SUCCESS]
+
+Unit Result:chk_SSM_LED_OFF was Passed
+eep wr 4 0xC2 0x10 1  0x11
+Write Success!
+A0@00:0027>eep wr 4 0xC2 0x11 1  0x11
+Write Success!
+A0@00:0028>eep wr 4 0xC2 0x12 1  0x11
+Write Success!
+ 0@00:0029>eep wr 4 0xC2 0x12 1  0x11 ^M[0]: Fan[0]operate[SUCCESS]
+ 1]: Fan[1]operate[SUCCESS]
+ 2]: Fan[2]operate[SUCCESS]
+ 3]: Fan[3]operate[SUCCESS]
+ 4]: Fan[4]operate[SUCCESS]
+ 5]: Fan[5]operate[SUCCESS]
+ 6]: Fan[6]operate[SUCCESS]
+ 7]: Fan[7]operate[SUCCESS]
+
+Unit Result:ctrl_SSM_LED_ON was Passed
+ 0]: Fan[0]operate[SUCCESS]
+ 1]: Fan[1]operate[SUCCESS]
+ 2]: Fan[2]operate[SUCCESS]
+ 3]: Fan[3]operate[SUCCESS]
+ 4]: Fan[4]operate[SUCCESS]
+ 5]: Fan[5]operate[SUCCESS]
+ 6]: Fan[6]operate[SUCCESS]
+ 7]: Fan[7]operate[SUCCESS]
+
+Unit Result:chk_SSM_LED_ON was Passed
+
+Suite Result:chk_SSM_LEDS was Passed
+
+Cluster Result:Wolfcreek_upper was Passed
+
+Loop Count:1 - Passed Loop Count:1 - Failed Loop Count:0
+######################################################
+Script ends at [11/12/2014-7:44:48PM]
+######################################################
+

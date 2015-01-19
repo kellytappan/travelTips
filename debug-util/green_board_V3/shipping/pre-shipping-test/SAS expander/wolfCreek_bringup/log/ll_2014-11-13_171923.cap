@@ -1,0 +1,94 @@
+
+A0@00:003e>
+send command line: phy
+ 0]: Symbol:
+ 1]: U-Unsupported
+ 2]: E-Enabled
+ 3]: D-Disabledbecauseit'snotused
+ 4]:
+ 5]: P_Stat-Programmingstatus
+ 6]: A_Stat-Actualstatus
+ 7]:
+ 8]: L_PHYP_PHYDev_PresTypeSpeedP_StatA_StatUsageWide_P
+[9]: ===========================================================================
+
+ 10]: 00x00Unpre-------EEHOST0Y
+ 11]: 10x01Unpre-------EEHOST0Y
+ 12]: 20x02Unpre-------EEHOST0Y
+ 13]: 30x03Unpre-------EEHOST0Y
+ 14]: 40x04Unpre-------EEHOST1Y
+ 15]: 50x05Unpre-------EEHOST1Y
+ 16]: 60x06Unpre-------EEHOST1Y
+ 17]: 70x07Unpre-------EEHOST1Y
+ 18]: 80x08Unpre-------EEHOST2Y
+ 19]: 90x09Unpre-------EEHOST2Y
+ 20]: 100x0aUnpre-------EEHOST2Y
+ 21]: 110x0bUnpre-------EEHOST2Y
+ 22]: 120x0cUnpre-------EEHOST3Y
+ 23]: 130x0dUnpre-------EEHOST3Y
+ 24]: 140x0eUnpre-------EEHOST3Y
+ 25]: 150x0fUnpre-------EEHOST3Y
+ 26]: 160x10Unpre-------EEHOST4Y
+ 27]: 170x11Unpre-------EEHOST4Y
+ 28]: 180x12Unpre-------EEHOST4Y
+ 29]: 190x13Unpre-------EEHOST4Y
+ 30]: 200x1dUnpre-------EEHDD0N
+ 31]: 210x1aUnpre-------EEHDD1N
+ 32]: 220x37DevpreSAS6.0GEEHDD2N
+ 33]: 230x34Unpre-------EEHDD3N
+ 34]: 240x31Unpre-------EEHDD4N
+ 35]: 250x2eUnpre-------EEHDD5N
+ 36]: 260x2bUnpre-------EEHDD6N
+ 37]: 270x28Unpre-------EEHDD7N
+ 38]: 280x25Unpre-------EEHDD8N
+ 39]: 290x22Unpre-------EEHDD9N
+ 40]: 300x1fUnpre-------EEHDD10N
+ 41]: 310x1cDevpreSAS6.0GEEHDD11N
+ 42]: 320x32Unpre-------EEHDD24N
+ 43]: 330x2cUnpre-------EEHDD25N
+ 44]: 340x26Unpre-------EEHDD26N
+ 45]: 350x20Unpre-------EEHDD27N
+ 46]: 360x18Unpre-------EEHDD28N
+ 47]: 370x1eUnpre-------EEHDD29N
+ 48]: 380x24Unpre-------EEHDD30N
+ 49]: 390x2aUnpre-------EEHDD31N
+ 50]: 400x19Unpre-------EEHDD32N
+ 51]: 410x16Unpre-------EEHDD33N
+ 52]: 420x30Unpre-------EEHDD34N
+ 53]: 430x36Unpre-------EEHDD35N
+ 54]: 440x35Unpre-------EEHDD48N
+ 55]: 450x2fUnpre-------EEHDD49N
+ 56]: 460x29Unpre-------EEHDD50N
+ 57]: 470x23Unpre-------EEHDD51N
+ 58]: 480x15Unpre-------EEHDD52N
+ 59]: 490x1bUnpre-------EEHDD53N
+ 60]: 500x21Unpre-------EEHDD54N
+ 61]: 510x27Unpre-------EEHDD55N
+ 62]: 520x17Unpre-------EEHDD56N
+ 63]: 530x14Unpre-------EEHDD57N
+ 64]: 540x2dUnpre-------EEHDD58N
+ 65]: 550x33Unpre-------EEHDD59N
+ 66]: 560x38DevpreSAS12GEEI_Lnk0Y
+ 67]: 570x39DevpreSAS12GEEI_Lnk0Y
+ 68]: 580x3aDevpreSAS12GEEI_Lnk0Y
+ 69]: 590x3bDevpreSAS12GEEI_Lnk0Y
+ 70]: 600x3cDevpreSAS12GEEI_Lnk1Y
+ 71]: 610x3dDevpreSAS12GEEI_Lnk1Y
+ 72]: 620x3eDevpreSAS12GEEI_Lnk1Y
+ 73]: 630x3fDevpreSAS12GEEI_Lnk1Y
+ 74]: 640x40DevpreSAS12GEEI_Lnk2Y
+ 75]: 650x41DevpreSAS12GEEI_Lnk2Y
+ 76]: 660x42DevpreSAS12GEEI_Lnk2Y
+ 77]: 670x43DevpreSAS12GEEI_Lnk2Y
+
+Unit Result:chk_PHY was Failed
+
+Suite Result:PHY was Failed
+
+Cluster Result:Wolfcreek_upper was Failed
+
+Loop Count:1 - Passed Loop Count:0 - Failed Loop Count:1
+######################################################
+Script ends at [11/13/2014-5:19:39PM]
+######################################################
+

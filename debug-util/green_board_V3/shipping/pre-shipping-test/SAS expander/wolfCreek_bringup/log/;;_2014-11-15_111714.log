@@ -1,0 +1,8 @@
+ItemName                            Result           Spent
+
+Unit:chk_BB0_CPLDFwVer              Passed           17s
+Unit:chk_BB1_CPLDFwVer              Passed           2s
+Unit:chk_MI_CPLDFwVer               Passed           1s
+Unit:chk_SSM_CPLDFwVer              Passed           2s
+Unit:chk_SAS_ActiveFwVer            Failed           1s
+Pay attention: SAS FW version NOT correct,please update first

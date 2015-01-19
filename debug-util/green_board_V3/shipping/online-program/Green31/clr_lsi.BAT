@@ -1,0 +1,11 @@
+sas3flsh -c 0 -o -e 5
+sas3flsh -c 1 -o -e 5
+sas3flsh -c 2 -o -e 5
+sas3flsh -c 3 -o -e 5
+sas3flsh -c 4 -o -e 5
+sas3flsh -c 5 -o -e 5
+sas3flsh -c 6 -o -e 5
+sas3flsh -c 7 -o -e 5
+sas3flsh -c 8 -o -e 5
+sas3flsh -c 9 -o -e 5
+sas3flsh -c a -o -e 5

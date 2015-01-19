@@ -1,0 +1,16 @@
+ItemName                            Result           Spent
+
+Unit:uart                           Passed           4s
+Unit:chk_BB0_CPLDFwVer              Passed           2s
+Unit:chk_BB1_CPLDFwVer              Passed           1s
+Unit:chk_MI_CPLDFwVer               Passed           1s
+Unit:chk_SSM_CPLDFwVer              Passed           1s
+Suite:chk_upperController_cpld      Passed           20s
+Unit:chk_upperController_FwVer      Passed           1s
+Unit:chk_upperController_BL_FWVer   Passed           1s
+Suite:chk_Version_upperController   Passed           7s
+Cluster:Wolfcreek_upper             Passed           31s
+
+Loop Count:1 - Passed Loop Count:1 - Failed Loop Count:0
+######################################################
+

@@ -1,0 +1,12 @@
+ItemName                            Result           Spent
+
+Unit:chk_MP_sensor                  Passed           36s
+Unit:chk_Inlet_sensor               Passed           33s
+Unit:chk_PSU_sensor                 Passed           34s
+Unit:chk_lower_sensor               Passed           34s
+Suite:lower_sensor                  Passed           145s
+Cluster:Wolfcreek_upper             Passed           147s
+
+Loop Count:1 - Passed Loop Count:1 - Failed Loop Count:0
+######################################################
+

@@ -1,0 +1,61 @@
+d
+unknown_cmd
+B1@00:0047>
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x01
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3184]
+ 8]: In-ActiveInitialStringRevision:0101[3184]
+ 9]: ActiveExpanderFWRevision:0101[3184]
+ 10]: In-ActiveExpanderFWRevision:0101[3184]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat0(id:1)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:n/a
+ 15]: BBCPLD2FWRevision:n/a
+ 16]: MICPLDFWRevision:n/a
+ 17]: SSMCPLDFWRevision:n/a
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x2a
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:fffffffffffffe00
+ 31]: SMPAddr:000000000000017f
+ 32]: SSPAddr:000000000000017e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:10
+ 39]: Temperaturenumbersupport:13
+ 40]: Powersupplynumbersupport:4
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:4
+ 44]: Currentsensornumbersupport:4
+
+Unit Result:chk_SAS_ActiveFwVer was Passed
+
+Suite Result:FW_ver was Passed
+
+Cluster Result:Wolfcreek_upper_lower_sec was Passed
+
+Loop Count:1 - Passed Loop Count:1 - Failed Loop Count:0
+######################################################
+Script ends at [2014/12/5-6:01:30ÏÂÎç]
+######################################################
+

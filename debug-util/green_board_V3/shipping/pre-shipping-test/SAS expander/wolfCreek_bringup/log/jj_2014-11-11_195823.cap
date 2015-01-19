@@ -1,0 +1,40 @@
+1       Y    01     00400                      |HOT_SWP|OK      [ Fan 2 Module 1
+  ]
+2       Y    01     --                         |HOT_SWP|OK      [ Fan 3 Module 2
+  ]
+3       Y    01     --                         |HOT_SWP|OK      [ Fan 4 Module 2
+  ]
+4       Y    01     --                         |HOT_SWP|OK      [ Fan 5 Module 3
+  ]
+5       Y    01     --                         |HOT_SWP|OK      [ Fan 6 Module 3
+  ]
+6       Y    01     --                         |HOT_SWP|OK      [ Fan 7 Module 4
+  ]
+7       Y    01     --                         |HOT_SWP|OK      [ Fan 8 Module 4
+  ]
+8       Y    01     --                         |HOT_SWP|OK      [ Fan 9 Module 5
+  ]
+9       Y    01     --                         |HOT_SWP|OK      [ Fan 10 Module
+5  ]
+10      Y    01     --                         |HOT_SWP|OK      [ PSU A Blower ]
+
+11      Y    01     --                         |HOT_SWP|OK      [ PSU B Blower ]
+
+12      Y    01     --                         |HOT_SWP|OK      [ PSU C Blower ]
+
+13      Y    01     08300                      |HOT_SWP|OK      [ PSU D Blower ]
+
+B0@00:00f5>
+send command line:
+
+Unit Result:FAN_pres_spd was Failed
+
+Suite Result:FAN was Failed
+
+Cluster Result:Wolfcreek_upper was Failed
+
+Loop Count:1 - Passed Loop Count:0 - Failed Loop Count:1
+######################################################
+Script ends at [11/11/2014-7:58:42PM]
+######################################################
+

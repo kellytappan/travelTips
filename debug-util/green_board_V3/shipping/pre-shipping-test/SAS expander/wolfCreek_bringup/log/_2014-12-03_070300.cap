@@ -1,0 +1,1133 @@
+
+A0@00:0000>
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3184]
+ 8]: In-ActiveInitialStringRevision:0101[3184]
+ 9]: ActiveExpanderFWRevision:0101[3184]
+ 10]: In-ActiveExpanderFWRevision:0101[3184]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat0(id:1)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x28
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003000
+ 31]: SMPAddr:514630800000307f
+ 32]: SSPAddr:514630800000307e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_BB0_CPLDFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3184]
+ 8]: In-ActiveInitialStringRevision:0101[3184]
+ 9]: ActiveExpanderFWRevision:0101[3184]
+ 10]: In-ActiveExpanderFWRevision:0101[3184]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat0(id:1)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x28
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003000
+ 31]: SMPAddr:514630800000307f
+ 32]: SSPAddr:514630800000307e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_BB1_CPLDFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3184]
+ 8]: In-ActiveInitialStringRevision:0101[3184]
+ 9]: ActiveExpanderFWRevision:0101[3184]
+ 10]: In-ActiveExpanderFWRevision:0101[3184]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat0(id:1)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x28
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003000
+ 31]: SMPAddr:514630800000307f
+ 32]: SSPAddr:514630800000307e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_MI_CPLDFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3184]
+ 8]: In-ActiveInitialStringRevision:0101[3184]
+ 9]: ActiveExpanderFWRevision:0101[3184]
+ 10]: In-ActiveExpanderFWRevision:0101[3184]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat0(id:1)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x28
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003000
+ 31]: SMPAddr:514630800000307f
+ 32]: SSPAddr:514630800000307e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_SSM_CPLDFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3184]
+ 8]: In-ActiveInitialStringRevision:0101[3184]
+ 9]: ActiveExpanderFWRevision:0101[3184]
+ 10]: In-ActiveExpanderFWRevision:0101[3184]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat0(id:1)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x28
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003000
+ 31]: SMPAddr:514630800000307f
+ 32]: SSPAddr:514630800000307e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_SAS_ActiveFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3184]
+ 8]: In-ActiveInitialStringRevision:0101[3184]
+ 9]: ActiveExpanderFWRevision:0101[3184]
+ 10]: In-ActiveExpanderFWRevision:0101[3184]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat0(id:1)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x28
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003000
+ 31]: SMPAddr:514630800000307f
+ 32]: SSPAddr:514630800000307e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_BootLoader_FWVer was Passed
+
+Suite Result:chk_Version_upperCanister was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3184]
+ 8]: In-ActiveInitialStringRevision:0101[3184]
+ 9]: ActiveExpanderFWRevision:0101[3184]
+ 10]: In-ActiveExpanderFWRevision:0101[3184]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat0(id:1)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x28
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003000
+ 31]: SMPAddr:514630800000307f
+ 32]: SSPAddr:514630800000307e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:f_BB_FRU was Passed
+
+send command line: ipmifru format 3
+ 0]:
+ 1]: Manuplateipmifrusuccessfully
+
+Unit Result:f_FAN1_FRU was Passed
+
+send command line: ipmifru format 4
+ 0]:
+ 1]: Manuplateipmifrusuccessfully
+
+Unit Result:f_FAN2_FRU was Passed
+
+send command line: ipmifru format 5
+ 0]:
+ 1]: Manuplateipmifrusuccessfully
+
+Unit Result:f_FAN3_FRU was Passed
+
+send command line: ipmifru format 6
+ 0]:
+ 1]: Manuplateipmifrusuccessfully
+
+Unit Result:f_FAN4_FRU was Passed
+
+send command line: ipmifru format 7
+ 0]:
+ 1]: Manuplateipmifrusuccessfully
+
+Unit Result:f_FAN5_FRU was Passed
+
+send command line: ipmifru format 8
+ 0]:
+ 1]: Manuplateipmifrusuccessfully
+
+Unit Result:f_SSM_FRU was Passed
+
+Suite Result:VPD was Passed
+ipmifru ext 2 sasaddr
+send command line: ipmifru ext 2 sasaddr
+ 0]: 68b9089c784513c0
+ 1]:
+ 2]: Manuplateipmifrufail,retryplz
+ 3]: error:0006f009
+
+retry...ipmifru ext 2 sasaddr
+send command line: ipmifru ext 2 sasaddr
+ 0]: 68b9089c784513c0
+ 1]:
+ 2]: Manuplateipmifrufail,retryplz
+ 3]: error:0006f009
+
+retry...ipmifru ext 2 sasaddr
+send command line: ipmifru ext 2 sasaddr
+ 0]: 68b9089c784513c0
+ 1]:
+ 2]: Manuplateipmifrufail,retryplz
+ 3]: error:0006f009
+
+retry...ipmifru ext 2 sasaddr
+send command line: ipmifru ext 2 sasaddr
+ 0]: 68b9089c784513c0
+ 1]:
+ 2]: Manuplateipmifrufail,retryplz
+ 3]: error:0006f009
+
+Unit Result:Program_enclosure was Failed
+
+Unit Result:close_diag_mode was Completed
+
+send command line: ipmifru ext 2 sasaddr
+ 0]: 68b9089c784513c0
+ 1]:
+ 2]: Manuplateipmifrufail,retryplz
+ 3]: error:0006f009
+
+Unit Result:Verify_enclosure was Passed
+
+Suite Result:sas_addr was Failed
+
+send command line: fan
+ 0]: IDPresSpdcodeSpdStatusDescriptor
+ 1]: 0Y0102000|HOT_SWP|OK[Fan1Module1]
+ 2]: 1Y0102000|HOT_SWP|OK[Fan2Module1]
+ 3]: 2Y0102000|HOT_SWP|OK[Fan3Module2]
+ 4]: 3Y0102000|HOT_SWP|OK[Fan4Module2]
+ 5]: 4Y0102000|HOT_SWP|OK[Fan5Module3]
+ 6]: 5Y0102000|HOT_SWP|OK[Fan6Module3]
+ 7]: 6Y0102000|HOT_SWP|OK[Fan7Module4]
+ 8]: 7Y0102000|HOT_SWP|OK[Fan8Module4]
+ 9]: 8Y0102000|HOT_SWP|OK[Fan9Module5]
+ 10]: 9Y0102000|HOT_SWP|OK[Fan10Module5]
+ 11]: 10Y0102000|HOT_SWP|OK[PSUABlower]
+ 12]: 11Y01--|HOT_SWP|OK[PSUBBlower]
+ 13]: 12Y01--|HOT_SWP|OK[PSUCBlower]
+ 14]: 13Y01--|HOT_SWP|OK[PSUDBlower]
+
+Unit Result:FAN_pres_spd was Failed
+
+Suite Result:FAN was Failed
+
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y--05|07|47|54|UF|CRIT[UpperCanister1]
+ 2]: 1Y--05|07|48|55|UF|CRIT[UpperCanister2]
+ 3]: 2Y005|07|45|52|UF|CRIT[LowerCanister1]
+ 4]: 3Y005|07|45|52|UF|CRIT[LowerCanister2]
+ 5]: 4Y2705|07|46|53|OK[Midplane1]
+ 6]: 5Y2705|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y3005|07|48|55|OK[UpperCPU0]
+ 9]: 8Y3005|07|48|55|OK[UpperCPU1]
+ 10]: 9Y3005|07|48|56|OK[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y3401|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y2701|10|45|50|OK[PSUAInlet]
+ 16]: 15Y-2559201|10|45|50|UF|CRIT[PSUBHotspot]
+ 17]: 16Y2117201|10|45|50|UF|CRIT[PSUBInlet]
+ 18]: 17Y-1637501|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y-2118401|10|45|50|UF|CRIT[PSUCInlet]
+ 20]: 19Y-2560001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y-2004401|10|45|50|UF|CRIT[PSUDInlet]
+
+Unit Result:chk_MP_sensor was Passed
+
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y105|07|47|54|UF|CRIT[UpperCanister1]
+ 2]: 1Y005|07|48|55|UF|CRIT[UpperCanister2]
+ 3]: 2Y005|07|45|52|UF|CRIT[LowerCanister1]
+ 4]: 3Y005|07|45|52|UF|CRIT[LowerCanister2]
+ 5]: 4Y2705|07|46|53|OK[Midplane1]
+ 6]: 5Y2705|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y3005|07|48|55|OK[UpperCPU0]
+ 9]: 8Y3005|07|48|55|OK[UpperCPU1]
+ 10]: 9Y3005|07|48|56|OK[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y3501|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y2701|10|45|50|OK[PSUAInlet]
+ 16]: 15Y-2559201|10|45|50|UF|CRIT[PSUBHotspot]
+ 17]: 16Y2117201|10|45|50|UF|CRIT[PSUBInlet]
+ 18]: 17Y-1637501|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y-2118401|10|45|50|UF|CRIT[PSUCInlet]
+ 20]: 19Y-2560001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y-2004401|10|45|50|UF|CRIT[PSUDInlet]
+
+Unit Result:chk_upper_sensor was Passed
+
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y105|07|47|54|UF|CRIT[UpperCanister1]
+ 2]: 1Y005|07|48|55|UF|CRIT[UpperCanister2]
+ 3]: 2Y005|07|45|52|UF|CRIT[LowerCanister1]
+ 4]: 3Y005|07|45|52|UF|CRIT[LowerCanister2]
+ 5]: 4Y2705|07|46|53|OK[Midplane1]
+ 6]: 5Y2705|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y3005|07|48|55|OK[UpperCPU0]
+ 9]: 8Y3005|07|48|55|OK[UpperCPU1]
+ 10]: 9Y3005|07|48|56|OK[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y3401|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y2701|10|45|50|OK[PSUAInlet]
+ 16]: 15Y-2559201|10|45|50|UF|CRIT[PSUBHotspot]
+ 17]: 16Y2117201|10|45|50|UF|CRIT[PSUBInlet]
+ 18]: 17Y-1637501|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y-2118401|10|45|50|UF|CRIT[PSUCInlet]
+ 20]: 19Y-2560001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y-2004401|10|45|50|UF|CRIT[PSUDInlet]
+
+Unit Result:chk_Inlet_sensor was Passed
+
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y105|07|47|54|UF|CRIT[UpperCanister1]
+ 2]: 1Y005|07|48|55|UF|CRIT[UpperCanister2]
+ 3]: 2Y005|07|45|52|UF|CRIT[LowerCanister1]
+ 4]: 3Y005|07|45|52|UF|CRIT[LowerCanister2]
+ 5]: 4Y2705|07|46|53|OK[Midplane1]
+ 6]: 5Y2705|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y3005|07|48|55|OK[UpperCPU0]
+ 9]: 8Y3005|07|48|55|OK[UpperCPU1]
+ 10]: 9Y3005|07|48|56|OK[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y3401|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y2701|10|45|50|OK[PSUAInlet]
+ 16]: 15Y-2559201|10|45|50|UF|CRIT[PSUBHotspot]
+ 17]: 16Y2117201|10|45|50|UF|CRIT[PSUBInlet]
+ 18]: 17Y-1637501|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y-2118401|10|45|50|UF|CRIT[PSUCInlet]
+ 20]: 19Y-2560001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y-2004401|10|45|50|UF|CRIT[PSUDInlet]
+
+Unit Result:chk_PSU_sensor was Passed
+
+Suite Result:upper_sensor was Passed
+
+send command line: volt
+ 0]: IDPresVoltage(V)ThresholdStatusDescriptor
+ 1]: 0Y3.30V30|20|20|30||OK[REGA3.3V]
+ 2]: 1Y3.30V30|20|20|30||OK[REGB3.3V]
+ 3]: 2Y3.30V30|20|20|30||OK[REGC3.3V]
+ 4]: 3Y3.30V30|20|20|30||OK[REGD3.3V]
+ 5]: 4Y11.99V30|20|20|30||OK[PSUA12V]
+ 6]: 5Y-255.-92V30|20|20|30||UF|OK[PSUB12V]
+ 7]: 6Y0.0V30|20|20|30||UF|OK[PSUC12V]
+ 8]: 7Y0.0V30|20|20|30||UF|OK[PSUD12V]
+
+Unit Result:chk_PSU_volt was Passed
+
+send command line: volt
+ 0]: IDPresVoltage(V)ThresholdStatusDescriptor
+ 1]: 0Y3.30V30|20|20|30||OK[REGA3.3V]
+ 2]: 1Y3.30V30|20|20|30||OK[REGB3.3V]
+ 3]: 2Y3.30V30|20|20|30||OK[REGC3.3V]
+ 4]: 3Y3.30V30|20|20|30||OK[REGD3.3V]
+ 5]: 4Y12.0V30|20|20|30||OK[PSUA12V]
+ 6]: 5Y-255.-92V30|20|20|30||UF|OK[PSUB12V]
+ 7]: 6Y0.0V30|20|20|30||UF|OK[PSUC12V]
+ 8]: 7Y0.0V30|20|20|30||UF|OK[PSUD12V]
+
+Unit Result:chk_REG_volt was Passed
+
+Suite Result:chk_volt was Passed
+
+send command line: curr
+ 0]: IDPresCurrent(mA)ThresholdStatusDescriptor
+ 1]: 0Y1000mA30|20|20|30|OK[REGA3.3V]
+ 2]: 1Y1000mA30|20|20|30|OK[REGB3.3V]
+ 3]: 2Y1000mA30|20|20|30|OK[REGC3.3V]
+ 4]: 3Y1000mA30|20|20|30|OK[REGD3.3V]
+ 5]: 4Y3068mA--|--|20|30|OK[PSUA12V]
+ 6]: 5Y-25592mA--|--|20|30|OK[PSUB12V]
+ 7]: 6Y0mA--|--|20|30|OK[PSUC12V]
+ 8]: 7Y0mA--|--|20|30|OK[PSUD12V]
+
+Unit Result:chk_PSU_curr was Passed
+
+send command line: curr
+ 0]: IDPresCurrent(mA)ThresholdStatusDescriptor
+ 1]: 0Y1000mA30|20|20|30|OK[REGA3.3V]
+ 2]: 1Y1000mA30|20|20|30|OK[REGB3.3V]
+ 3]: 2Y1000mA30|20|20|30|OK[REGC3.3V]
+ 4]: 3Y1000mA30|20|20|30|OK[REGD3.3V]
+ 5]: 4Y2937mA--|--|20|30|OK[PSUA12V]
+ 6]: 5Y-25592mA--|--|20|30|OK[PSUB12V]
+ 7]: 6Y0mA--|--|20|30|OK[PSUC12V]
+ 8]: 7Y0mA--|--|20|30|OK[PSUD12V]
+
+Unit Result:chk_REG_curr was Passed
+
+Suite Result:chk_curr was Passed
+
+send command line: door
+ 0]: IDPresStatusOpenDescriptor
+ 1]: 0Y|YES|OK[LeftDoor]
+ 2]: 1Y|YES|OK[RightDoor]
+
+Unit Result:chk_door_open was Passed
+
+send command line: door
+ 0]: IDPresStatusOpenDescriptor
+ 1]: 0Y|YES|OK[LeftDoor]
+ 2]: 1Y|YES|OK[RightDoor]
+
+Unit Result:chk_door_close was Failed
+
+Suite Result:chk_door was Failed
+
+send command line: psu
+ 0]: IDPresStatusDescriptor
+ 1]: 0Y|OK[REGA]
+ 2]: 1Y|OK[REGB]
+ 3]: 2Y|OK[REGC]
+ 4]: 3Y|OK[REGD]
+ 5]: 4Y|HOT_SWP|OK[]
+ 6]: 5Y|HOT_SWP|OK[]
+ 7]: 6Y|HOT_SWP|OK[]
+ 8]: 7Y|HOT_SWP|OK[]
+
+Unit Result:psu_detect was Passed
+
+Suite Result:power was Passed
+
+send command line: hdd id 0xffffffffffffffffff
+ 0]: Harddrive[0]operate[SUCCESS]
+ 1]: Harddrive[1]operate[SUCCESS]
+ 2]: Harddrive[2]operate[SUCCESS]
+ 3]: Harddrive[3]operate[SUCCESS]
+ 4]: Harddrive[4]operate[SUCCESS]
+ 5]: Harddrive[5]operate[SUCCESS]
+ 6]: Harddrive[6]operate[SUCCESS]
+ 7]: Harddrive[7]operate[SUCCESS]
+ 8]: Harddrive[8]operate[SUCCESS]
+ 9]: Harddrive[9]operate[SUCCESS]
+ 10]: Harddrive[10]operate[SUCCESS]
+ 11]: Harddrive[11]operate[SUCCESS]
+ 12]: Harddrive[12]operate[SUCCESS]
+ 13]: Harddrive[13]operate[SUCCESS]
+ 14]: Harddrive[14]operate[SUCCESS]
+ 15]: Harddrive[15]operate[SUCCESS]
+ 16]: Harddrive[16]operate[SUCCESS]
+ 17]: Harddrive[17]operate[SUCCESS]
+ 18]: Harddrive[18]operate[SUCCESS]
+ 19]: Harddrive[19]operate[SUCCESS]
+ 20]: Harddrive[20]operate[SUCCESS]
+ 21]: Harddrive[21]operate[SUCCESS]
+ 22]: Harddrive[22]operate[SUCCESS]
+ 23]: Harddrive[23]operate[SUCCESS]
+ 24]: Harddrive[24]operate[SUCCESS]
+ 25]: Harddrive[25]operate[SUCCESS]
+ 26]: Harddrive[26]operate[SUCCESS]
+ 27]: Harddrive[27]operate[SUCCESS]
+ 28]: Harddrive[28]operate[SUCCESS]
+ 29]: Harddrive[29]operate[SUCCESS]
+ 30]: Harddrive[30]operate[SUCCESS]
+ 31]: Harddrive[31]operate[SUCCESS]
+ 32]: Harddrive[32]operate[SUCCESS]
+ 33]: Harddrive[33]operate[SUCCESS]
+ 34]: Harddrive[34]operate[SUCCESS]
+ 35]: Harddrive[35]operate[SUCCESS]
+ 36]: Harddrive[36]operate[SUCCESS]
+ 37]: Harddrive[37]operate[SUCCESS]
+ 38]: Harddrive[38]operate[SUCCESS]
+ 39]: Harddrive[39]operate[SUCCESS]
+ 40]: Harddrive[40]operate[SUCCESS]
+ 41]: Harddrive[41]operate[SUCCESS]
+ 42]: Harddrive[42]operate[SUCCESS]
+ 43]: Harddrive[43]operate[SUCCESS]
+ 44]: Harddrive[44]operate[SUCCESS]
+ 45]: Harddrive[45]operate[SUCCESS]
+ 46]: Harddrive[46]operate[SUCCESS]
+ 47]: Harddrive[47]operate[SUCCESS]
+ 48]: Harddrive[48]operate[SUCCESS]
+ 49]: Harddrive[49]operate[SUCCESS]
+ 50]: Harddrive[50]operate[SUCCESS]
+ 51]: Harddrive[51]operate[SUCCESS]
+ 52]: Harddrive[52]operate[SUCCESS]
+ 53]: Harddrive[53]operate[SUCCESS]
+ 54]: Harddrive[54]operate[SUCCESS]
+ 55]: Harddrive[55]operate[SUCCESS]
+ 56]: Harddrive[56]operate[SUCCESS]
+ 57]: Harddrive[57]operate[SUCCESS]
+ 58]: Harddrive[58]operate[SUCCESS]
+ 59]: Harddrive[59]operate[SUCCESS]
+ 60]: Harddrive[60]operate[SUCCESS]
+ 61]: Harddrive[61]operate[SUCCESS]
+ 62]: Harddrive[62]operate[SUCCESS]
+ 63]: Harddrive[63]operate[SUCCESS]
+ 64]: Harddrive[64]operate[SUCCESS]
+ 65]: Harddrive[65]operate[SUCCESS]
+ 66]: Harddrive[66]operate[SUCCESS]
+ 67]: Harddrive[67]operate[SUCCESS]
+ 68]: Harddrive[68]operate[SUCCESS]
+ 69]: Harddrive[69]operate[SUCCESS]
+ 70]: Harddrive[70]operate[SUCCESS]
+ 71]: Harddrive[71]operate[SUCCESS]
+
+Unit Result:ctrl_BB_HDD_LEDS_ID_ON was Passed
+
+send command line: hdd !id 0xffffffffffffffffff
+ 0]: Harddrive[0]operate[SUCCESS]
+ 1]: Harddrive[1]operate[SUCCESS]
+ 2]: Harddrive[2]operate[SUCCESS]
+ 3]: Harddrive[3]operate[SUCCESS]
+ 4]: Harddrive[4]operate[SUCCESS]
+ 5]: Harddrive[5]operate[SUCCESS]
+ 6]: Harddrive[6]operate[SUCCESS]
+ 7]: Harddrive[7]operate[SUCCESS]
+ 8]: Harddrive[8]operate[SUCCESS]
+ 9]: Harddrive[9]operate[SUCCESS]
+ 10]: Harddrive[10]operate[SUCCESS]
+ 11]: Harddrive[11]operate[SUCCESS]
+ 12]: Harddrive[12]operate[SUCCESS]
+ 13]: Harddrive[13]operate[SUCCESS]
+ 14]: Harddrive[14]operate[SUCCESS]
+ 15]: Harddrive[15]operate[SUCCESS]
+ 16]: Harddrive[16]operate[SUCCESS]
+ 17]: Harddrive[17]operate[SUCCESS]
+ 18]: Harddrive[18]operate[SUCCESS]
+ 19]: Harddrive[19]operate[SUCCESS]
+ 20]: Harddrive[20]operate[SUCCESS]
+ 21]: Harddrive[21]operate[SUCCESS]
+ 22]: Harddrive[22]operate[SUCCESS]
+ 23]: Harddrive[23]operate[SUCCESS]
+ 24]: Harddrive[24]operate[SUCCESS]
+ 25]: Harddrive[25]operate[SUCCESS]
+ 26]: Harddrive[26]operate[SUCCESS]
+ 27]: Harddrive[27]operate[SUCCESS]
+ 28]: Harddrive[28]operate[SUCCESS]
+ 29]: Harddrive[29]operate[SUCCESS]
+ 30]: Harddrive[30]operate[SUCCESS]
+ 31]: Harddrive[31]operate[SUCCESS]
+ 32]: Harddrive[32]operate[SUCCESS]
+ 33]: Harddrive[33]operate[SUCCESS]
+ 34]: Harddrive[34]operate[SUCCESS]
+ 35]: Harddrive[35]operate[SUCCESS]
+ 36]: Harddrive[36]operate[SUCCESS]
+ 37]: Harddrive[37]operate[SUCCESS]
+ 38]: Harddrive[38]operate[SUCCESS]
+ 39]: Harddrive[39]operate[SUCCESS]
+ 40]: Harddrive[40]operate[SUCCESS]
+ 41]: Harddrive[41]operate[SUCCESS]
+ 42]: Harddrive[42]operate[SUCCESS]
+ 43]: Harddrive[43]operate[SUCCESS]
+ 44]: Harddrive[44]operate[SUCCESS]
+ 45]: Harddrive[45]operate[SUCCESS]
+ 46]: Harddrive[46]operate[SUCCESS]
+ 47]: Harddrive[47]operate[SUCCESS]
+ 48]: Harddrive[48]operate[SUCCESS]
+ 49]: Harddrive[49]operate[SUCCESS]
+ 50]: Harddrive[50]operate[SUCCESS]
+ 51]: Harddrive[51]operate[SUCCESS]
+ 52]: Harddrive[52]operate[SUCCESS]
+ 53]: Harddrive[53]operate[SUCCESS]
+ 54]: Harddrive[54]operate[SUCCESS]
+ 55]: Harddrive[55]operate[SUCCESS]
+ 56]: Harddrive[56]operate[SUCCESS]
+ 57]: Harddrive[57]operate[SUCCESS]
+ 58]: Harddrive[58]operate[SUCCESS]
+ 59]: Harddrive[59]operate[SUCCESS]
+ 60]: Harddrive[60]operate[SUCCESS]
+ 61]: Harddrive[61]operate[SUCCESS]
+ 62]: Harddrive[62]operate[SUCCESS]
+ 63]: Harddrive[63]operate[SUCCESS]
+ 64]: Harddrive[64]operate[SUCCESS]
+ 65]: Harddrive[65]operate[SUCCESS]
+ 66]: Harddrive[66]operate[SUCCESS]
+ 67]: Harddrive[67]operate[SUCCESS]
+ 68]: Harddrive[68]operate[SUCCESS]
+ 69]: Harddrive[69]operate[SUCCESS]
+ 70]: Harddrive[70]operate[SUCCESS]
+ 71]: Harddrive[71]operate[SUCCESS]
+
+Unit Result:ctrl_BB_HDD_LEDS_ID_OFF was Passed
+
+send command line: hdd flt 0xffffffffffffffffff
+ 0]: Harddrive[0]operate[SUCCESS]
+ 1]: Harddrive[1]operate[SUCCESS]
+ 2]: Harddrive[2]operate[SUCCESS]
+ 3]: Harddrive[3]operate[SUCCESS]
+ 4]: Harddrive[4]operate[SUCCESS]
+ 5]: Harddrive[5]operate[SUCCESS]
+ 6]: Harddrive[6]operate[SUCCESS]
+ 7]: Harddrive[7]operate[SUCCESS]
+ 8]: Harddrive[8]operate[SUCCESS]
+ 9]: Harddrive[9]operate[SUCCESS]
+ 10]: Harddrive[10]operate[SUCCESS]
+ 11]: Harddrive[11]operate[SUCCESS]
+ 12]: Harddrive[12]operate[SUCCESS]
+ 13]: Harddrive[13]operate[SUCCESS]
+ 14]: Harddrive[14]operate[SUCCESS]
+ 15]: Harddrive[15]operate[SUCCESS]
+ 16]: Harddrive[16]operate[SUCCESS]
+ 17]: Harddrive[17]operate[SUCCESS]
+ 18]: Harddrive[18]operate[SUCCESS]
+ 19]: Harddrive[19]operate[SUCCESS]
+ 20]: Harddrive[20]operate[SUCCESS]
+ 21]: Harddrive[21]operate[SUCCESS]
+ 22]: Harddrive[22]operate[SUCCESS]
+ 23]: Harddrive[23]operate[SUCCESS]
+ 24]: Harddrive[24]operate[SUCCESS]
+ 25]: Harddrive[25]operate[SUCCESS]
+ 26]: Harddrive[26]operate[SUCCESS]
+ 27]: Harddrive[27]operate[SUCCESS]
+ 28]: Harddrive[28]operate[SUCCESS]
+ 29]: Harddrive[29]operate[SUCCESS]
+ 30]: Harddrive[30]operate[SUCCESS]
+ 31]: Harddrive[31]operate[SUCCESS]
+ 32]: Harddrive[32]operate[SUCCESS]
+ 33]: Harddrive[33]operate[SUCCESS]
+ 34]: Harddrive[34]operate[SUCCESS]
+ 35]: Harddrive[35]operate[SUCCESS]
+ 36]: Harddrive[36]operate[SUCCESS]
+ 37]: Harddrive[37]operate[SUCCESS]
+ 38]: Harddrive[38]operate[SUCCESS]
+ 39]: Harddrive[39]operate[SUCCESS]
+ 40]: Harddrive[40]operate[SUCCESS]
+ 41]: Harddrive[41]operate[SUCCESS]
+ 42]: Harddrive[42]operate[SUCCESS]
+ 43]: Harddrive[43]operate[SUCCESS]
+ 44]: Harddrive[44]operate[SUCCESS]
+ 45]: Harddrive[45]operate[SUCCESS]
+ 46]: Harddrive[46]operate[SUCCESS]
+ 47]: Harddrive[47]operate[SUCCESS]
+ 48]: Harddrive[48]operate[SUCCESS]
+ 49]: Harddrive[49]operate[SUCCESS]
+ 50]: Harddrive[50]operate[SUCCESS]
+ 51]: Harddrive[51]operate[SUCCESS]
+ 52]: Harddrive[52]operate[SUCCESS]
+ 53]: Harddrive[53]operate[SUCCESS]
+ 54]: Harddrive[54]operate[SUCCESS]
+ 55]: Harddrive[55]operate[SUCCESS]
+ 56]: Harddrive[56]operate[SUCCESS]
+ 57]: Harddrive[57]operate[SUCCESS]
+ 58]: Harddrive[58]operate[SUCCESS]
+ 59]: Harddrive[59]operate[SUCCESS]
+ 60]: Harddrive[60]operate[SUCCESS]
+ 61]: Harddrive[61]operate[SUCCESS]
+ 62]: Harddrive[62]operate[SUCCESS]
+ 63]: Harddrive[63]operate[SUCCESS]
+ 64]: Harddrive[64]operate[SUCCESS]
+ 65]: Harddrive[65]operate[SUCCESS]
+ 66]: Harddrive[66]operate[SUCCESS]
+ 67]: Harddrive[67]operate[SUCCESS]
+ 68]: Harddrive[68]operate[SUCCESS]
+ 69]: Harddrive[69]operate[SUCCESS]
+ 70]: Harddrive[70]operate[SUCCESS]
+ 71]: Harddrive[71]operate[SUCCESS]
+
+Unit Result:ctrl_BB_HDD_LEDS_FLT_ON was Passed
+
+send command line: hdd !flt 0xffffffffffffffffff
+ 0]: Harddrive[0]operate[SUCCESS]
+ 1]: Harddrive[1]operate[SUCCESS]
+ 2]: Harddrive[2]operate[SUCCESS]
+ 3]: Harddrive[3]operate[SUCCESS]
+ 4]: Harddrive[4]operate[SUCCESS]
+ 5]: Harddrive[5]operate[SUCCESS]
+ 6]: Harddrive[6]operate[SUCCESS]
+ 7]: Harddrive[7]operate[SUCCESS]
+ 8]: Harddrive[8]operate[SUCCESS]
+ 9]: Harddrive[9]operate[SUCCESS]
+ 10]: Harddrive[10]operate[SUCCESS]
+ 11]: Harddrive[11]operate[SUCCESS]
+ 12]: Harddrive[12]operate[SUCCESS]
+ 13]: Harddrive[13]operate[SUCCESS]
+ 14]: Harddrive[14]operate[SUCCESS]
+ 15]: Harddrive[15]operate[SUCCESS]
+ 16]: Harddrive[16]operate[SUCCESS]
+ 17]: Harddrive[17]operate[SUCCESS]
+ 18]: Harddrive[18]operate[SUCCESS]
+ 19]: Harddrive[19]operate[SUCCESS]
+ 20]: Harddrive[20]operate[SUCCESS]
+ 21]: Harddrive[21]operate[SUCCESS]
+ 22]: Harddrive[22]operate[SUCCESS]
+ 23]: Harddrive[23]operate[SUCCESS]
+ 24]: Harddrive[24]operate[SUCCESS]
+ 25]: Harddrive[25]operate[SUCCESS]
+ 26]: Harddrive[26]operate[SUCCESS]
+ 27]: Harddrive[27]operate[SUCCESS]
+ 28]: Harddrive[28]operate[SUCCESS]
+ 29]: Harddrive[29]operate[SUCCESS]
+ 30]: Harddrive[30]operate[SUCCESS]
+ 31]: Harddrive[31]operate[SUCCESS]
+ 32]: Harddrive[32]operate[SUCCESS]
+ 33]: Harddrive[33]operate[SUCCESS]
+ 34]: Harddrive[34]operate[SUCCESS]
+ 35]: Harddrive[35]operate[SUCCESS]
+ 36]: Harddrive[36]operate[SUCCESS]
+ 37]: Harddrive[37]operate[SUCCESS]
+ 38]: Harddrive[38]operate[SUCCESS]
+ 39]: Harddrive[39]operate[SUCCESS]
+ 40]: Harddrive[40]operate[SUCCESS]
+ 41]: Harddrive[41]operate[SUCCESS]
+ 42]: Harddrive[42]operate[SUCCESS]
+ 43]: Harddrive[43]operate[SUCCESS]
+ 44]: Harddrive[44]operate[SUCCESS]
+ 45]: Harddrive[45]operate[SUCCESS]
+ 46]: Harddrive[46]operate[SUCCESS]
+ 47]: Harddrive[47]operate[SUCCESS]
+ 48]: Harddrive[48]operate[SUCCESS]
+ 49]: Harddrive[49]operate[SUCCESS]
+ 50]: Harddrive[50]operate[SUCCESS]
+ 51]: Harddrive[51]operate[SUCCESS]
+ 52]: Harddrive[52]operate[SUCCESS]
+ 53]: Harddrive[53]operate[SUCCESS]
+ 54]: Harddrive[54]operate[SUCCESS]
+ 55]: Harddrive[55]operate[SUCCESS]
+ 56]: Harddrive[56]operate[SUCCESS]
+ 57]: Harddrive[57]operate[SUCCESS]
+ 58]: Harddrive[58]operate[SUCCESS]
+ 59]: Harddrive[59]operate[SUCCESS]
+ 60]: Harddrive[60]operate[SUCCESS]
+ 61]: Harddrive[61]operate[SUCCESS]
+ 62]: Harddrive[62]operate[SUCCESS]
+ 63]: Harddrive[63]operate[SUCCESS]
+ 64]: Harddrive[64]operate[SUCCESS]
+ 65]: Harddrive[65]operate[SUCCESS]
+ 66]: Harddrive[66]operate[SUCCESS]
+ 67]: Harddrive[67]operate[SUCCESS]
+ 68]: Harddrive[68]operate[SUCCESS]
+ 69]: Harddrive[69]operate[SUCCESS]
+ 70]: Harddrive[70]operate[SUCCESS]
+ 71]: Harddrive[71]operate[SUCCESS]
+
+Unit Result:ctrl_BB_HDD_LEDS_FLT_OFF was Passed
+
+Suite Result:chk_hdd_leds was Passed
+
+send command line: fan id 0xffff
+ 0]: Fan[0]operate[SUCCESS]
+ 1]: Fan[1]operate[SUCCESS]
+ 2]: Fan[2]operate[SUCCESS]
+ 3]: Fan[3]operate[SUCCESS]
+ 4]: Fan[4]operate[SUCCESS]
+ 5]: Fan[5]operate[SUCCESS]
+ 6]: Fan[6]operate[SUCCESS]
+ 7]: Fan[7]operate[SUCCESS]
+ 8]: Fan[8]operate[SUCCESS]
+ 9]: Fan[9]operate[SUCCESS]
+ 10]: Fan[10]operate[SUCCESS]
+ 11]: Fan[11]operate[SUCCESS]
+ 12]: Fan[12]operate[SUCCESS]
+ 13]: Fan[13]operate[SUCCESS]
+
+Unit Result:ctrl_FAN_ID_LEDS_ON was Passed
+
+send command line: fan !id 0xffff
+ 0]: Fan[0]operate[SUCCESS]
+ 1]: Fan[1]operate[SUCCESS]
+ 2]: Fan[2]operate[SUCCESS]
+ 3]: Fan[3]operate[SUCCESS]
+ 4]: Fan[4]operate[SUCCESS]
+ 5]: Fan[5]operate[SUCCESS]
+ 6]: Fan[6]operate[SUCCESS]
+ 7]: Fan[7]operate[SUCCESS]
+ 8]: Fan[8]operate[SUCCESS]
+ 9]: Fan[9]operate[SUCCESS]
+ 10]: Fan[10]operate[SUCCESS]
+ 11]: Fan[11]operate[SUCCESS]
+ 12]: Fan[12]operate[SUCCESS]
+ 13]: Fan[13]operate[SUCCESS]
+
+Unit Result:ctrl_FAN_ID_LEDS_OFF was Passed
+
+send command line: fan flt 0xffff
+ 0]: Fan[0]operate[SUCCESS]
+ 1]: Fan[1]operate[SUCCESS]
+ 2]: Fan[2]operate[SUCCESS]
+ 3]: Fan[3]operate[SUCCESS]
+ 4]: Fan[4]operate[SUCCESS]
+ 5]: Fan[5]operate[SUCCESS]
+ 6]: Fan[6]operate[SUCCESS]
+ 7]: Fan[7]operate[SUCCESS]
+ 8]: Fan[8]operate[SUCCESS]
+ 9]: Fan[9]operate[SUCCESS]
+ 10]: Fan[10]operate[SUCCESS]
+ 11]: Fan[11]operate[SUCCESS]
+ 12]: Fan[12]operate[SUCCESS]
+ 13]: Fan[13]operate[SUCCESS]
+
+Unit Result:ctrl_FAN_FLT_LEDS_ON was Passed
+
+send command line: fan !flt 0xffff
+ 0]: Fan[0]operate[SUCCESS]
+ 1]: Fan[1]operate[SUCCESS]
+ 2]: Fan[2]operate[SUCCESS]
+ 3]: Fan[3]operate[SUCCESS]
+ 4]: Fan[4]operate[SUCCESS]
+ 5]: Fan[5]operate[SUCCESS]
+ 6]: Fan[6]operate[SUCCESS]
+ 7]: Fan[7]operate[SUCCESS]
+ 8]: Fan[8]operate[SUCCESS]
+ 9]: Fan[9]operate[SUCCESS]
+ 10]: Fan[10]operate[SUCCESS]
+ 11]: Fan[11]operate[SUCCESS]
+ 12]: Fan[12]operate[SUCCESS]
+ 13]: Fan[13]operate[SUCCESS]
+
+Unit Result:ctrl_FAN_FLT_LEDS_OFF was Passed
+
+Suite Result:chk_fan_leds was Passed
+eep wr 4 0xC2 0x10 1  0x11
+Write Success!
+A0@00:0029>eep wr 4 0xC2 0x11 1  0x11
+Write Success!
+A0@00:002a>eep wr 4 0xC2 0x12 1  0x11
+Write Success!
+ 0@00:002b>[0]: Fan[0]operate[SUCCESS]
+ 1]: Fan[1]operate[SUCCESS]
+ 2]: Fan[2]operate[SUCCESS]
+ 3]: Fan[3]operate[SUCCESS]
+ 4]: Fan[4]operate[SUCCESS]
+ 5]: Fan[5]operate[SUCCESS]
+ 6]: Fan[6]operate[SUCCESS]
+ 7]: Fan[7]operate[SUCCESS]
+ 8]: Fan[8]operate[SUCCESS]
+ 9]: Fan[9]operate[SUCCESS]
+ 10]: Fan[10]operate[SUCCESS]
+ 11]: Fan[11]operate[SUCCESS]
+ 12]: Fan[12]operate[SUCCESS]
+ 13]: Fan[13]operate[SUCCESS]
+
+Unit Result:ctrl_SSM_LED_ON was Passed
+ 0]: Fan[0]operate[SUCCESS]
+ 1]: Fan[1]operate[SUCCESS]
+ 2]: Fan[2]operate[SUCCESS]
+ 3]: Fan[3]operate[SUCCESS]
+ 4]: Fan[4]operate[SUCCESS]
+ 5]: Fan[5]operate[SUCCESS]
+ 6]: Fan[6]operate[SUCCESS]
+ 7]: Fan[7]operate[SUCCESS]
+ 8]: Fan[8]operate[SUCCESS]
+ 9]: Fan[9]operate[SUCCESS]
+ 10]: Fan[10]operate[SUCCESS]
+ 11]: Fan[11]operate[SUCCESS]
+ 12]: Fan[12]operate[SUCCESS]
+ 13]: Fan[13]operate[SUCCESS]
+
+Unit Result:chk_SSM_LED_ON was Passed
+eep wr 4 0xC2 0x10 1  0x0
+Write Success!
+A0@00:002c>eep wr 4 0xC2 0x11 1  0x0
+Write Success!
+A0@00:002d>eep wr 4 0xC2 0x12 1  0x0
+Write Success!
+ 0@00:002e>[0]: Fan[0]operate[SUCCESS]
+ 1]: Fan[1]operate[SUCCESS]
+ 2]: Fan[2]operate[SUCCESS]
+ 3]: Fan[3]operate[SUCCESS]
+ 4]: Fan[4]operate[SUCCESS]
+ 5]: Fan[5]operate[SUCCESS]
+ 6]: Fan[6]operate[SUCCESS]
+ 7]: Fan[7]operate[SUCCESS]
+ 8]: Fan[8]operate[SUCCESS]
+ 9]: Fan[9]operate[SUCCESS]
+ 10]: Fan[10]operate[SUCCESS]
+ 11]: Fan[11]operate[SUCCESS]
+ 12]: Fan[12]operate[SUCCESS]
+ 13]: Fan[13]operate[SUCCESS]
+
+Unit Result:ctrl_SSM_LED_OFF was Passed
+ 0]: Fan[0]operate[SUCCESS]
+ 1]: Fan[1]operate[SUCCESS]
+ 2]: Fan[2]operate[SUCCESS]
+ 3]: Fan[3]operate[SUCCESS]
+ 4]: Fan[4]operate[SUCCESS]
+ 5]: Fan[5]operate[SUCCESS]
+ 6]: Fan[6]operate[SUCCESS]
+ 7]: Fan[7]operate[SUCCESS]
+ 8]: Fan[8]operate[SUCCESS]
+ 9]: Fan[9]operate[SUCCESS]
+ 10]: Fan[10]operate[SUCCESS]
+ 11]: Fan[11]operate[SUCCESS]
+ 12]: Fan[12]operate[SUCCESS]
+ 13]: Fan[13]operate[SUCCESS]
+
+Unit Result:chk_SSM_LED_OFF was Passed
+
+Suite Result:chk_SSM_LEDS was Passed
+ 0]: Fan[0]operate[SUCCESS]
+ 1]: Fan[1]operate[SUCCESS]
+ 2]: Fan[2]operate[SUCCESS]
+ 3]: Fan[3]operate[SUCCESS]
+ 4]: Fan[4]operate[SUCCESS]
+ 5]: Fan[5]operate[SUCCESS]
+ 6]: Fan[6]operate[SUCCESS]
+ 7]: Fan[7]operate[SUCCESS]
+ 8]: Fan[8]operate[SUCCESS]
+ 9]: Fan[9]operate[SUCCESS]
+ 10]: Fan[10]operate[SUCCESS]
+ 11]: Fan[11]operate[SUCCESS]
+ 12]: Fan[12]operate[SUCCESS]
+ 13]: Fan[13]operate[SUCCESS]
+
+Unit Result:chk_PSU_LED_ON was Passed
+
+Suite Result:chk_PSU_LED was Passed
+
+send command line: display fill
+
+Unit Result:fill_LCD was Passed
+
+send command line: display clr
+
+Unit Result:clear_LCD was Passed
+
+Suite Result:LCD was Passed
+
+Cluster Result:Wolfcreek_upper_pri was Failed
+
+Loop Count:1 - Passed Loop Count:0 - Failed Loop Count:1
+######################################################
+Script ends at [2014/12/3-7:14:58ÏÂÎç]
+######################################################
+

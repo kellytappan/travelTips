@@ -1,0 +1,412 @@
+c
+unknown_cmd
+B0@00:0017>
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3202]
+ 8]: In-ActiveInitialStringRevision:0101[3201]
+ 9]: ActiveExpanderFWRevision:0101[3202]
+ 10]: In-ActiveExpanderFWRevision:0101[3201]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat1(id:2)
+ 13]: ActiveFirmwareImage:Img1(id:6)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x2a
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003200
+ 31]: SMPAddr:514630800000327f
+ 32]: SSPAddr:514630800000327e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_BB0_CPLDFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3202]
+ 8]: In-ActiveInitialStringRevision:0101[3201]
+ 9]: ActiveExpanderFWRevision:0101[3202]
+ 10]: In-ActiveExpanderFWRevision:0101[3201]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat1(id:2)
+ 13]: ActiveFirmwareImage:Img1(id:6)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x2a
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003200
+ 31]: SMPAddr:514630800000327f
+ 32]: SSPAddr:514630800000327e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_BB1_CPLDFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3202]
+ 8]: In-ActiveInitialStringRevision:0101[3201]
+ 9]: ActiveExpanderFWRevision:0101[3202]
+ 10]: In-ActiveExpanderFWRevision:0101[3201]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat1(id:2)
+ 13]: ActiveFirmwareImage:Img1(id:6)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x2a
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003200
+ 31]: SMPAddr:514630800000327f
+ 32]: SSPAddr:514630800000327e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_MI_CPLDFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3202]
+ 8]: In-ActiveInitialStringRevision:0101[3201]
+ 9]: ActiveExpanderFWRevision:0101[3202]
+ 10]: In-ActiveExpanderFWRevision:0101[3201]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat1(id:2)
+ 13]: ActiveFirmwareImage:Img1(id:6)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x2a
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003200
+ 31]: SMPAddr:514630800000327f
+ 32]: SSPAddr:514630800000327e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_SSM_CPLDFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3202]
+ 8]: In-ActiveInitialStringRevision:0101[3201]
+ 9]: ActiveExpanderFWRevision:0101[3202]
+ 10]: In-ActiveExpanderFWRevision:0101[3201]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat1(id:2)
+ 13]: ActiveFirmwareImage:Img1(id:6)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x2a
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003200
+ 31]: SMPAddr:514630800000327f
+ 32]: SSPAddr:514630800000327e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_SAS_ActiveFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3202]
+ 8]: In-ActiveInitialStringRevision:0101[3201]
+ 9]: ActiveExpanderFWRevision:0101[3202]
+ 10]: In-ActiveExpanderFWRevision:0101[3201]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat1(id:2)
+ 13]: ActiveFirmwareImage:Img1(id:6)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x2a
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003200
+ 31]: SMPAddr:514630800000327f
+ 32]: SSPAddr:514630800000327e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_BootLoader_FWVer was Passed
+
+Suite Result:chk_version_lowercanister was Passed
+
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y005|07|47|54|UF|CRIT[UpperCanister1]
+ 2]: 1Y005|07|48|55|UF|CRIT[UpperCanister2]
+ 3]: 2Y5605|07|45|52|OT|CRIT[LowerCanister1]
+ 4]: 3Y4205|07|45|52|OK[LowerCanister2]
+ 5]: 4Y2705|07|46|53|OK[Midplane1]
+ 6]: 5Y2705|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y4401|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y3301|10|45|50|OK[PSUAInlet]
+ 16]: 15Y-2559201|10|45|50|UF|CRIT[PSUBHotspot]
+ 17]: 16Y839201|10|45|50|UF|CRIT[PSUBInlet]
+ 18]: 17Y-1637501|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y-2124801|10|45|50|UF|CRIT[PSUCInlet]
+ 20]: 19Y-2560001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y2811601|10|45|50|UF|CRIT[PSUDInlet]
+
+Unit Result:chk_MP_sensor was Passed
+
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y005|07|47|54|UF|CRIT[UpperCanister1]
+ 2]: 1Y005|07|48|55|UF|CRIT[UpperCanister2]
+ 3]: 2Y5605|07|45|52|OT|CRIT[LowerCanister1]
+ 4]: 3Y4205|07|45|52|OK[LowerCanister2]
+ 5]: 4Y2705|07|46|53|OK[Midplane1]
+ 6]: 5Y2705|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y4401|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y3301|10|45|50|OK[PSUAInlet]
+ 16]: 15Y-2559201|10|45|50|UF|CRIT[PSUBHotspot]
+ 17]: 16Y839201|10|45|50|UF|CRIT[PSUBInlet]
+ 18]: 17Y-1637501|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y-2124801|10|45|50|UF|CRIT[PSUCInlet]
+ 20]: 19Y-2560001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y2811601|10|45|50|UF|CRIT[PSUDInlet]
+
+Unit Result:chk_Inlet_sensor was Passed
+
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y005|07|47|54|UF|CRIT[UpperCanister1]
+ 2]: 1Y005|07|48|55|UF|CRIT[UpperCanister2]
+ 3]: 2Y5605|07|45|52|OT|CRIT[LowerCanister1]
+ 4]: 3Y4205|07|45|52|OK[LowerCanister2]
+ 5]: 4Y2705|07|46|53|OK[Midplane1]
+ 6]: 5Y2705|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y4401|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y3301|10|45|50|OK[PSUAInlet]
+ 16]: 15Y-2559201|10|45|50|UF|CRIT[PSUBHotspot]
+ 17]: 16Y839201|10|45|50|UF|CRIT[PSUBInlet]
+ 18]: 17Y-1637501|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y-2124801|10|45|50|UF|CRIT[PSUCInlet]
+ 20]: 19Y-2560001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y2811601|10|45|50|UF|CRIT[PSUDInlet]
+
+Unit Result:chk_PSU_sensor was Passed
+
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y005|07|47|54|UF|CRIT[UpperCanister1]
+ 2]: 1Y005|07|48|55|UF|CRIT[UpperCanister2]
+ 3]: 2Y5605|07|45|52|OT|CRIT[LowerCanister1]
+ 4]: 3Y4205|07|45|52|OK[LowerCanister2]
+ 5]: 4Y2705|07|46|53|OK[Midplane1]
+ 6]: 5Y2705|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y4401|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y3301|10|45|50|OK[PSUAInlet]
+ 16]: 15Y-2559201|10|45|50|UF|CRIT[PSUBHotspot]
+ 17]: 16Y839201|10|45|50|UF|CRIT[PSUBInlet]
+ 18]: 17Y-1637501|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y-2124801|10|45|50|UF|CRIT[PSUCInlet]
+ 20]: 19Y-2560001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y2811601|10|45|50|UF|CRIT[PSUDInlet]
+
+Unit Result:chk_lower_sensor was Passed
+
+Suite Result:lower_sensor was Passed
+
+Cluster Result:Wolfcreek_lower_pri was Passed
+
+Loop Count:1 - Passed Loop Count:1 - Failed Loop Count:0
+######################################################
+Script ends at [2014/12/5-6:37:38ÏÂÎç]
+######################################################
+

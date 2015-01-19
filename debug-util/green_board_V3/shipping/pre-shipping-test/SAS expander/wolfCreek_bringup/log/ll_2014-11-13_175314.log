@@ -1,0 +1,13 @@
+ItemName                            Result           Spent
+
+[ Fan 3 Module 2  ]  fan speed is 200, less than 1000
+[ Fan 4 Module 2  ]  fan speed is 200, less than 1000
+[ Fan 9 Module 5  ]  fan speed is 200, less than 1000
+[ Fan 10 Module 5  ]  fan speed is 200, less than 1000
+Unit:FAN_pres_spd                   Failed           3s
+Suite:FAN                           Failed           11s
+Cluster:Wolfcreek_upper             Failed           13s
+
+Loop Count:1 - Passed Loop Count:0 - Failed Loop Count:1
+######################################################
+

@@ -1,0 +1,12 @@
+ItemName                            Result           Spent
+
+Unit:ctrl_BB_HDD_LEDS_ID_OFF        Passed           14s
+Unit:ctrl_BB_HDD_LEDS_ID_ON         Passed           7s
+Unit:ctrl_BB_HDD_LEDS_FLT_ON        Passed           12s
+Unit:ctrl_BB_HDD_LEDS_FLT_OFF       Passed           18s
+Suite:chk_hdd_leds                  Passed           59s
+Cluster:Wolfcreek_upper             Passed           61s
+
+Loop Count:1 - Passed Loop Count:1 - Failed Loop Count:0
+######################################################
+

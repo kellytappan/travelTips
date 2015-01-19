@@ -1,0 +1,1 @@
+rsync -rtvPSH $@ '//huajtses01/Storage/DDN - Wolf Creek/FW/green_board_V3' .

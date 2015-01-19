@@ -1,0 +1,721 @@
+
+A0@00:0000>
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3202]
+ 8]: In-ActiveInitialStringRevision:0101[3202]
+ 9]: ActiveExpanderFWRevision:0101[3202]
+ 10]: In-ActiveExpanderFWRevision:0101[3202]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat0(id:1)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x28
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003000
+ 31]: SMPAddr:514630800000307f
+ 32]: SSPAddr:514630800000307e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_BB0_CPLDFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3202]
+ 8]: In-ActiveInitialStringRevision:0101[3202]
+ 9]: ActiveExpanderFWRevision:0101[3202]
+ 10]: In-ActiveExpanderFWRevision:0101[3202]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat0(id:1)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x28
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003000
+ 31]: SMPAddr:514630800000307f
+ 32]: SSPAddr:514630800000307e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_BB1_CPLDFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3202]
+ 8]: In-ActiveInitialStringRevision:0101[3202]
+ 9]: ActiveExpanderFWRevision:0101[3202]
+ 10]: In-ActiveExpanderFWRevision:0101[3202]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat0(id:1)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x28
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003000
+ 31]: SMPAddr:514630800000307f
+ 32]: SSPAddr:514630800000307e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_MI_CPLDFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3202]
+ 8]: In-ActiveInitialStringRevision:0101[3202]
+ 9]: ActiveExpanderFWRevision:0101[3202]
+ 10]: In-ActiveExpanderFWRevision:0101[3202]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat0(id:1)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x28
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003000
+ 31]: SMPAddr:514630800000307f
+ 32]: SSPAddr:514630800000307e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_SSM_CPLDFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3202]
+ 8]: In-ActiveInitialStringRevision:0101[3202]
+ 9]: ActiveExpanderFWRevision:0101[3202]
+ 10]: In-ActiveExpanderFWRevision:0101[3202]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat0(id:1)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x28
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003000
+ 31]: SMPAddr:514630800000307f
+ 32]: SSPAddr:514630800000307e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_SAS_ActiveFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3202]
+ 8]: In-ActiveInitialStringRevision:0101[3202]
+ 9]: ActiveExpanderFWRevision:0101[3202]
+ 10]: In-ActiveExpanderFWRevision:0101[3202]
+ 11]: BootLoaderFWRevision:0101[0160]
+ 12]: ActiveDATAImage:Dat0(id:1)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0103
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0101
+ 21]: HardwareRevision:X00000031
+ 22]:
+ 23]: LocalTWIAddr:0x28
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003000
+ 31]: SMPAddr:514630800000307f
+ 32]: SSPAddr:514630800000307e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_BootLoader_FWVer was Passed
+
+Suite Result:chk_version_lowercanister was Passed
+
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y3305|07|47|54|OK[UpperCanister1]
+ 2]: 1Y2805|07|48|55|OK[UpperCanister2]
+ 3]: 2Y005|07|45|52|UF|CRIT[LowerCanister1]
+ 4]: 3Y005|07|45|52|UF|CRIT[LowerCanister2]
+ 5]: 4Y2505|07|46|53|OK[Midplane1]
+ 6]: 5Y2505|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y3101|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y2401|10|45|50|OK[PSUAInlet]
+ 16]: 15N--01|10|45|50|UNINSTL[PSUBHotspot]
+ 17]: 16N--01|10|45|50|UNINSTL[PSUBInlet]
+ 18]: 17Y001|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y1801|10|45|50|OK[PSUCInlet]
+ 20]: 19Y001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y1801|10|45|50|OK[PSUDInlet]
+
+Unit Result:chk_MP_sensor was Passed
+
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y3405|07|47|54|OK[UpperCanister1]
+ 2]: 1Y2805|07|48|55|OK[UpperCanister2]
+ 3]: 2Y005|07|45|52|UF|CRIT[LowerCanister1]
+ 4]: 3Y005|07|45|52|UF|CRIT[LowerCanister2]
+ 5]: 4Y2505|07|46|53|OK[Midplane1]
+ 6]: 5Y2505|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y3101|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y2401|10|45|50|OK[PSUAInlet]
+ 16]: 15N--01|10|45|50|UNINSTL[PSUBHotspot]
+ 17]: 16N--01|10|45|50|UNINSTL[PSUBInlet]
+ 18]: 17Y001|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y1801|10|45|50|OK[PSUCInlet]
+ 20]: 19Y001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y1801|10|45|50|OK[PSUDInlet]
+
+retry...
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y3405|07|47|54|OK[UpperCanister1]
+ 2]: 1Y2905|07|48|55|OK[UpperCanister2]
+ 3]: 2Y005|07|45|52|UF|CRIT[LowerCanister1]
+ 4]: 3Y005|07|45|52|UF|CRIT[LowerCanister2]
+ 5]: 4Y2505|07|46|53|OK[Midplane1]
+ 6]: 5Y2505|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y3101|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y2401|10|45|50|OK[PSUAInlet]
+ 16]: 15N--01|10|45|50|UNINSTL[PSUBHotspot]
+ 17]: 16N--01|10|45|50|UNINSTL[PSUBInlet]
+ 18]: 17Y001|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y1801|10|45|50|OK[PSUCInlet]
+ 20]: 19Y001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y1801|10|45|50|OK[PSUDInlet]
+
+retry...
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y3405|07|47|54|OK[UpperCanister1]
+ 2]: 1Y2905|07|48|55|OK[UpperCanister2]
+ 3]: 2Y005|07|45|52|UF|CRIT[LowerCanister1]
+ 4]: 3Y005|07|45|52|UF|CRIT[LowerCanister2]
+ 5]: 4Y2505|07|46|53|OK[Midplane1]
+ 6]: 5Y2505|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y3101|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y2401|10|45|50|OK[PSUAInlet]
+ 16]: 15N--01|10|45|50|UNINSTL[PSUBHotspot]
+ 17]: 16N--01|10|45|50|UNINSTL[PSUBInlet]
+ 18]: 17Y001|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y1801|10|45|50|OK[PSUCInlet]
+ 20]: 19Y001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y1801|10|45|50|OK[PSUDInlet]
+
+retry...
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y3405|07|47|54|OK[UpperCanister1]
+ 2]: 1Y2905|07|48|55|OK[UpperCanister2]
+ 3]: 2Y005|07|45|52|UF|CRIT[LowerCanister1]
+ 4]: 3Y005|07|45|52|UF|CRIT[LowerCanister2]
+ 5]: 4Y2505|07|46|53|OK[Midplane1]
+ 6]: 5Y2505|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y3101|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y2401|10|45|50|OK[PSUAInlet]
+ 16]: 15N--01|10|45|50|UNINSTL[PSUBHotspot]
+ 17]: 16N--01|10|45|50|UNINSTL[PSUBInlet]
+ 18]: 17Y001|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y1801|10|45|50|OK[PSUCInlet]
+ 20]: 19Y001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y1801|10|45|50|OK[PSUDInlet]
+
+Unit Result:chk_Inlet_sensor was Failed
+
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y3505|07|47|54|OK[UpperCanister1]
+ 2]: 1Y2905|07|48|55|OK[UpperCanister2]
+ 3]: 2Y005|07|45|52|UF|CRIT[LowerCanister1]
+ 4]: 3Y005|07|45|52|UF|CRIT[LowerCanister2]
+ 5]: 4Y2505|07|46|53|OK[Midplane1]
+ 6]: 5Y2505|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y3101|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y2401|10|45|50|OK[PSUAInlet]
+ 16]: 15N--01|10|45|50|UNINSTL[PSUBHotspot]
+ 17]: 16N--01|10|45|50|UNINSTL[PSUBInlet]
+ 18]: 17Y001|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y1801|10|45|50|OK[PSUCInlet]
+ 20]: 19Y001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y1801|10|45|50|OK[PSUDInlet]
+
+retry...
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y3505|07|47|54|OK[UpperCanister1]
+ 2]: 1Y2905|07|48|55|OK[UpperCanister2]
+ 3]: 2Y005|07|45|52|UF|CRIT[LowerCanister1]
+ 4]: 3Y005|07|45|52|UF|CRIT[LowerCanister2]
+ 5]: 4Y2505|07|46|53|OK[Midplane1]
+ 6]: 5Y2505|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y3101|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y2501|10|45|50|OK[PSUAInlet]
+ 16]: 15N--01|10|45|50|UNINSTL[PSUBHotspot]
+ 17]: 16N--01|10|45|50|UNINSTL[PSUBInlet]
+ 18]: 17Y001|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y1801|10|45|50|OK[PSUCInlet]
+ 20]: 19Y001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y1801|10|45|50|OK[PSUDInlet]
+
+retry...
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y3505|07|47|54|OK[UpperCanister1]
+ 2]: 1Y2905|07|48|55|OK[UpperCanister2]
+ 3]: 2Y005|07|45|52|UF|CRIT[LowerCanister1]
+ 4]: 3Y005|07|45|52|UF|CRIT[LowerCanister2]
+ 5]: 4Y2505|07|46|53|OK[Midplane1]
+ 6]: 5Y2505|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y3101|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y2501|10|45|50|OK[PSUAInlet]
+ 16]: 15N--01|10|45|50|UNINSTL[PSUBHotspot]
+ 17]: 16N--01|10|45|50|UNINSTL[PSUBInlet]
+ 18]: 17Y001|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y1801|10|45|50|OK[PSUCInlet]
+ 20]: 19Y001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y1801|10|45|50|OK[PSUDInlet]
+
+retry...
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y3505|07|47|54|OK[UpperCanister1]
+ 2]: 1Y2905|07|48|55|OK[UpperCanister2]
+ 3]: 2Y005|07|45|52|UF|CRIT[LowerCanister1]
+ 4]: 3Y005|07|45|52|UF|CRIT[LowerCanister2]
+ 5]: 4Y2505|07|46|53|OK[Midplane1]
+ 6]: 5Y2505|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y3101|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y2501|10|45|50|OK[PSUAInlet]
+ 16]: 15N--01|10|45|50|UNINSTL[PSUBHotspot]
+ 17]: 16N--01|10|45|50|UNINSTL[PSUBInlet]
+ 18]: 17Y001|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y1801|10|45|50|OK[PSUCInlet]
+ 20]: 19Y001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y1801|10|45|50|OK[PSUDInlet]
+
+Unit Result:chk_PSU_sensor was Failed
+
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y3605|07|47|54|OK[UpperCanister1]
+ 2]: 1Y2905|07|48|55|OK[UpperCanister2]
+ 3]: 2Y005|07|45|52|UF|CRIT[LowerCanister1]
+ 4]: 3Y005|07|45|52|UF|CRIT[LowerCanister2]
+ 5]: 4Y2505|07|46|53|OK[Midplane1]
+ 6]: 5Y2505|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y3101|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y2501|10|45|50|OK[PSUAInlet]
+ 16]: 15N--01|10|45|50|UNINSTL[PSUBHotspot]
+ 17]: 16N--01|10|45|50|UNINSTL[PSUBInlet]
+ 18]: 17Y001|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y1801|10|45|50|OK[PSUCInlet]
+ 20]: 19Y001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y1801|10|45|50|OK[PSUDInlet]
+
+retry...
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y3605|07|47|54|OK[UpperCanister1]
+ 2]: 1Y3005|07|48|55|OK[UpperCanister2]
+ 3]: 2Y005|07|45|52|UF|CRIT[LowerCanister1]
+ 4]: 3Y005|07|45|52|UF|CRIT[LowerCanister2]
+ 5]: 4Y2505|07|46|53|OK[Midplane1]
+ 6]: 5Y2505|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y3101|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y2501|10|45|50|OK[PSUAInlet]
+ 16]: 15N--01|10|45|50|UNINSTL[PSUBHotspot]
+ 17]: 16N--01|10|45|50|UNINSTL[PSUBInlet]
+ 18]: 17Y001|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y1801|10|45|50|OK[PSUCInlet]
+ 20]: 19Y001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y1801|10|45|50|OK[PSUDInlet]
+
+retry...
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y3605|07|47|54|OK[UpperCanister1]
+ 2]: 1Y3005|07|48|55|OK[UpperCanister2]
+ 3]: 2Y005|07|45|52|UF|CRIT[LowerCanister1]
+ 4]: 3Y005|07|45|52|UF|CRIT[LowerCanister2]
+ 5]: 4Y2505|07|46|53|OK[Midplane1]
+ 6]: 5Y2505|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y3101|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y2501|10|45|50|OK[PSUAInlet]
+ 16]: 15N--01|10|45|50|UNINSTL[PSUBHotspot]
+ 17]: 16N--01|10|45|50|UNINSTL[PSUBInlet]
+ 18]: 17Y001|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y1801|10|45|50|OK[PSUCInlet]
+ 20]: 19Y001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y1801|10|45|50|OK[PSUDInlet]
+
+retry...
+send command line: snsr
+ 0]: IDPresTemp(C)ThresholdStatusDescriptor
+ 1]: 0Y3605|07|47|54|OK[UpperCanister1]
+ 2]: 1Y3005|07|48|55|OK[UpperCanister2]
+ 3]: 2Y005|07|45|52|UF|CRIT[LowerCanister1]
+ 4]: 3Y005|07|45|52|UF|CRIT[LowerCanister2]
+ 5]: 4Y2505|07|46|53|OK[Midplane1]
+ 6]: 5Y2505|07|47|54|OK[Midplane2]
+ 7]: 6Y2405|07|48|55|OK[Inlet]
+ 8]: 7Y005|07|48|55|UF|CRIT[UpperCPU0]
+ 9]: 8Y005|07|48|55|UF|CRIT[UpperCPU1]
+ 10]: 9Y005|07|48|56|UF|CRIT[UpperPCH]
+ 11]: 10Y0--|--|--|--|OW|NONCRIT[LowerCPU0]
+ 12]: 11Y0--|--|--|--|OW|NONCRIT[LowerCPU1]
+ 13]: 12Y0--|--|--|--|OW|NONCRIT[LowerPCH]
+ 14]: 13Y3101|10|45|50|OK[PSUAHotspot]
+ 15]: 14Y2501|10|45|50|OK[PSUAInlet]
+ 16]: 15N--01|10|45|50|UNINSTL[PSUBHotspot]
+ 17]: 16N--01|10|45|50|UNINSTL[PSUBInlet]
+ 18]: 17Y001|10|45|50|UF|CRIT[PSUCHotspot]
+ 19]: 18Y1801|10|45|50|OK[PSUCInlet]
+ 20]: 19Y001|10|45|50|UF|CRIT[PSUDHotspot]
+ 21]: 20Y1801|10|45|50|OK[PSUDInlet]
+
+Unit Result:chk_lower_sensor was Failed
+
+Suite Result:lower_sensor was Failed
+
+send command line: phy
+ 0]: Symbol:
+ 1]: U-Unsupported
+ 2]: E-Enabled
+ 3]: D-Disabledbecauseit'snotused
+ 4]:
+ 5]: P_Stat-Programmingstatus
+ 6]: A_Stat-Actualstatus
+ 7]:
+ 8]: L_PHYP_PHYDev_PresTypeSpeedP_StatA_StatUsageWide_P
+[9]: ===========================================================================
+
+ 10]: 00x00Unpre-------EEHOST0Y
+ 11]: 10x01Unpre-------EEHOST0Y
+ 12]: 20x02Unpre-------EEHOST0Y
+ 13]: 30x03Unpre-------EEHOST0Y
+ 14]: 40x04Unpre-------EEHOST1Y
+ 15]: 50x05Unpre-------EEHOST1Y
+ 16]: 60x06Unpre-------EEHOST1Y
+ 17]: 70x07Unpre-------EEHOST1Y
+ 18]: 80x08Unpre-------EEHOST2Y
+ 19]: 90x09Unpre-------EEHOST2Y
+ 20]: 100x0aUnpre-------EEHOST2Y
+ 21]: 110x0bUnpre-------EEHOST2Y
+ 22]: 120x0cUnpre-------EEHOST3Y
+ 23]: 130x0dUnpre-------EEHOST3Y
+ 24]: 140x0eUnpre-------EEHOST3Y
+ 25]: 150x0fUnpre-------EEHOST3Y
+ 26]: 160x10Unpre-------EEHOST4Y
+ 27]: 170x11Unpre-------EEHOST4Y
+ 28]: 180x12Unpre-------EEHOST4Y
+ 29]: 190x13Unpre-------EEHOST4Y
+ 30]: 200x1dUnpre-------EEHDD0N
+ 31]: 210x1aUnpre-------EEHDD1N
+ 32]: 220x37Unpre-------EEHDD2N
+ 33]: 230x34Unpre-------EEHDD3N
+ 34]: 240x31Unpre-------EEHDD4N
+ 35]: 250x2eUnpre-------EEHDD5N
+ 36]: 260x2bUnpre-------EEHDD6N
+ 37]: 270x28Unpre-------EEHDD7N
+ 38]: 280x25Unpre-------EEHDD8N
+ 39]: 290x22Unpre-------EEHDD9N
+ 40]: 300x1fUnpre-------EEHDD10N
+ 41]: 310x1cUnpre-------EEHDD11N
+ 42]: 320x32Unpre-------EEHDD24N
+ 43]: 330x2cUnpre-------EEHDD25N
+ 44]: 340x26Unpre-------EEHDD26N
+ 45]: 350x20Unpre-------EEHDD27N
+ 46]: 360x18Unpre-------EEHDD28N
+ 47]: 370x1eUnpre-------EEHDD29N
+ 48]: 380x24Unpre-------EEHDD30N
+ 49]: 390x2aUnpre-------EEHDD31N
+ 50]: 400x19Unpre-------EEHDD32N
+ 51]: 410x16Unpre-------EEHDD33N
+ 52]: 420x30Unpre-------EEHDD34N
+ 53]: 430x36Unpre-------EEHDD35N
+ 54]: 440x35Unpre-------EEHDD48N
+ 55]: 450x2fUnpre-------EEHDD49N
+ 56]: 460x29Unpre-------EEHDD50N
+ 57]: 470x23Unpre-------EEHDD51N
+ 58]: 480x15Unpre-------EEHDD52N
+ 59]: 490x1bUnpre-------EEHDD53N
+ 60]: 500x21Unpre-------EEHDD54N
+ 61]: 510x27Unpre-------EEHDD55N
+ 62]: 520x17Unpre-------EEHDD56N
+ 63]: 530x14Unpre-------EEHDD57N
+ 64]: 540x2dUnpre-------EEHDD58N
+ 65]: 550x33Unpre-------EEHDD59N
+ 66]: 560x38DevpreSAS12GEEI_Lnk0Y
+ 67]: 570x39DevpreSAS12GEEI_Lnk0Y
+ 68]: 580x3aDevpreSAS12GEEI_Lnk0Y
+ 69]: 590x3bDevpreSAS12GEEI_Lnk0Y
+ 70]: 600x3cDevpreSAS12GEEI_Lnk1Y
+ 71]: 610x3dDevpreSAS12GEEI_Lnk1Y
+ 72]: 620x3eDevpreSAS12GEEI_Lnk1Y
+ 73]: 630x3fDevpreSAS12GEEI_Lnk1Y
+ 74]: 640x40DevpreSAS12GEEI_Lnk2Y
+ 75]: 650x41DevpreSAS12GEEI_Lnk2Y
+ 76]: 660x42DevpreSAS12GEEI_Lnk2Y
+ 77]: 670x43DevpreSAS12GEEI_Lnk2Y
+
+Unit Result:chk_PHY was Failed
+
+Suite Result:PHY was Failed
+
+Cluster Result:Wolfcreek_lower_pri was Failed
+
+Loop Count:1 - Passed Loop Count:0 - Failed Loop Count:1
+######################################################
+Script ends at [2014/12/6-6:27:22ÏÂÎç]
+######################################################
+

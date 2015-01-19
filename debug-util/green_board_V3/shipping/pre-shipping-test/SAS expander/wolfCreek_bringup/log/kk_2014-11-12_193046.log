@@ -1,0 +1,10 @@
+ItemName                            Result           Spent
+
+Unit:ctrl_SSM_LED_OFF               Passed           6s
+Unit:ctrl_SSM_LED_ON                Passed           4s
+Suite:chk_SSM_LEDS                  Passed           14s
+Cluster:Wolfcreek_upper             Passed           16s
+
+Loop Count:1 - Passed Loop Count:1 - Failed Loop Count:0
+######################################################
+

@@ -1,0 +1,75 @@
+ItemName                            Result           Spent
+
+Unit:chk_BB0_CPLDFwVer              Passed           3s
+Unit:chk_BB1_CPLDFwVer              Passed           1s
+Unit:chk_MI_CPLDFwVer               Passed           1s
+Unit:chk_SSM_CPLDFwVer              Passed           1s
+Unit:chk_SAS_ActiveFwVer            Passed           1s
+Unit:chk_BootLoader_FWVer           Passed           2s
+Suite:chk_Version_upperCanister     Passed           22s
+Unit:f_BB_FRU                       Passed           2s
+Unit:f_FAN1_FRU                     Passed           1s
+Unit:f_FAN2_FRU                     Passed           2s
+Unit:f_FAN3_FRU                     Passed           2s
+Unit:f_FAN4_FRU                     Passed           2s
+Unit:f_FAN5_FRU                     Passed           1s
+Unit:f_SSM_FRU                      Passed           1s
+Unit:f_PSU_interposer1_FRU          Passed           2s
+Unit:f_PSU_interposer2_FRU          Passed           2s
+Unit:f_PSU_interposer3_FRU          Passed           2s
+Unit:f_PSU_interposer4_FRU          Passed           2s
+Suite:VPD                           Passed           43s
+Unit:Program_enclosure              Failed           20s
+Unit:close_diag_mode                Completed        2s
+Unit:Verify_enclosure               Failed           5s
+Suite:sas_addr                      Failed           43s
+[ Fan 1 Module 1  ]  fan speed is 200, less than 1000
+[ Fan 2 Module 1  ]  fan speed is 200, less than 1000
+[ Fan 7 Module 4  ]  fan speed is 200, less than 1000
+[ Fan 8 Module 4  ]  fan speed is 200, less than 1000
+Unit:FAN_pres_spd                   Failed           2s
+Suite:FAN                           Failed           9s
+Unit:chk_MP_sensor                  Passed           4s
+Unit:chk_upper_sensor               Passed           4s
+Unit:chk_Inlet_sensor               Failed           16s
+Unit:chk_PSU_sensor                 Failed           16s
+Suite:upper_sensor                  Failed           60s
+Unit:chk_PSU_volt                   Failed           10s
+Unit:chk_REG_volt                   Failed           10s
+Suite:chk_volt                      Failed           35s
+Unit:chk_PSU_curr                   Failed           9s
+Unit:chk_REG_curr                   Failed           9s
+Suite:chk_curr                      Failed           33s
+Unit:chk_door_open                  Passed           10s
+Unit:chk_door_close                 Failed           6s
+Suite:chk_door                      Failed           26s
+Unit:psu_detect                     Failed           8s
+Suite:power                         Failed           15s
+Unit:ctrl_BB_HDD_LEDS_ID_ON         Passed           12s
+Unit:ctrl_BB_HDD_LEDS_ID_OFF        Passed           6s
+Unit:ctrl_BB_HDD_LEDS_FLT_ON        Passed           13s
+Unit:ctrl_BB_HDD_LEDS_FLT_OFF       Passed           7s
+Suite:chk_hdd_leds                  Passed           47s
+Unit:ctrl_FAN_ID_LEDS_ON            Passed           9s
+Unit:ctrl_FAN_ID_LEDS_OFF           Passed           7s
+Unit:ctrl_FAN_FLT_LEDS_ON           Passed           5s
+Unit:ctrl_FAN_FLT_LEDS_OFF          Passed           5s
+Suite:chk_fan_leds                  Passed           34s
+Unit:ctrl_SSM_LED_ON                Passed           2s
+Unit:chk_SSM_LED_ON                 Passed           9s
+Unit:ctrl_SSM_LED_OFF               Passed           2s
+Unit:chk_SSM_LED_OFF                Passed           5s
+Suite:chk_SSM_LEDS                  Passed           26s
+Unit:chk_PSU_LED_ON                 Passed           11s
+Suite:chk_PSU_LED                   Passed           13s
+Unit:fill_LCD                       Passed           7s
+Unit:clear_LCD                      Passed           5s
+Suite:LCD                           Passed           16s
+phy return host:0, hdd:0, link: 12
+Unit:chk_PHY                        Failed           2s
+Suite:PHY                           Failed           9s
+Cluster:Wolfcreek_upper_pri         Failed           466s
+
+Loop Count:1 - Passed Loop Count:0 - Failed Loop Count:1
+######################################################
+

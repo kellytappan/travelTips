@@ -1,0 +1,67 @@
+ItemName                            Result           Spent
+
+Unit:chk_BB0_CPLDFwVer              Passed           15s
+Unit:chk_BB1_CPLDFwVer              Passed           1s
+Unit:chk_MI_CPLDFwVer               Passed           1s
+Unit:chk_SSM_CPLDFwVer              Passed           2s
+Unit:chk_SAS_ActiveFwVer            Passed           1s
+Unit:chk_BootLoader_FWVer           Passed           2s
+Suite:chk_Version_upperCanister     Passed           34s
+Unit:f_BB_FRU                       Passed           2s
+Unit:f_FAN1_FRU                     Passed           5s
+Unit:f_FAN2_FRU                     Passed           2s
+Unit:f_FAN3_FRU                     Passed           2s
+Unit:f_FAN4_FRU                     Passed           1s
+Unit:f_FAN5_FRU                     Passed           1s
+Unit:f_SSM_FRU                      Passed           2s
+Suite:VPD                           Passed           32s
+Unit:Program_enclosure              Failed           11s
+Unit:close_diag_mode                Completed        2s
+Unit:Verify_enclosure               Passed           1s
+Suite:sas_addr                      Failed           26s
+[ PSU B Blower ]  fan speed is 0, less than 1000
+[ PSU C Blower ]  fan speed is 0, less than 1000
+[ PSU D Blower ]  fan speed is 0, less than 1000
+Unit:FAN_pres_spd                   Failed           5s
+Suite:FAN                           Failed           12s
+Unit:chk_MP_sensor                  Passed           30s
+Unit:chk_upper_sensor               Passed           31s
+Unit:chk_Inlet_sensor               Passed           29s
+Unit:chk_PSU_sensor                 Passed           29s
+Suite:upper_sensor                  Passed           128s
+Unit:chk_PSU_volt                   Passed           24s
+Unit:chk_REG_volt                   Passed           24s
+Suite:chk_volt                      Passed           52s
+Unit:chk_PSU_curr                   Passed           15s
+Unit:chk_REG_curr                   Passed           15s
+Suite:chk_curr                      Passed           35s
+Unit:chk_door_open                  Passed           159s
+Unit:chk_door_close                 Failed           67s
+Suite:chk_door                      Failed           236s
+Unit:psu_detect                     Passed           4s
+Suite:power                         Passed           6s
+Unit:ctrl_BB_HDD_LEDS_ID_ON         Passed           6s
+Unit:ctrl_BB_HDD_LEDS_ID_OFF        Passed           6s
+Unit:ctrl_BB_HDD_LEDS_FLT_ON        Passed           5s
+Unit:ctrl_BB_HDD_LEDS_FLT_OFF       Passed           5s
+Suite:chk_hdd_leds                  Passed           30s
+Unit:ctrl_FAN_ID_LEDS_ON            Passed           7s
+Unit:ctrl_FAN_ID_LEDS_OFF           Passed           7s
+Unit:ctrl_FAN_FLT_LEDS_ON           Passed           7s
+Unit:ctrl_FAN_FLT_LEDS_OFF          Passed           6s
+Suite:chk_fan_leds                  Passed           35s
+Unit:ctrl_SSM_LED_ON                Passed           2s
+Unit:chk_SSM_LED_ON                 Passed           4s
+Unit:ctrl_SSM_LED_OFF               Passed           2s
+Unit:chk_SSM_LED_OFF                Passed           20s
+Suite:chk_SSM_LEDS                  Passed           37s
+Unit:chk_PSU_LED_ON                 Passed           2s
+Suite:chk_PSU_LED                   Passed           4s
+Unit:fill_LCD                       Passed           4s
+Unit:clear_LCD                      Passed           4s
+Suite:LCD                           Passed           12s
+Cluster:Wolfcreek_upper_pri         Failed           708s
+
+Loop Count:1 - Passed Loop Count:0 - Failed Loop Count:1
+######################################################
+

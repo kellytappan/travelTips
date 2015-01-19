@@ -1,0 +1,16 @@
+ItemName                            Result           Spent
+
+Unit:chk_BB0_CPLDFwVer              Passed           4s
+Unit:chk_BB1_CPLDFwVer              Passed           2s
+Unit:chk_MI_CPLDFwVer               Passed           1s
+Unit:chk_SSM_CPLDFwVer              Passed           2s
+Unit:chk_SAS_ActiveFwVer            Passed           1s
+Unit:chk_BootLoader_FWVer           Passed           1s
+Suite:chk_Version_upperCanister     Passed           24s
+Unit:open_diag_mode                 Completed        2s
+Unit:f_BB_FRU                       Passed           2s
+Unit:f_MP_FRU                       Passed           2s
+Unit:f_FAN1_FRU                     Passed           2s
+Unit:f_FAN2_FRU                     Passed           31s
+Unit:f_FAN3_FRU                     Failed           120s
+Server 500 error in communicate with serial port,can't get data from remote target

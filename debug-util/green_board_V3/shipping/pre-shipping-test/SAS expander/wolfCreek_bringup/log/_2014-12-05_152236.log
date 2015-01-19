@@ -1,0 +1,12 @@
+ItemName                            Result           Spent
+
+Unit:chk_SAS_ActiveFwVer            Passed           4s
+Suite:FW_ver                        Passed           6s
+phy return host:0, hdd:36, link: 12
+Unit:chk_PHY                        Passed           3s
+Suite:PHY                           Passed           5s
+Cluster:Wolfcreek_upper_lower_sec   Passed           15s
+
+Loop Count:1 - Passed Loop Count:1 - Failed Loop Count:0
+######################################################
+

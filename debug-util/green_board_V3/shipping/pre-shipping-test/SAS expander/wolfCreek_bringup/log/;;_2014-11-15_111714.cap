@@ -1,0 +1,252 @@
+
+A0@00:0000>
+send command line: info
+        MI CPLD FW Revision: 0x0102
+        SSM CPLD FW Revision: 0x0101
+
+Hardware Information:
+        Product Revision: X0200
+        Hardware Revision: X00000030
+
+Local TWI Addr : 0x28
+
+Device Information:
+        Max Supported HDD Count: 72
+        Max Supported PHY Count: 68
+
+SAS Information:
+        Enclosure Logical ID: 5146308000003000
+        SMP Addr: 514630800000307f
+        SSP Addr: 514630800000307e
+
+Enclosure Ambient Temperature:  NA C
+
+FRU Capability:
+        HDD number support:72
+        FAN number support: 14
+        Temperature number support: 21
+        Power supply number support: 8
+        SAS cable number support: 0
+        Display number support: 1
+        Voltage sensor number support: 8
+        Current sensor number support: 8
+A0@00:0001>
+ 0@00:0001>[0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0200[3185]
+ 8]: In-ActiveInitialStringRevision:0200[3467]
+ 9]: ActiveExpanderFWRevision:0200[3185]
+ 10]: In-ActiveExpanderFWRevision:0200[3467]
+ 11]: BootLoaderFWRevision:0101[0159]
+ 12]: ActiveDATAImage:Dat1(id:2)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]:
+
+Unit Result:chk_BB0_CPLDFwVer was Passed
+A0@00:0001>
+A0@00:0001>
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0200[3185]
+ 8]: In-ActiveInitialStringRevision:0200[3467]
+ 9]: ActiveExpanderFWRevision:0200[3185]
+ 10]: In-ActiveExpanderFWRevision:0200[3467]
+ 11]: BootLoaderFWRevision:0101[0159]
+ 12]: ActiveDATAImage:Dat1(id:2)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0102
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0200
+ 21]: HardwareRevision:X00000030
+ 22]:
+ 23]: LocalTWIAddr:0x28
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003000
+ 31]: SMPAddr:514630800000307f
+ 32]: SSPAddr:514630800000307e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_BB1_CPLDFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0200[3185]
+ 8]: In-ActiveInitialStringRevision:0200[3467]
+ 9]: ActiveExpanderFWRevision:0200[3185]
+ 10]: In-ActiveExpanderFWRevision:0200[3467]
+ 11]: BootLoaderFWRevision:0101[0159]
+ 12]: ActiveDATAImage:Dat1(id:2)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0102
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0200
+ 21]: HardwareRevision:X00000030
+ 22]:
+ 23]: LocalTWIAddr:0x28
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003000
+ 31]: SMPAddr:514630800000307f
+ 32]: SSPAddr:514630800000307e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_MI_CPLDFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0200[3185]
+ 8]: In-ActiveInitialStringRevision:0200[3467]
+ 9]: ActiveExpanderFWRevision:0200[3185]
+ 10]: In-ActiveExpanderFWRevision:0200[3467]
+ 11]: BootLoaderFWRevision:0101[0159]
+ 12]: ActiveDATAImage:Dat1(id:2)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0102
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0200
+ 21]: HardwareRevision:X00000030
+ 22]:
+ 23]: LocalTWIAddr:0x28
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003000
+ 31]: SMPAddr:514630800000307f
+ 32]: SSPAddr:514630800000307e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_SSM_CPLDFwVer was Passed
+
+send command line: info
+ 0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x00
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0200[3185]
+ 8]: In-ActiveInitialStringRevision:0200[3467]
+ 9]: ActiveExpanderFWRevision:0200[3185]
+ 10]: In-ActiveExpanderFWRevision:0200[3467]
+ 11]: BootLoaderFWRevision:0101[0159]
+ 12]: ActiveDATAImage:Dat1(id:2)
+ 13]: ActiveFirmwareImage:Img0(id:5)
+ 14]: BBCPLD1FWRevision:0x0102
+ 15]: BBCPLD2FWRevision:0x0102
+ 16]: MICPLDFWRevision:0x0102
+ 17]: SSMCPLDFWRevision:0x0101
+ 18]:
+ 19]: HardwareInformation:
+ 20]: ProductRevision:X0200
+ 21]: HardwareRevision:X00000030
+ 22]:
+ 23]: LocalTWIAddr:0x28
+ 24]:
+ 25]: DeviceInformation:
+ 26]: MaxSupportedHDDCount:72
+ 27]: MaxSupportedPHYCount:68
+ 28]:
+ 29]: SASInformation:
+ 30]: EnclosureLogicalID:5146308000003000
+ 31]: SMPAddr:514630800000307f
+ 32]: SSPAddr:514630800000307e
+ 33]:
+ 34]: EnclosureAmbientTemperature:NAC
+ 35]:
+ 36]: FRUCapability:
+ 37]: HDDnumbersupport:72
+ 38]: FANnumbersupport:14
+ 39]: Temperaturenumbersupport:21
+ 40]: Powersupplynumbersupport:8
+ 41]: SAScablenumbersupport:0
+ 42]: Displaynumbersupport:1
+ 43]: Voltagesensornumbersupport:8
+ 44]: Currentsensornumbersupport:8
+
+Unit Result:chk_SAS_ActiveFwVer was Failed
+Script ends at [11/15/2014-11:18:11AM]
+######################################################
+

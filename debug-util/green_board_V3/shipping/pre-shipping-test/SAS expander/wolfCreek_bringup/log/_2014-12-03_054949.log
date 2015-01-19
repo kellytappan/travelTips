@@ -1,0 +1,68 @@
+ItemName                            Result           Spent
+
+Unit:chk_BB0_CPLDFwVer              Passed           4s
+Unit:chk_BB1_CPLDFwVer              Passed           1s
+Unit:chk_MI_CPLDFwVer               Passed           1s
+Unit:chk_SSM_CPLDFwVer              Passed           2s
+Unit:chk_SAS_ActiveFwVer            Passed           1s
+Unit:chk_BootLoader_FWVer           Passed           2s
+Suite:chk_Version_upperCanister     Passed           24s
+Unit:f_BB_FRU                       Passed           2s
+Unit:f_FAN1_FRU                     Passed           2s
+Unit:f_FAN2_FRU                     Passed           2s
+Unit:f_FAN3_FRU                     Passed           2s
+Unit:f_FAN4_FRU                     Passed           2s
+Unit:f_FAN5_FRU                     Passed           1s
+Unit:f_SSM_FRU                      Passed           3s
+Suite:VPD                           Passed           28s
+Unit:Program_enclosure              Failed           305s
+Unit:close_diag_mode                Completed        2s
+Unit:Verify_enclosure               Failed           5s
+Suite:sas_addr                      Failed           328s
+[ PSU B Blower ]  fan speed is 0, less than 1000
+Unit:FAN_pres_spd                   Failed           3s
+Suite:FAN                           Failed           10s
+Unit:chk_MP_sensor                  Passed           14s
+Unit:chk_upper_sensor               Passed           14s
+Unit:chk_Inlet_sensor               Passed           13s
+Unit:chk_PSU_sensor                 Passed           14s
+Suite:upper_sensor                  Passed           63s
+Unit:chk_PSU_volt                   Passed           10s
+Unit:chk_REG_volt                   Passed           11s
+Suite:chk_volt                      Passed           25s
+Unit:chk_PSU_curr                   Passed           8s
+Unit:chk_REG_curr                   Passed           7s
+Suite:chk_curr                      Passed           19s
+Unit:chk_door_open                  Passed           440s
+Unit:chk_door_close                 Failed           1154s
+Suite:chk_door                      Failed           1603s
+Unit:psu_detect                     Passed           3s
+Suite:power                         Passed           5s
+Unit:ctrl_BB_HDD_LEDS_ID_ON         Passed           289s
+Unit:ctrl_BB_HDD_LEDS_ID_OFF        Passed           138s
+Unit:ctrl_BB_HDD_LEDS_FLT_ON        Passed           58s
+Unit:ctrl_BB_HDD_LEDS_FLT_OFF       Passed           35s
+Suite:chk_hdd_leds                  Passed           528s
+Unit:ctrl_FAN_ID_LEDS_ON            Passed           158s
+Unit:ctrl_FAN_ID_LEDS_OFF           Passed           29s
+Unit:ctrl_FAN_FLT_LEDS_ON           Passed           66s
+Unit:ctrl_FAN_FLT_LEDS_OFF          Passed           73s
+Suite:chk_fan_leds                  Passed           334s
+Unit:ctrl_SSM_LED_ON                Passed           3s
+Unit:chk_SSM_LED_ON                 Passed           75s
+Unit:ctrl_SSM_LED_OFF               Passed           2s
+Unit:chk_SSM_LED_OFF                Passed           39s
+Suite:chk_SSM_LEDS                  Passed           127s
+Unit:chk_PSU_LED_ON                 Passed           59s
+Suite:chk_PSU_LED                   Passed           61s
+Unit:fill_LCD                       Passed           105s
+Unit:clear_LCD                      Passed           44s
+Suite:LCD                           Passed           153s
+phy return host:0, hdd:0, link: 12
+Unit:chk_PHY                        Failed           3s
+Suite:PHY                           Failed           10s
+Cluster:Wolfcreek_upper_pri         Failed           3351s
+
+Loop Count:1 - Passed Loop Count:0 - Failed Loop Count:1
+######################################################
+

@@ -1,0 +1,24 @@
+
+A0@00:000c>eep wr 4 0xC2 10 1  0
+Write Success!
+A0@00:000d>eep wr 4 0xC2 11 1  0
+Write Success!
+A0@00:000e>eep wr 4 0xC2 12 1  0
+Write Success!
+A0@00:000f>eep wr 4 0xC2 12 1  0 ^M
+Unit Result:ctrl_SSM_LED_OFF was Passed
+Don't have this after action:boxCheck, please checkScript ends at [11/12/2014-7:
+05:40PM]
+######################################################
+
+
+
+
+
+
+
+
+
+
+
+

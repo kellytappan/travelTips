@@ -1,0 +1,24 @@
+ItemName                            Result           Spent
+
+Unit:psu_detect                     Failed           8s
+Suite:power                         Failed           15s
+Unit:ctrl_BB_HDD_LEDS_ID_ON         Passed           121s
+Unit:ctrl_BB_HDD_LEDS_ID_OFF        Passed           15s
+Unit:ctrl_BB_HDD_LEDS_FLT_ON        Passed           16s
+Unit:ctrl_BB_HDD_LEDS_FLT_OFF       Passed           14s
+Suite:chk_hdd_leds                  Passed           174s
+Unit:ctrl_FAN_ID_LEDS_ON            Passed           18s
+Unit:ctrl_FAN_ID_LEDS_OFF           Passed           21s
+Unit:ctrl_FAN_FLT_LEDS_ON           Passed           7s
+Unit:ctrl_FAN_FLT_LEDS_OFF          Passed           6s
+Suite:chk_fan_leds                  Passed           60s
+Unit:ctrl_SSM_LED_ON                Passed           4s
+Unit:chk_SSM_LED_ON                 Passed           15s
+Unit:ctrl_SSM_LED_OFF               Passed           5s
+Unit:chk_SSM_LED_OFF                Passed           4s
+Suite:chk_SSM_LEDS                  Passed           36s
+Unit:chk_PSU_LED_ON                 Passed           13s
+Suite:chk_PSU_LED                   Passed           15s
+Unit:fill_LCD                       Passed           8s
+Unit:clear_LCD                      Passed           14s
+Suite:LCD                           Passed           26s

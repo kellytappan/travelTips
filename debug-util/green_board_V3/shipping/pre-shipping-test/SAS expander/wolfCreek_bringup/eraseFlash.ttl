@@ -1,0 +1,81 @@
+
+show -1
+timeout = 120 ; connection timeout in seconds
+
+yesnobox "Erase the flash now?"#13"Click 'Yes' to continue, Click 'No' to exit." param3
+if result = 0 then
+  end
+endif
+
+X = 0
+Y = 0
+strcompare param3 "FEM_A0"
+if result = 0 then
+	X = 0
+	Y = 0
+endif
+strcompare param3 "FEM_B0"
+if result = 0 then
+	X = 500
+	Y = 0
+endif
+strcompare param3 "FEM_A1"
+if result = 0 then
+	X = 0
+	Y = 500
+endif
+strcompare param3 "FEM_B1"
+if result = 0 then
+	X = 500
+	Y = 500
+endif
+
+sprintf2 conn_param '%s /W=%s /X=%d /Y=%d' param2 param3 X Y
+connect conn_param
+if result = 0 then
+  sprintf2 msg "Cannot link Tera Term with parameter %s. Click Ok to exit." param2
+  messagebox msg "Connection Error"
+  closett
+  end
+elseif result = 1 then
+  messagebox "Failed to connect to serial port,Please check the serial port configuration. Click Ok to exit." "Connection Error"
+  closett
+  end
+endif
+setbaud 115200
+
+sendln "reset"
+wait "Hit"
+if result = 0 then ; Timeout
+  sprintf "Script waited %d seconds but did not receive Hit ^d ... Click Ok to exit." timeout
+  messagebox "CAN NOT change to bootloader..." "Bootloader"
+  closett
+  end
+endif
+send #4
+
+waitregex  "=>"
+if result = 0 then ; Timeout
+  sprintf "Can not enter the bootloader ... Click Ok to exit." timeout
+  messagebox "CAN NOT change to bootloader..." "Bootloader"
+  closett
+  end
+endif
+
+sendln "flm erase chip"
+wait "Done!" "Invalid parameters!" "Perform flash operation error!" "Perform flash operation doesn't success!"
+if result = 1 then
+  messagebox "Flash is erased successfully!" "Flash Erase Result"
+elseif result = 2 then
+  messagebox "Flash is not erased!" "Flash Erase Result"
+elseif result = 3 then
+  messagebox "Error when performing flash erase!" "Flash Erase Result"
+elseif result = 4 then
+  messagebox "Flash is not erased!" "Flash Erase Result"
+else
+  messagebox "Timeout! No response!" "Flash Erase Result"
+endif
+
+closett
+end
+; End of generated script

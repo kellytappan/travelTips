@@ -1,0 +1,13 @@
+ItemName                            Result           Spent
+
+Unit:chk_PSU_volt                   Passed           15s
+Unit:chk_REG_volt                   Passed           13s
+Suite:chk_volt                      Passed           33s
+Unit:chk_PSU_curr                   Passed           17s
+Unit:chk_REG_curr                   Failed           67s
+Suite:chk_curr                      Failed           94s
+Cluster:Wolfcreek_upper             Failed           131s
+
+Loop Count:1 - Passed Loop Count:0 - Failed Loop Count:1
+######################################################
+

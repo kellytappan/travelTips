@@ -1,0 +1,24 @@
+
+the ret value is 0
+[2016 CRITICAL][active_session.c:289]Unable to get privilege of the user:c:Not a
+ble to register the session
+
+
+Login timed out after 60 seconds[2397 CRITICAL][libipmi_AMIOEM.c:4404]Unable to
+Get Firmware Boot Selector Value 1c1
+
+
+AMI000000000000 login:
+SMASHCLPD Connection Established & Started...!
+
+AMI000000000000 login:
+AMI000000000000 login:
+
+
+
+
+
+
+
+
+

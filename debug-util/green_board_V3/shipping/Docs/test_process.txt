@@ -1,0 +1,7 @@
+Follow the step for pre-shipping
+1. Online program before the shipment by following the document 
+WolfCreek_Online_Programming_Instruction_Guide_v1.doc
+2. SAS pre-ship diag by following the document
+WolfCreek_SAS_PreShip_Diag_Instruction_Guide_v2.doc
+3. CPU complex pre-ship diag by following the doucment
+Host Complex Test Procedure_v0.2.doc

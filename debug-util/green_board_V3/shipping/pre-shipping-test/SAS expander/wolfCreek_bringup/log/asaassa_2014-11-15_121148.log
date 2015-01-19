@@ -1,0 +1,12 @@
+ItemName                            Result           Spent
+
+Unit:chk_BB0_CPLDFwVer              Passed           3s
+Unit:chk_BB1_CPLDFwVer              Passed           1s
+Unit:chk_MI_CPLDFwVer               Passed           2s
+Unit:chk_SSM_CPLDFwVer              Passed           1s
+Unit:chk_SAS_ActiveFwVer            Passed           1s
+Unit:chk_BootLoader_FWVer           Passed           1s
+Suite:chk_Version_upperCanister     Passed           22s
+Unit:f_BB_FRU                       Passed           3s
+Unit:f_MP_FRU                       Failed           4s
+Pay attention: Midplane VPD format fail

@@ -1,0 +1,14 @@
+ItemName                            Result           Spent
+
+Unit:chk_BB0_CPLDFwVer              Passed           2s
+Unit:chk_BB1_CPLDFwVer              Passed           1s
+Unit:chk_MI_CPLDFwVer               Passed           1s
+Unit:chk_SSM_CPLDFwVer              Passed           2s
+Unit:chk_SAS_ActiveFwVer            Passed           1s
+Unit:chk_BootLoader_FWVer           Passed           2s
+Suite:chk_Version_upperCanister     Passed           22s
+Unit:f_BB_FRU                       Passed           2s
+Unit:f_MP_FRU                       Passed           3s
+Unit:f_FAN1_FRU                     Passed           1s
+Unit:f_FAN2_FRU                     Failed           6s
+Pay attention: Fan Module 2 VPD format fail

@@ -1,0 +1,30 @@
+
+B0@00:00d5>
+send command line: fan
+ 0]: IDPresSpdcodeSpdStatusDescriptor
+ 1]: 0Y0100400|HOT_SWP|OK[Fan1Module1]
+ 2]: 1Y0100400|HOT_SWP|OK[Fan2Module1]
+ 3]: 2Y01--|HOT_SWP|OK[Fan3Module2]
+ 4]: 3Y01--|HOT_SWP|OK[Fan4Module2]
+ 5]: 4Y01--|HOT_SWP|OK[Fan5Module3]
+ 6]: 5Y01--|HOT_SWP|OK[Fan6Module3]
+ 7]: 6Y01--|HOT_SWP|OK[Fan7Module4]
+ 8]: 7Y01--|HOT_SWP|OK[Fan8Module4]
+ 9]: 8Y01--|HOT_SWP|OK[Fan9Module5]
+ 10]: 9Y01--|HOT_SWP|OK[Fan10Module5]
+ 11]: 10Y01--|HOT_SWP|OK[PSUABlower]
+ 12]: 11Y01--|HOT_SWP|OK[PSUBBlower]
+ 13]: 12Y01--|HOT_SWP|OK[PSUCBlower]
+ 14]: 13Y0108300|HOT_SWP|OK[PSUDBlower]
+
+Unit Result:FAN_pres_spd was Failed
+
+Suite Result:FAN was Failed
+
+Cluster Result:Wolfcreek_upper was Failed
+
+Loop Count:1 - Passed Loop Count:0 - Failed Loop Count:1
+######################################################
+Script ends at [11/11/2014-7:09:05PM]
+######################################################
+

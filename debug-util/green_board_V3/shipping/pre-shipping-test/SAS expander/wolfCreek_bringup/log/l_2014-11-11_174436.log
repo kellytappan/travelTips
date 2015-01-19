@@ -1,0 +1,11 @@
+ItemName                            Result           Spent
+
+Unit:chk_BB0_CPLDFwVer              Passed           3s
+Unit:chk_BB1_CPLDFwVer              Passed           1s
+Unit:chk_MI_CPLDFwVer               Passed           1s
+Unit:chk_SSM_CPLDFwVer              Passed           1s
+Unit:chk_SAS_ActiveFwVer            Passed           1s
+Unit:chk_BootLoader_FWVer           Passed           2s
+Suite:chk_Version_upperCanister     Passed           22s
+Unit:f_BB_FRU                       Failed           5s
+Pay attention: BaseBoard VPD format fail

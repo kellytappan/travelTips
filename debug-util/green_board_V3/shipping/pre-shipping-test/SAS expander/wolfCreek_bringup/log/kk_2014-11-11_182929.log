@@ -1,0 +1,31 @@
+ItemName                            Result           Spent
+
+Unit:chk_BB0_CPLDFwVer              Passed           3s
+Unit:chk_BB1_CPLDFwVer              Passed           1s
+Unit:chk_MI_CPLDFwVer               Passed           2s
+Unit:chk_SSM_CPLDFwVer              Passed           1s
+Unit:chk_SAS_ActiveFwVer            Passed           1s
+Unit:chk_BootLoader_FWVer           Passed           1s
+Suite:chk_Version_upperCanister     Passed           22s
+Unit:f_BB_FRU                       Passed           3s
+Unit:f_MP_FRU                       Passed           3s
+Unit:f_FAN1_FRU                     Passed           1s
+Unit:f_FAN2_FRU                     Passed           1s
+Unit:f_FAN3_FRU                     Passed           2s
+Unit:f_FAN4_FRU                     Passed           2s
+Unit:f_FAN5_FRU                     Passed           2s
+Unit:f_SSM_FRU                      Passed           2s
+Unit:f_PSU_interposer1_FRU          Passed           1s
+Unit:f_PSU_interposer2_FRU          Passed           2s
+Unit:f_PSU_interposer3_FRU          Passed           2s
+Unit:f_PSU_interposer4_FRU          Passed           2s
+Unit:close_diag_mode                Completed        2s
+Suite:VPD                           Completed        52s
+Unit:Program_enclosure              Passed           161s
+Unit:Verify_enclosure               Passed           1s
+Suite:sas_addr                      Passed           166s
+Cluster:Wolfcreek_upper             Passed           246s
+
+Loop Count:1 - Passed Loop Count:1 - Failed Loop Count:0
+######################################################
+

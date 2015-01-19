@@ -1,0 +1,6 @@
+ItemName                            Result           Spent
+
+Unit:chk_BB0_CPLDFwVer              Passed           8s
+Unit:chk_BB1_CPLDFwVer              Passed           2s
+Unit:chk_MI_CPLDFwVer               Failed           1s
+Pay attention: MI CPLD version NOT correct,please update first

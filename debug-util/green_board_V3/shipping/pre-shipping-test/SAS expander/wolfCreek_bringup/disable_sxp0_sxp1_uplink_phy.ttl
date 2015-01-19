@@ -1,0 +1,67 @@
+;sendin ""
+;pause 3
+;send #D
+send #30
+send #99
+pause 1
+send #30
+send #99
+pause 1
+sendln "info"
+pause 1
+sendln "phy disable 0"
+sendln "phy disable 1"
+sendln "phy disable 2"
+sendln "phy disable 3"
+sendln "phy disable 4"
+sendln "phy disable 5"
+sendln "phy disable 6"
+sendln "phy disable 7"
+sendln "phy disable 8"
+sendln "phy disable 9"
+sendln "phy disable 10"
+sendln "phy disable 11"
+sendln "phy disable 12"
+sendln "phy disable 13"
+sendln "phy disable 14"
+sendln "phy disable 15"
+sendln "phy disable 16"
+sendln "phy disable 17"
+sendln "phy disable 18"
+sendln "phy disable 19"
+pause 1
+send #30
+send #100
+pause 1
+send #30
+send #100
+pause 1
+sendln "info"
+pause 1
+sendln "phy disable 0"
+sendln "phy disable 1"
+sendln "phy disable 2"
+sendln "phy disable 3"
+sendln "phy disable 4"
+sendln "phy disable 5"
+sendln "phy disable 6"
+sendln "phy disable 7"
+sendln "phy disable 8"
+sendln "phy disable 9"
+sendln "phy disable 10"
+sendln "phy disable 11"
+sendln "phy disable 12"
+sendln "phy disable 13"
+sendln "phy disable 14"
+sendln "phy disable 15"
+sendln "phy disable 16"
+sendln "phy disable 17"
+sendln "phy disable 18"
+sendln "phy disable 19"
+pause 1
+send #30
+send #97
+pause 1
+send #30
+send #97
+pause 1

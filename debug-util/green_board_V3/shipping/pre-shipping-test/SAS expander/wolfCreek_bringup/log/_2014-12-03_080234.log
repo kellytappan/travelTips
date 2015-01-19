@@ -1,0 +1,19 @@
+ItemName                            Result           Spent
+
+Unit:chk_BB0_CPLDFwVer              Passed           6s
+Unit:chk_BB1_CPLDFwVer              Passed           1s
+Unit:chk_MI_CPLDFwVer               Passed           1s
+Unit:chk_SSM_CPLDFwVer              Passed           1s
+Unit:chk_SAS_ActiveFwVer            Passed           2s
+Unit:chk_BootLoader_FWVer           Passed           1s
+Suite:chk_version_lowercanister     Passed           25s
+Unit:chk_MP_sensor                  Passed           31s
+Unit:chk_Inlet_sensor               Passed           30s
+Unit:chk_PSU_sensor                 Passed           30s
+Unit:chk_lower_sensor               Failed           117s
+Suite:lower_sensor                  Failed           223s
+Cluster:Wolfcreek_lower_pri         Failed           252s
+
+Loop Count:1 - Passed Loop Count:0 - Failed Loop Count:1
+######################################################
+

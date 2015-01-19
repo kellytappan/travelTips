@@ -1,0 +1,22 @@
+ItemName                            Result           Spent
+
+[ Fan 1 Module 1  ]  fan speed is 400, less than 1000
+[ Fan 2 Module 1  ]  fan speed is 400, less than 1000
+[ Fan 3 Module 2  ]  fan speed is 0, less than 1000
+[ Fan 4 Module 2  ]  fan speed is 0, less than 1000
+[ Fan 5 Module 3  ]  fan speed is 0, less than 1000
+[ Fan 6 Module 3  ]  fan speed is 0, less than 1000
+[ Fan 7 Module 4  ]  fan speed is 0, less than 1000
+[ Fan 8 Module 4  ]  fan speed is 0, less than 1000
+[ Fan 9 Module 5  ]  fan speed is 0, less than 1000
+[ Fan 10 Module 5  ]  fan speed is 0, less than 1000
+[ PSU A Blower ]  fan speed is 0, less than 1000
+[ PSU B Blower ]  fan speed is 0, less than 1000
+[ PSU C Blower ]  fan speed is 0, less than 1000
+Unit:FAN_pres_spd                   Failed           8s
+Suite:FAN                           Failed           15s
+Cluster:Wolfcreek_upper             Failed           17s
+
+Loop Count:1 - Passed Loop Count:0 - Failed Loop Count:1
+######################################################
+

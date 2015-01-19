@@ -1,0 +1,1 @@
+pw5.exe %~dp0jPro.wax -c powerCycle

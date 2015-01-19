@@ -1,0 +1,24 @@
+
+AMI000001000001 login: sysadmin
+Password:
+Executing [-/bin/sh]
+
+
+BusyBox v1.13.2 (2014-10-25 16:49:24 CST) built-in shell (ash)
+Enter 'help' for a list of built-in commands.
+
+# /usr/local/bin/i2c-test -b 7 -s 0x64 -w -d 0xa5
+i2c_dev = /dev/i2c7
+Bytes written:   1
+a5
+#
+
+
+
+
+
+
+
+
+
+

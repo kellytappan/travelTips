@@ -1,0 +1,59 @@
+
+=>
+send command line: info
+ 0]: =========================================================
+ 1]: Firmwareinformation:
+ 2]: JabilBootLoaderrevision:0182Buildno:[0150]
+ 3]:
+ 4]: ActiveFWpartition:Img0
+ 5]: InactiveFWpartition:Img1
+ 6]: ActiveDatapartition:Dat0
+ 7]: InactiveDatapartition:Dat1
+ 8]: Validflagsinbootconfigis0xbf
+ 9]:
+ 10]: =========================================================
+ 11]: Memorymapinformation:
+ 12]:
+ 13]: +----------------+0xbc000000
+ 14]: |stack(4K)|
+ 15]: ||
+ 16]: +----------------+0xbc001000
+ 17]: |Othersection|
+ 18]: |(13K)|
+ 19]: +----------------+0xbc0045b0
+ 20]: |heap(20K)|
+ 21]: +----------------+0xbc0095b0
+ 22]: |free_mem|
+ 23]: |(16K)|
+ 24]: +----------------+0xbc00d5b0
+ 25]: |Unusedhole|
+ 26]: |(074K)|
+ 27]: +----------------+0xbc020000
+ 28]: |Resvedfor|
+ 29]: |flashops|
+ 30]: |(256K)|
+ 31]: +----------------+0xbc060000
+ 32]: |FW_ENVSection|
+ 33]: |(8K)|
+ 34]: +----------------+0xbc062000
+ 35]: |Unusedhole|
+ 36]: |(56K)|
+ 37]: +----------------+0xbc070000
+ 38]: |Uncompressed|
+ 39]: |bootzipApplet|
+ 40]: |img|
+ 41]: |(MAX196K)|
+ 42]: ||
+ 43]: ||
+ 44]: +----------------+0xbc0a1000
+ 45]: |Unusedhole|
+ 46]: |(292K)|
+ 47]: +----------------+0xbc0ea000
+ 48]: |Reservedfor|
+ 49]: |NDSR(88K)|
+ 50]: +----------------+0xbc100000
+
+Unit Result:chk_BB0_CPLDFwVer was Failed
+Script ends at [11/15/2014-12:19:00PM]
+######################################################
+

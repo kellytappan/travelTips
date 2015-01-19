@@ -1,0 +1,27 @@
+
+A0@00:0012>eep wr 4 0xC2 0x10 1  0x0
+Write Success!
+A0@00:0013>eep wr 4 0xC2 0x11 1  0x0
+Write Success!
+A0@00:0014>eep wr 4 0xC2 0x12 1  0x0
+Write Success!
+A0@00:0015>eep wr 4 0xC2 0x12 1  0x0 ^M
+Unit Result:ctrl_SSM_LED_OFF was Passed
+eep wr 4 0xC2 0x10 1  0x11
+Write Success!
+A0@00:0016>eep wr 4 0xC2 0x11 1  0x11
+Write Success!
+A0@00:0017>eep wr 4 0xC2 0x12 1  0x11
+Write Success!
+A0@00:0018>eep wr 4 0xC2 0x12 1  0x11 ^M
+Unit Result:ctrl_SSM_LED_ON was Passed
+
+Suite Result:chk_SSM_LEDS was Passed
+
+Cluster Result:Wolfcreek_upper was Passed
+
+Loop Count:1 - Passed Loop Count:1 - Failed Loop Count:0
+######################################################
+Script ends at [11/12/2014-7:31:04PM]
+######################################################
+

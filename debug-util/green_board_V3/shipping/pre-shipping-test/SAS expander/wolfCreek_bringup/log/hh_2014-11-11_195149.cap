@@ -1,0 +1,25 @@
+
+B0@00:00f1>
+send command line: door
+ 0]: IDPresStatusOpenDescriptor
+ 1]: 0Y|YES|UNINSTL[LeftDoor]
+ 2]: 1Y|YES|UNINSTL[RightDoor]
+
+Unit Result:chk_door_open was Passed
+
+send command line: door
+ 0]: IDPresStatusOpenDescriptor
+ 1]: 0Y|YES|UNINSTL[LeftDoor]
+ 2]: 1Y|YES|UNINSTL[RightDoor]
+
+Unit Result:chk_door_close was Failed
+
+Suite Result:chk_door was Failed
+
+Cluster Result:Wolfcreek_upper was Failed
+
+Loop Count:1 - Passed Loop Count:0 - Failed Loop Count:1
+######################################################
+Script ends at [11/11/2014-7:52:30PM]
+######################################################
+

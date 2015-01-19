@@ -1,0 +1,54 @@
+
+B1@00:0000>
+send command line: info
+        Active Expander FW Revision: 0101 [3184]
+        In-Active Expander FW Revision: 0101 [3184]
+        Boot Loader FW Revision: 0101 [0159]
+        Active DATA Image: Dat0(id: 1)
+        Active Firmware Image: Img0(id: 5)
+        BB CPLD 1 FW Revision: n/a
+        BB CPLD 2 FW Revision: n/a
+        MI CPLD FW Revision: n/a
+        SSM CPLD FW Revision: n/a
+
+Hardware Information:
+        Product Revision: X0101
+        Hardware Revision: X00000031
+
+Local TWI Addr : 0x2a
+
+Device Information:
+        Max Supported HDD Count: 72
+        Max Supported PHY Count: 68
+
+SAS Information:
+        Enclosure Logical ID: fffffffffffffe00
+        SMP Addr: 000000000000017f
+        SSP Addr: 000000000000017e
+
+Enclosure Ambient Temperature:  NA C
+
+FRU Capability:
+        HDD number support:72
+        FAN number support: 10
+        Temperature number support: 13
+        Power supply number support: 4
+        SAS cable number support: 0
+        Display number support: 1
+        Voltage sensor number support: 4
+        Current sensor number support: 4
+ 1@00:0001>[0]: =========================================================
+ 1]: EnclosureID:0x00
+ 2]: ServerID:0x01
+ 3]: ProductID:WOILFCEEK
+ 4]: VendorID:JABIL
+ 5]: ComponentVendorID:JABIL
+ 6]: FirmwareInformation:
+ 7]: ActiveInitialStringRevision:0101[3184]
+ 8]: In-ActiveInitialStringRevision:0101[3184]
+ 9]:
+
+Unit Result:chk_SAS_ActiveFwVer was Failed
+Script ends at [11/20/2014-5:39:03PM]
+######################################################
+
