@@ -13,37 +13,48 @@ from firmwarecli import FirmwareCli
 
 class FirmwareCliWC(FirmwareCli):
 
-    def __init__(self, tty, filename, ip, verbosity=0):
+    def __init__(self, tty, filename, expnum, ip=None, verbosity=0):
         """
         tty, filename, verbosity are the same as in FirmwareCli.__init__
+        expnum is the FEM number to be affected, 0 or 1
         ip is the desired IP address or None for no change
         """
         super(FirmwareCliWC, self).__init__(tty, filename, verbosity)
+        self.expnum = expnum
         self.ip = ip
+        
         self.procssh = None
+        self.curr_ip = None
     
     def _get_ip(self, new_ip=None):
         # Make sure we're logged in.
-        self.proc.sendline("")
-        match = self.proc.expect([
-            pexpect.TIMEOUT,
-            "login:",
-            "# ",
-            "@",
-            ])
-        if   match is 0:  # TIMEOUT
-            return None
-        elif match is 1:  # login:
-            self.proc.sendline("sysadmin")
-            self.proc.expect("assword:", timeout=5)
-            self.proc.sendline("sysadmin")
-            self.proc.expect("# ", timeout=5)
-        elif match is 2:
-            pass  # Already logged in.
-        elif match is 3:  # UART MUX is switched to the wrong port.
-            # TODO put this set of ifs in a loop
-            self.proc.sendcontrol("^")
-            self.proc.send("a")
+        if self.curr_ip:
+            return self.curr_ip
+        
+        triesleft = 5
+        while True:
+            self.proc.sendline("")
+            match = self.proc.expect([
+                pexpect.TIMEOUT,
+                "login:",
+                "# ",
+                "@",
+                ])
+            if   match is 0:  # TIMEOUT
+                return None
+            elif match is 1:  # login:
+                self.proc.sendline("sysadmin")
+                self.proc.expect("assword:", timeout=5)
+                self.proc.sendline("sysadmin")
+                self.proc.expect("# ", timeout=5)
+            elif match is 2:
+                break  # Already logged in.
+            elif match is 3:  # UART MUX is switched to the wrong port.
+                self.proc.sendcontrol("^")
+                self.proc.send("a")
+            triesleft -= 1
+            if triesleft is 0:
+                return None
         # Now logged in.
         
         # Optionally set IP, and get it.
@@ -61,6 +72,7 @@ class FirmwareCliWC(FirmwareCli):
         # Log out.
         self.proc.sendline("exit")
         
+        self.curr_ip = curr_ip
         return curr_ip
     
     def _ssh_start(self, ip):
@@ -112,28 +124,69 @@ class FirmwareCliWC(FirmwareCli):
     
     def _mux_set(self, port, disable=1):
         self._ssh_cmd("i2c-test -b 7 -s 64 -w -d a6 "+str(disable))  # Disable hotkey support.
-        self._ssh_cmd("i2c-test -b 7 -s 64 -w -d a5 "+str(port))  # Set the UART MUX to the desired port
+        self._ssh_cmd("i2c-test -b 7 -s 64 -w -d a5 "+str(port))     # Set the UART MUX to the desired port
     
     def _mux_restore(self):
         self._mux_set(4, disable=0)
+    
+    def port_setup(self):
+        ip = self._get_ip()
+        print "ip =", ip
+        if not ip:
+            raise("cannot get IP address")
+            return False
+        if ip:
+            if not self._ssh_start(ip):
+                raise("cannot start ssh")
+                return False
+            self._mux_set(2+self.expnum)  # Switch the UART MUX to requested SAS expander.
+            return True
+        
+    def port_reset(self):
+        self._mux_restore()
+        self._ssh_stop()
+        
+    def update(self):
+        if self.port_setup():
+            super(FirmwareCliWC, self).update()
+            self.port_reset()
 
+
+# if __name__ == "__main__":
+#     filename = "firmware/WC/wolfcreek_fem_sas_update_01_01.bin"
+#     fw = FirmwareCliWC(tty="/dev/ttyUSB0", filename=filename, ip=None, verbosity=2)
+#     fw.update()
 
 if __name__ == "__main__":
-    filename = "firmware/WC/wolfcreek_fem_sas_update_01_01.bin"
-    fw = FirmwareCliWC(tty="/dev/ttyUSB0", filename=filename, ip=None, verbosity=2)
-    ip = fw._get_ip()
-    print "ip =", ip
-    if not ip:
-        print "cannot get IP address"
-        sys.exit(1)
-    if ip:
-        if not fw._ssh_start(ip):
-            print "cannot start ssh"
-            sys.exit(2)
-        fw._mux_set(2)  # Switch the UART MUX to primary SAS expander.
-        
-        fw.update()
-        
-        fw._mux_restore()
-        fw._ssh_stop()
-
+    # TODO Do we need the user to supply IP address?
+    if len(sys.argv) != 4:
+        print "usage:", sys.argv[0].split('/')[-1], "<tty device file> <firmware file> <expander number>"
+        sys.exit(-1)
+    tty      =     sys.argv[1]
+    filename =     sys.argv[2]
+    expnum   = int(sys.argv[3])
+    
+    print "program version =", version
+    
+    fw = FirmwareCliWC(tty, filename, expnum, ip=None, verbosity=2)
+    fw.port_setup()
+#     fid = fw.identifyfile()
+#     did = fw.identifydevice()
+#     if not fid:
+#         print "Aborting; cannot get version string from file, '" + filename +"'."
+#         sys.exit(-1)
+#     if not did:
+#         print "Aborting; cannot get version string from device at " + tty + "'."
+#         sys.exit(-1)
+#     fver, mapped      = fid
+#     expanders, imageid, typ = mapped
+#     dvers, expanderid = did
+#     if expanderid not in expanders:
+#         print "Aborting; mismatch between expander type and firmware type."
+#         print expanderid, "not in", expanders
+#         sys.exit(-1)
+    fw.update()
+#     fw.identifydevice()
+    
+    if fw.procssh:
+        fw.port_reset()
