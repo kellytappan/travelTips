@@ -102,6 +102,11 @@ class FirmwareFile():
             "\x03\x0b\xff": (("A0","A1","B0","B1"), 1, FirmwareTypes.BOOT   ),
             "\x03\x0b\x08": (("A0",              ), 2, FirmwareTypes.BB     ),
             "\x03\x0b\x09": (("A0",              ), 3, FirmwareTypes.DAP    ),
+            
+            "\x05\x0b\x08": None,  # wc_baseboard
+            "\x05\x0b\x09": None,  # wc_midplane
+            "\x05\x0b\x0a": None,  # wc_status
+            "\x05\xa0\x02": (("A0","A1"), 0, FirmwareTypes.APP),  # wolfcreek_fem_sas_update
             }
 
         f = open(filename, 'rb')
