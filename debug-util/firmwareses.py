@@ -58,7 +58,7 @@ class FirmwareSes:
         for offset in range(0, len(microcode), FirmwareSes.chunksize):
             mycallback(offset/FirmwareSes.chunksize, 0, 0)
             sesdat = self.sp.page_0e_fill({
-                "mode":0x07,
+                "mode":0x0e,
                 "buf_offset":offset,
                 "data_len":min(FirmwareSes.chunksize, len(microcode[offset:])),
                 "firmware_image_id":1,
@@ -69,11 +69,21 @@ class FirmwareSes:
                 print "aborting; result =", result
                 break
             page0e_desc = self.sp.parse(self.sp.readpage(0x0e))["data"].descriptors.val[0]
-            if page0e_desc.status.val not in (0x01, 0x10):
+            if page0e_desc.status.val not in (0x01, 0x13):
                 print "aborting; status =", page0e_desc.status.val
                 break
-            if page0e_desc.status.val == 0x10:
-                print "done? status =", 0x10
+            if page0e_desc.status.val == 0x13:
+                print "done? status =", page0e_desc.status.val
+        sesdat = self.sp.page_0e_fill({
+            "mode":0x0f,
+            "buf_offset":offset,
+            "data_len":min(FirmwareSes.chunksize, len(microcode[offset:])),
+            "firmware_image_id":1,
+            "sas_expander_id":self.expanderid,
+            }, microcode)
+        result = self.sp.writepage(sesdat)
+        if result != 0:
+            print "result =", result
         page0e = self.sp.parse(self.sp.readpage(0x0e))["data"]
         for descriptor in page0e.descriptors.val:
             print "Enclosure #" + str(descriptor.subid.val)

@@ -150,6 +150,36 @@ class FirmwareCliWC(FirmwareCli):
         if self.port_setup():
             super(FirmwareCliWC, self).update()
             self.port_reset()
+            
+    def update_bios(self):
+        # TODO
+        # run on compute node
+        # flashrom -p internal -l layout.txt -i bios -f -w 0101.FD
+        pass
+    
+    def update_bmc(self):
+        # TODO
+        # run on compute node
+        # yafuflash
+        pass
+
+    def update_plx(self):
+        # TODO
+        # run on compute node
+        # plxeep
+        subprocess.call("cd utilities/PlxSdk; lsmod | grep -q Plx8000_NT || Bin/Plx_load 8000n", shell=True)
+        subprocess.call("cd utilities/PlxSdk; lsmod | grep -q PlxSvc     || Bin/Plx_load Svc  ", shell=True)
+        p = subprocess.Popen("lspci -x -s 00:01.0 | grep ^10:", shell=True, stdout=subprocess.PIPE)
+        for line in p.stdout:
+            bus112 = line.split()[10]
+        p = subprocess.Popen("lspci -x -s 00:02.0 | grep ^10:", shell=True, stdout=subprocess.PIPE)
+        for line in p.stdout:
+            bus187 = line.split()[10]
+        p = subprocess.Popen("lspci -x -s 00:03.0 | grep ^10:", shell=True, stdout=subprocess.PIPE)
+        for line in p.stdout:
+            bus199 = line.split()[10]
+        print "bus112 =", bus112, ", bus187 =", bus187, ", bus199 =", bus199
+        pass
 
 
 # if __name__ == "__main__":
@@ -169,6 +199,9 @@ if __name__ == "__main__":
     print "program version =", version
     
     fw = FirmwareCliWC(tty, filename, expnum, ip=None, verbosity=2)
+    fw.update_plx()
+    sys.exit(0)
+    
     fw.port_setup()
 #     fid = fw.identifyfile()
 #     did = fw.identifydevice()

@@ -11,6 +11,12 @@ class FirmwareTypes:
     SASCONN = "cpld sasconn"
     BB      = "cpld baseboard"
     DAP     = "cpld dap"
+    MI      = "cpld mi"   # midplane
+    SSM     = "cpld ssm"  # status
+    BIOS    = "bios"
+    U112    = "U112"  # PLX EEPROM 87xx
+    U187    = "U187"  # PLX EEPROM 87xx
+    U199    = "U199"  # PLX EEPROM 87xx
     cpld_set = set((SBBMI, SASCONN, BB, DAP))
     specials = set((BB, DAP))  # programming requires FEM-B to be down
     affect   = \
@@ -21,6 +27,12 @@ class FirmwareTypes:
      SASCONN: set(("A","B")),
      BB     : set(("A0")),
      DAP    : set(("A0")),
+     MI     : set(("A","B")),
+     SSM    : set(("A")),
+     BIOS   : set(("A","B")),
+     U112   : set(("A","B")),
+     U187   : set(("A","B")),
+     U199   : set(("A","B")),
 
      "A" : set((APP,BOOT,SBBMI,SASCONN)),
      "B" : set((APP,BOOT,SBBMI,SASCONN)),
@@ -48,7 +60,7 @@ class FirmwareFile():
         self.name = name
         self.verbosity = verbosity
 
-        self.tmpdir = None
+        self.tmpdirs = []
         # fwdict is
         #   dictionary indexed by expander type ("A", "A0", etc.) of
         #     dictionary indexed by firmware type of
@@ -58,15 +70,17 @@ class FirmwareFile():
 #         self.fwlist = []
         
         if os.path.isfile(name):
-            self.tmpdir = tempfile.mkdtemp("", "fw-")
-            result = subprocess.call(['7za','x','-o'+self.tmpdir,self.name], stdout=open("/dev/null","w"))
-            #print "result =", result
-            if   result is 0:
-                self._populate_from_dir(self.tmpdir)
-            elif result is 2:
-                self._populate_from_file(self.name)
-            else:
-                print "7z error", result
+#             tmpdir = tempfile.mkdtemp("", "fw-")
+#             self.tmpdirs.append(tmpdir)
+#             result = subprocess.call(['7za','x','-o'+tmpdir,self.name], stdout=open("/dev/null","w"))
+#             #print "result =", result
+#             if   result is 0:
+#                 self._populate_from_dir(tmpdir)
+#             elif result is 2:
+#                 self._populate_from_file(self.name)
+#             else:
+#                 print "7z error", result
+            self._populate_from_file(self.name)
         elif os.path.isdir(name):
             self._populate_from_dir(self.name)
         elif name == "":
@@ -75,8 +89,8 @@ class FirmwareFile():
             print "path not found:", self.name
             
     def __del__(self):
-        if self.tmpdir:
-            shutil.rmtree(self.tmpdir, ignore_errors=True)
+        for tmpdir in self.tmpdirs:
+            shutil.rmtree(tmpdir, ignore_errors=True)
 
     def _log(self, level, message):
         if self.verbosity >= level:
@@ -103,10 +117,15 @@ class FirmwareFile():
             "\x03\x0b\x08": (("A0",              ), 2, FirmwareTypes.BB     ),
             "\x03\x0b\x09": (("A0",              ), 3, FirmwareTypes.DAP    ),
             
-            "\x05\x0b\x08": None,  # wc_baseboard
-            "\x05\x0b\x09": None,  # wc_midplane
-            "\x05\x0b\x0a": None,  # wc_status
-            "\x05\xa0\x02": (("A0","A1"), 0, FirmwareTypes.APP),  # wolfcreek_fem_sas_update
+            "\x05\x0b\x08": (("A0",              ), 0, FirmwareTypes.BB     ),  # wc_baseboard
+            "\x05\x0b\x09": (("A0",     "B0"     ), 0, FirmwareTypes.MI     ),  # wc_midplane
+            "\x05\x0b\x0a": (("A0",              ), 0, FirmwareTypes.SSM    ),  # wc_status
+            "\x05\xa0\x02": (("A0","A1","B0","B1"), 0, FirmwareTypes.APP    ),  # wolfcreek_fem_sas_update
+            
+            "BIOS"        : (("A" ,     "B"      ), 0, FirmwareTypes.BIOS   ),
+            "U112"        : (("A" ,     "B"      ), 0, FirmwareTypes.U112   ),
+            "U187"        : (("A" ,     "B"      ), 0, FirmwareTypes.U187   ),
+            "U199"        : (("A" ,     "B"      ), 0, FirmwareTypes.U199   ),
             }
 
         f = open(filename, 'rb')
@@ -114,6 +133,24 @@ class FirmwareFile():
         f.seek(0x00)
         magic = f.read(8)
         if "JBL" not in magic:
+            # Try some other types.
+            # Try BIOS: strings has '$BVDT' followed by version number.
+            p = subprocess.Popen(["strings", "--all", filename], stdout=subprocess.PIPE)
+            state = "looking"
+            for line in p.stdout:
+                if state == "looking":
+                    if "$BVDT$" in line:
+                        state = "grabrev"
+                        continue
+                if state == "grabrev":
+                    version = line[1:5]
+                    p.terminate()
+                    return (version, keymap["BIOS"])
+            # Try PLX EEPROMs.
+            if "U112" in filename and ".bin" in filename: return ("-", keymap["U112"])
+            if "U187" in filename and ".bin" in filename: return ("-", keymap["U187"])
+            if "U199" in filename and ".bin" in filename: return ("-", keymap["U199"])
+            # unknown
             self._log(2, "file has bad magic number: "+filename)
             return None
         
@@ -131,7 +168,7 @@ class FirmwareFile():
             f.seek(0x0e)
             version = f.read(2)
             version = (ord(version[0]) << 8) + (ord(version[1]) << 0)
-            version = "0x%02x" % version
+            version = "0x%04x" % version
             self._log(2, "file version   = "+version)
 
 #         f.seek(0x2b)
@@ -142,6 +179,22 @@ class FirmwareFile():
         return (version, mapped)
     
     def _populate_from_file(self, filename):
+        if filename.split('.')[-1] in ("xlsx","docx"):
+            # Some Microsoft Office files can be unpacked with 7za, but we don't bother.
+            self._populate_from_single_file(filename)
+        else:
+            tmpdir = tempfile.mkdtemp("", "fw-")
+            self.tmpdirs.append(tmpdir)
+            result = subprocess.call(['7za','x','-o'+tmpdir,filename], stdout=open("/dev/null","w"))
+            #print "result =", result
+            if   result is 0:
+                self._populate_from_dir(tmpdir)
+            elif result is 2:
+                self._populate_from_single_file(filename)
+            else:
+                print "7z error", result
+
+    def _populate_from_single_file(self, filename):
         identity = self.identifyfile(filename)
         if identity:
             version, mapped = identity
