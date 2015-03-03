@@ -3,6 +3,8 @@ import os.path
 import subprocess
 import tempfile
 import shutil
+import re
+import struct
 
 class FirmwareTypes:
     APP     = "app"
@@ -17,6 +19,7 @@ class FirmwareTypes:
     U112    = "U112"  # PLX EEPROM 87xx
     U187    = "U187"  # PLX EEPROM 87xx
     U199    = "U199"  # PLX EEPROM 87xx
+    BMC     = "bmc"
     cpld_set = set((SBBMI, SASCONN, BB, DAP))
     specials = set((BB, DAP))  # programming requires FEM-B to be down
     affect   = \
@@ -33,6 +36,7 @@ class FirmwareTypes:
      U112   : set(("A","B")),
      U187   : set(("A","B")),
      U199   : set(("A","B")),
+     BMC    : set(("A","B")),
 
      "A" : set((APP,BOOT,SBBMI,SASCONN)),
      "B" : set((APP,BOOT,SBBMI,SASCONN)),
@@ -50,6 +54,30 @@ class FirmwareFile():
     operations pertaining to firmware files
     """
     
+    # key is bytes 8, 9, 10 of file, i.e. product id, hardware rev, destination partition
+    # value is tuple of expanders, firmware image id, firmware type
+    keymap = {
+        "\x02\xa0\x02"    : (("A" ,     "B"      ), 1, FirmwareTypes.APP    ),
+        "\x02\x0b\xff"    : (("A" ,     "B"      ), 1, FirmwareTypes.BOOT   ),
+        "\x02\xa0\x08"    : (("A" ,     "B"      ), 2, FirmwareTypes.SBBMI  ),
+        "\x02\x0b\x09"    : (("A" ,     "B"      ), 3, FirmwareTypes.SASCONN),
+        "\x03\xa0\x02"    : (("A0","A1","B0","B1"), 1, FirmwareTypes.APP    ),
+        "\x03\x0b\xff"    : (("A0","A1","B0","B1"), 1, FirmwareTypes.BOOT   ),
+        "\x03\x0b\x08"    : (("A0",              ), 2, FirmwareTypes.BB     ),
+        "\x03\x0b\x09"    : (("A0",              ), 3, FirmwareTypes.DAP    ),
+        
+        "\x05\x0b\x08"    : (("A0",              ), 0, FirmwareTypes.BB     ),  # wc_baseboard
+        "\x05\x0b\x09"    : (("A0",     "B0"     ), 0, FirmwareTypes.MI     ),  # wc_midplane
+        "\x05\x0b\x0a"    : (("A0",              ), 0, FirmwareTypes.SSM    ),  # wc_status
+        "\x05\xa0\x02"    : (("A0","A1","B0","B1"), 0, FirmwareTypes.APP    ),  # wolfcreek_fem_sas_update
+        
+        FirmwareTypes.BIOS: (("A" ,     "B"      ), 0, FirmwareTypes.BIOS   ),
+        FirmwareTypes.U112: (("A" ,     "B"      ), 0, FirmwareTypes.U112   ),
+        FirmwareTypes.U187: (("A" ,     "B"      ), 0, FirmwareTypes.U187   ),
+        FirmwareTypes.U199: (("A" ,     "B"      ), 0, FirmwareTypes.U199   ),
+        FirmwareTypes.BMC : (("A" ,     "B"      ), 0, FirmwareTypes.BMC    ),
+        }
+
     def __init__(self, name, verbosity=0):
         """
         "name" can be either
@@ -105,79 +133,78 @@ class FirmwareFile():
           the keymap entry, or None
         """
         
-        # key is bytes 8, 9, 10 of file, i.e. product id, hardware rev, destination partition
-        # value is tuple of expanders, firmware image id, firmware type
-        keymap = {
-            "\x02\xa0\x02": (("A" ,     "B"      ), 1, FirmwareTypes.APP    ),
-            "\x02\x0b\xff": (("A" ,     "B"      ), 1, FirmwareTypes.BOOT   ),
-            "\x02\xa0\x08": (("A" ,     "B"      ), 2, FirmwareTypes.SBBMI  ),
-            "\x02\x0b\x09": (("A" ,     "B"      ), 3, FirmwareTypes.SASCONN),
-            "\x03\xa0\x02": (("A0","A1","B0","B1"), 1, FirmwareTypes.APP    ),
-            "\x03\x0b\xff": (("A0","A1","B0","B1"), 1, FirmwareTypes.BOOT   ),
-            "\x03\x0b\x08": (("A0",              ), 2, FirmwareTypes.BB     ),
-            "\x03\x0b\x09": (("A0",              ), 3, FirmwareTypes.DAP    ),
+        with open(filename, 'rb') as f:
+    
+            f.seek(0x00)
+            magic = f.read(8)
+            if "JBL" not in magic:
+                # Try some other types.
+                # Try BIOS: strings has '$BVDT' followed by version number.
+                p = subprocess.Popen(["strings", "--all", filename], stdout=subprocess.PIPE)
+                state = "looking"
+                for line in p.stdout:
+                    if state == "looking":
+                        if "$BVDT$" in line:
+                            state = "grabrev"
+                            continue
+                    if state == "grabrev":
+                        version = line[1:5]
+                        p.terminate()
+                        return (version, self.keymap[FirmwareTypes.BIOS])
+                # Try PLX EEPROMs.
+                retval = self.identifyfile_plx(filename)
+                if retval:
+                    return retval
+                # Try BMC.
+                m = re.search("JBL_WC_BMC_([0-9a-fA-F]*)\.bin", filename)
+                if m:
+                    version = m.group(1)
+                    return (version, self.keymap[FirmwareTypes.BMC])
+    #                 p = subprocess.call(["grep", "-q", "ifconfig", filename])
+    #                 if p is 0:
+    #                     return ("-", self.keymap[FirmwareTypes.BMC])
+                # unknown
+                self._log(2, "file is not recognizable firmware: "+filename)
+                return None
             
-            "\x05\x0b\x08": (("A0",              ), 0, FirmwareTypes.BB     ),  # wc_baseboard
-            "\x05\x0b\x09": (("A0",     "B0"     ), 0, FirmwareTypes.MI     ),  # wc_midplane
-            "\x05\x0b\x0a": (("A0",              ), 0, FirmwareTypes.SSM    ),  # wc_status
-            "\x05\xa0\x02": (("A0","A1","B0","B1"), 0, FirmwareTypes.APP    ),  # wolfcreek_fem_sas_update
-            
-            "BIOS"        : (("A" ,     "B"      ), 0, FirmwareTypes.BIOS   ),
-            "U112"        : (("A" ,     "B"      ), 0, FirmwareTypes.U112   ),
-            "U187"        : (("A" ,     "B"      ), 0, FirmwareTypes.U187   ),
-            "U199"        : (("A" ,     "B"      ), 0, FirmwareTypes.U199   ),
-            }
-
-        f = open(filename, 'rb')
-
-        f.seek(0x00)
-        magic = f.read(8)
-        if "JBL" not in magic:
-            # Try some other types.
-            # Try BIOS: strings has '$BVDT' followed by version number.
-            p = subprocess.Popen(["strings", "--all", filename], stdout=subprocess.PIPE)
-            state = "looking"
-            for line in p.stdout:
-                if state == "looking":
-                    if "$BVDT$" in line:
-                        state = "grabrev"
-                        continue
-                if state == "grabrev":
-                    version = line[1:5]
-                    p.terminate()
-                    return (version, keymap["BIOS"])
-            # Try PLX EEPROMs.
-            if "U112" in filename and ".bin" in filename: return ("-", keymap["U112"])
-            if "U187" in filename and ".bin" in filename: return ("-", keymap["U187"])
-            if "U199" in filename and ".bin" in filename: return ("-", keymap["U199"])
-            # unknown
-            self._log(2, "file has bad magic number: "+filename)
-            return None
-        
-        f.seek(0x08)
-        key = f.read(3)  # product id, hardware rev, destination partition
-        self._log(3, "key = %.2x,%.2x,%.2x %s" % (ord(key[0]), ord(key[1]), ord(key[2]), filename))
-        mapped = keymap[key] if key in keymap else None
-
-        f.seek(0x0c)
-        version = f.read(2)
-        version = (ord(version[0]) << 8) + (ord(version[1]) << 0)
-        version = "%04X" % version
-        self._log(2, "file version   = "+version)
-        if version == "0000":
-            f.seek(0x0e)
+            f.seek(0x08)
+            key = f.read(3)  # product id, hardware rev, destination partition
+            self._log(3, "key = %.2x,%.2x,%.2x %s" % (ord(key[0]), ord(key[1]), ord(key[2]), filename))
+            mapped = self.keymap[key] if key in self.keymap else None
+    
+            f.seek(0x0c)
             version = f.read(2)
             version = (ord(version[0]) << 8) + (ord(version[1]) << 0)
-            version = "0x%04x" % version
+            version = "%04X" % version
             self._log(2, "file version   = "+version)
-
-#         f.seek(0x2b)
-#         productid = f.read(16)
-#         productid = mapped[4] if mapped else None
-#         self._log(2, "file productid = "+productid)
+            if version == "0000":
+                f.seek(0x0e)
+                version = f.read(2)
+                version = (ord(version[0]) << 8) + (ord(version[1]) << 0)
+                version = "0x%04x" % version
+                self._log(2, "file version   = "+version)
+    
+    #         f.seek(0x2b)
+    #         productid = f.read(16)
+    #         productid = mapped[4] if mapped else None
+    #         self._log(2, "file productid = "+productid)
 
         return (version, mapped)
     
+    def identifyfile_plx(self, filename):
+        prog = self.parse_plx(filename)
+        if prog:
+            for entry in prog:
+                if entry[0] is 0x29c:
+                    return entry[2]  #TODO: data needs to be parsed into version and type
+            # It doesn't have the 0x29c register with version and type,
+            # so guess type based on filename.  Version is hopeless.
+            if "U112" in filename: return ("", self.keymap[FirmwareTypes.U112])
+            if "U187" in filename: return ("", self.keymap[FirmwareTypes.U187])
+            if "U199" in filename: return ("", self.keymap[FirmwareTypes.U199])
+        else:
+            return None  # If parse_plx fails, it's not a PLX EEPROM file.
+
     def _populate_from_file(self, filename):
         if filename.split('.')[-1] in ("xlsx","docx"):
             # Some Microsoft Office files can be unpacked with 7za, but we don't bother.
@@ -271,4 +298,35 @@ class FirmwareFile():
     
 #     def get_list(self):
 #         return self.fwlist
+
+    def parse_plx(self, filename):
+        with open(filename, 'rb') as f:
+
+            # Check magic number.
+            magic = f.read(1)
+            if magic != "\x5a":
+                #print "bad magic"
+                return None
+            flags = f.read(1)  # @UnusedVariable
+
+            # Retrieve and check data size.            
+            filesize = os.fstat(f.fileno()).st_size
+            datasize = struct.unpack("<H", f.read(2))[0]
+            if filesize != 4+datasize+4:
+                #print "bad size:", filesize, datasize
+                return None
+            
+            # Read the entries.
+            program = []
+            while datasize:
+                addr, data = struct.unpack("<HI", f.read(6))
+                port = addr >> 10
+                regn = (addr << 2) & 0xfff
+                program.append((regn, port, data))
+                datasize -= 6
+            
+            # Read checksum.  We don't check it yet.
+            chk = struct.unpack("<I", f.read(4))[0]  # @UnusedVariable
+            
+            return program
 

@@ -9,7 +9,10 @@ import pexpect.fdpexpect  # @UnusedImport
 import sys
 # import os.path
 import subprocess
+import re
+
 from firmwarecli import FirmwareCli
+from firmwarefile import FirmwareTypes
 
 class FirmwareCliWC(FirmwareCli):
 
@@ -19,7 +22,8 @@ class FirmwareCliWC(FirmwareCli):
         expnum is the FEM number to be affected, 0 or 1
         ip is the desired IP address or None for no change
         """
-        super(FirmwareCliWC, self).__init__(tty, filename, verbosity)
+        #TODO: uncomment super
+        #super(FirmwareCliWC, self).__init__(tty, filename, verbosity)
         self.expnum = expnum
         self.ip = ip
         
@@ -151,35 +155,101 @@ class FirmwareCliWC(FirmwareCli):
             super(FirmwareCliWC, self).update()
             self.port_reset()
             
-    def update_bios(self):
-        # TODO
-        # run on compute node
-        # flashrom -p internal -l layout.txt -i bios -f -w 0101.FD
-        pass
+    def update_bios(self, filename):
+        # This must run on the compute node.
+        subprocess.call(["utilities/flashrom", "-p", "internal", "-l", "utilities/layout.txt", "-i", "bios", "-f", "-w", filename])
     
-    def update_bmc(self):
+    def version_bios(self):
+        # This must run on the compute node.
+        version = subprocess.Popen(["dmidecode", "-s", "bios-version"])
+        version = version.strip()
+        return version
+    
+    def update_bmc(self, filename):
+        # This must run on the compute node.
         # TODO
-        # run on compute node
-        # yafuflash
-        pass
-
-    def update_plx(self):
+        self.procssh = pexpect.spawn("utilities/Yafuflash64", ["-full", "-cd", "-no-reboot", filename], logfile=sys.stdout)
+        match = self.procssh.expect([
+            pexpect.TIMEOUT,
+            pexpect.EOF,
+            "The Module boot major or minor version is different from the one in the image.*Enter your Option : ",
+            "Existing Image and Current Image are Same.*Enter your Option : ",
+            "The Module boot size is different from the one in the Image.*Enter your Option : ",
+            ], timeout=60*12)
+        if   match is 0:  # timeout
+            #TODO
+            pass
+        elif match is 1:  # eof
+            #TODO
+            pass
+        elif match is 2:  # The Module boot major or minor
+            self.procssh.send("y")
+        elif match is 3:  # Existing Image and Current Image are Same
+            self.procssh.send("y")
+        elif match is 4:  # The Module boot size is different
+            self.procssh.send("y")
+        self.procssh.expect(pexpect.EOF, timeout=60*12)
+        self.procssh.close(); self.procssh = None
+        # For now we are supposed to follow the BMC update with this command to program power/controller/the CPLD, but it resets.
+        #subprocess.call(["ipmitool", "-H", self._get_ip(), "-U", "admin", "-P", "admin", "raw", "0x3c", "0x00", "0x01", "0x00"])
+        #subprocess.call(["poweroff"])  # Assuming we're running on the compute node.
+        
+    def version_bmc(self):
+        # To get revisions of BMC and power/controller/the CPLD:
+        line = subprocess.check_output(["ipmitool", "-H", self._get_ip(), "-U", "admin", "-P", "admin", "raw", "0x3c", "0x00", "0x00", "0x00"])
+        # Maybe it's just the running and next CPLD versions.
+        # Instead do: ipmitool bmc info
         # TODO
-        # run on compute node
+        
+    def update_plx(self, filename, typ, s, p):
+        # This must run on the compute node.
+        # TODO
         # plxeep
         subprocess.call("cd utilities/PlxSdk; lsmod | grep -q Plx8000_NT || Bin/Plx_load 8000n", shell=True)
         subprocess.call("cd utilities/PlxSdk; lsmod | grep -q PlxSvc     || Bin/Plx_load Svc  ", shell=True)
-        p = subprocess.Popen("lspci -x -s 00:01.0 | grep ^10:", shell=True, stdout=subprocess.PIPE)
-        for line in p.stdout:
-            bus112 = line.split()[10]
-        p = subprocess.Popen("lspci -x -s 00:02.0 | grep ^10:", shell=True, stdout=subprocess.PIPE)
-        for line in p.stdout:
-            bus187 = line.split()[10]
-        p = subprocess.Popen("lspci -x -s 00:03.0 | grep ^10:", shell=True, stdout=subprocess.PIPE)
-        for line in p.stdout:
-            bus199 = line.split()[10]
-        print "bus112 =", bus112, ", bus187 =", bus187, ", bus199 =", bus199
-        pass
+        line = subprocess.check_output("lspci -x -s "+s+" | grep ^10:", shell=True)
+        bus = line.split()[10]
+        self.procssh = pexpect.spawn("utilities/PlxSdk/Samples/PlxEep/App/PlxEep", ["-l", filename, "-p", p, "-d", "0"], logfile=sys.stdout)
+        itemnumber = None
+        while True:
+            match = self.procssh.expect([
+                pexpect.TIMEOUT,
+                " +[0-9]+\.",
+                "b:"+bus,
+                "Device selection --> ",
+                ], timeout=5)
+            if match is 0:
+                # timeout
+                # indicate a failure
+                return False
+            elif match is 1:
+                # menu item number
+                m = re.match(" +([0-9]+)\.", match.after)
+                if not m:
+                    return False
+                recentitemnumber = m.group(1)
+            elif match is 2:
+                # bus number
+                itemnumber = recentitemnumber
+            elif match is 3:
+                # Device selection prompt
+                self.procssh.sendline(itemnumber)
+                break
+        self.procssh.expect(pexpect.EOF, timeout=None)  # Wait for the program to terminate.
+        self.procssh.close()
+        self.procssh = None
+    
+    def update_U199(self, filename): self.update_plx(filename, FirmwareTypes.U199, "00:01.0", "8750,AB")
+    def update_U187(self, filename): self.update_plx(filename, FirmwareTypes.U187, "00:02.0", "8796,AB")
+    def update_U112(self, filename): self.update_plx(filename, FirmwareTypes.U112, "00:03.0", "8796,AB")
+    
+    def version_plx(self, typ, s):
+        # plxcm to read, mmr 29c
+        return None #TODO
+    
+    def version_U199(self): return self.version_plx(FirmwareTypes.U199, "00:01.0")
+    def version_U187(self): return self.version_plx(FirmwareTypes.U187, "00:02.0")
+    def version_U112(self): return self.version_plx(FirmwareTypes.U112, "00:03.0")
 
 
 # if __name__ == "__main__":
@@ -199,7 +269,7 @@ if __name__ == "__main__":
     print "program version =", version
     
     fw = FirmwareCliWC(tty, filename, expnum, ip=None, verbosity=2)
-    fw.update_plx()
+    fw.update_bmc(filename)
     sys.exit(0)
     
     fw.port_setup()

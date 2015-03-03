@@ -13,10 +13,15 @@ from firmwarefile import FirmwareFile
 #     print "%-14s %d %-4s %-11s %s" % (f[2][2], f[2][1], f[1], ','.join(f[2][0]), f[0].split('/')[-1])
 
 filenames = FirmwareFile(sys.argv[1], verbosity=1).get_filename()
-for expander in filenames:
+for expander in sorted(filenames):
     print "expander:", expander
-    for typ in filenames[expander]:
+    for typ in sorted(filenames[expander]):
         print "  typ:", typ
-        for version in filenames[expander][typ]:
+        for version in sorted(filenames[expander][typ]):
             filename = filenames[expander][typ][version]
-            print "    version:", version, " filename:", filename.split('/')[-1]
+            print "    version: %-6s" % version, " filename:", filename.split('/')[-1]
+
+# ff = FirmwareFile(sys.argv[1])
+# prog = ff.parse_plx(sys.argv[1])
+# for entry in prog:
+#     print "%3X:%2X %8X" % entry
