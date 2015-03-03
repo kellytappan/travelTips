@@ -14,3 +14,6 @@ from PyPI (pip install <name>):
   pyserial  (also as Ubuntu python-serial)
   xmodem
 
+for Wolf Creek firmware:
+  ipmitool
+  p7zip-full
