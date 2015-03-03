@@ -1,0 +1,43 @@
+// This file initializes the SXP Evaluation board with the
+// following configuration:
+
+print "Reset chip;"
+target tr -s
+
+//print "Enabling i-cache ..."
+target rw cp0_r16 0x80a40483
+target clst i * * 0
+print "Enabling d-cache ..."
+target clst d * * 0
+
+//print "SPRAM POST ..."
+//target vm 0xbc000000 0x100000
+//target vm 0x9c000000 0x100000
+
+print "Config DSPRAM, base address 0xbc140000, size: 32k;"
+target rw cp0_r26 0x10000000
+target rw cp0_s2_r28 0x1c140080
+target mw 0xbc000000 0xbc090000
+target rw pc 0xbc000000
+target ts
+target rw cp0_s2_r28 0x00008000
+target mw 0xbc000000 0xbc090008
+target rw pc 0xbc000000
+target ts
+target rw cp0_r26 0x0
+
+print "Enable Cache/DSPRAM parity"
+target rw cp0_r26 0x80000000
+
+target vm 0xbc140000 0x8000
+
+print "Config Flash Timing"
+target mw 0xbc130020 0x06162404
+
+print "Enable ES(Externalize Sync) in Config7 Register (CP0 Register 16, Select 7);"
+target rw cp0_s7_r16 0x80080500
+
+print "Initialize FWS"
+target vm 0xb0000000 0x30000
+
+print "End ..."
