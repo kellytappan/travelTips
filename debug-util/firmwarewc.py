@@ -55,11 +55,11 @@ class FirmwareBmc:
             #TODO
             pass
         elif match is 2:  # The Module boot major or minor
-            self.procssh.send("y")
+            self.procssh.sendline("y")
         elif match is 3:  # Existing Image and Current Image are Same
-            self.procssh.send("y")
+            self.procssh.sendline("y")
         elif match is 4:  # The Module boot size is different
-            self.procssh.send("y")
+            self.procssh.sendline("y")
         self.procssh.expect(pexpect.EOF, timeout=60*12)
         self.procssh.close(); self.procssh = None
         # For now we are supposed to follow the BMC update with this command to program power/controller/the CPLD, but it resets.
@@ -71,7 +71,7 @@ class FirmwareBmc:
         #line = subprocess.check_output(["ipmitool", "-H", self._get_ip(), "-U", "admin", "-P", "admin", "raw", "0x3c", "0x00", "0x00", "0x00"])
         # Maybe it's just the running and next CPLD versions.
         # Instead do: ipmitool bmc info
-        version = subprocess.check_output(["ipmitool", "bmc", "info"])
+        version = subprocess.check_output("ipmitool bmc info | grep 'Firmware Revision' | cut -d: -f2 | tr -d ' '", shell=True)
         version = version.strip()
         return version
         # TODO test
@@ -152,7 +152,7 @@ class FirmwareU112(FirmwarePlx):
     
 
 
-class FirmwareCliWC(FirmwareCli):
+class FirmwareFem(FirmwareCli):
 
     def __init__(self, tty, filename, expnum, ip=None, verbosity=0):
         """
@@ -160,7 +160,7 @@ class FirmwareCliWC(FirmwareCli):
         expnum is the FEM number to be affected, 0 or 1
         ip is the desired IP address or None for no change
         """
-        super(FirmwareCliWC, self).__init__(tty, filename, verbosity)
+        super(FirmwareFem, self).__init__(tty, filename, verbosity)
         self.expnum = expnum
         self.ip = ip
         
@@ -289,13 +289,16 @@ class FirmwareCliWC(FirmwareCli):
         
     def update(self):
         if self.port_setup():
-            super(FirmwareCliWC, self).update()
+            print "setup succeeded; updating"  #DEBUG
+            super(FirmwareFem, self).update()
+            print "update finished; resetting port"  #DEBUG
             self.port_reset()
+            print "resetting port finished"  #DEBUG
             
 
 # if __name__ == "__main__":
 #     filename = "firmware/WC/wolfcreek_fem_sas_update_01_01.bin"
-#     fw = FirmwareCliWC(tty="/dev/ttyUSB0", filename=filename, ip=None, verbosity=2)
+#     fw = FirmwareFem(tty="/dev/ttyUSB0", filename=filename, ip=None, verbosity=2)
 #     fw.update()
 
 if __name__ == "__main__":
@@ -309,7 +312,7 @@ if __name__ == "__main__":
     
     print "program version =", version
     
-    fw = FirmwareCliWC(tty, filename, expnum, ip=None, verbosity=2)
+    fw = FirmwareFem(tty, filename, expnum, ip=None, verbosity=2)
     fw.update_bmc(filename)
     sys.exit(0)
     

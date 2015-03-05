@@ -212,6 +212,7 @@ class FirmwareFile():
         else:
             tmpdir = tempfile.mkdtemp("", "fw-")
             self.tmpdirs.append(tmpdir)
+            #TODO errorcheck
             result = subprocess.call(['7za','x','-o'+tmpdir,filename], stdout=open("/dev/null","w"))
             #print "result =", result
             if   result is 0:
