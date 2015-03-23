@@ -36,22 +36,24 @@ make types disk and disk array equivalent so wcdu actually works with Wolf Creek
 
 Wolf Creek firmware
 ===================
-test PLX 8700
-write PLX 9700
-  Do I need more information?  Internalize the PDF first, translate to command line.
-  Find PLX SDK 7.20.
-restructure code
-write wrapper
-  Where can each piece run?
-  What information and connections are needed for each piece?
-  Can everything be updated from a single point?
-    a compute canister
-    both compute canisters
-    an external workstation
-  Determine how to discover if we're running on a computer canister.
-  Determine how to discover correspondence between compute processor and its BMC.
-  Need to warn when pieces are requested but no firmware for them.
-  Need to be able to specify "all" to update everything there's firmware for.
-  Warnings could be interactive -- ask what to do.
-  Need version management; handle multiple versions of same firmware.
-package together for delivery
+  test PLX 8700
+  write PLX 9700
+    Do I need more information?  Internalize the PDF first, translate to command line.
+x   Find PLX SDK 7.20.
+  restructure code
+  write wrapper
+    Where can each piece run?
+    What other restrictions are there?
+    What information and connections are needed for each piece?
+    Can everything be updated from a single point?
+      a compute canister
+      both compute canisters
+      an external workstation
+    Determine how to discover if we're running on a computer canister.
+x   Determine how to discover correspondence between compute processor and its BMC.
+    Need to warn when pieces are requested but no firmware for them.
+    Need to be able to specify "all" to update everything there's firmware for.
+    Warnings could be interactive -- ask what to do.
+    Need version management; handle multiple versions of same firmware.
+  write manual
+  package together for delivery
