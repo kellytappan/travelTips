@@ -19,6 +19,13 @@ class FirmwareTypes:
     U112    = "U112"  # PLX EEPROM 87xx
     U187    = "U187"  # PLX EEPROM 87xx
     U199    = "U199"  # PLX EEPROM 87xx
+    U1000   = "U1000" # PLX EEPROM 97xx
+    U1001   = "U1001" # PLX EEPROM 97xx
+    U1002   = "U1002" # PLX EEPROM 97xx
+    U1003   = "U1003" # PLX EEPROM 97xx
+    U1004   = "U1004" # PLX EEPROM 97xx
+    U1005   = "U1005" # PLX EEPROM 97xx
+    U1006   = "U1006" # PLX EEPROM 97xx
     BMC     = "bmc"
     cpld_set = set((SBBMI, SASCONN, BB, DAP))
     specials = set((BB, DAP))  # programming requires FEM-B to be down
@@ -36,6 +43,13 @@ class FirmwareTypes:
      U112   : set(("A","B")),
      U187   : set(("A","B")),
      U199   : set(("A","B")),
+     U1000  : set(("A","B")),
+     U1001  : set(("A","B")),
+     U1002  : set(("A","B")),
+     U1003  : set(("A","B")),
+     U1004  : set(("A","B")),
+     U1005  : set(("A","B")),
+     U1006  : set(("A","B")),
      BMC    : set(("A","B")),
 
      "A" : set((APP,BOOT,SBBMI,SASCONN)),
@@ -57,25 +71,33 @@ class FirmwareFile():
     # key is bytes 8, 9, 10 of file, i.e. product id, hardware rev, destination partition
     # value is tuple of expanders, firmware image id, firmware type
     keymap = {
-        "\x02\xa0\x02"    : (("A" ,     "B"      ), 1, FirmwareTypes.APP    ),
-        "\x02\x0b\xff"    : (("A" ,     "B"      ), 1, FirmwareTypes.BOOT   ),
-        "\x02\xa0\x08"    : (("A" ,     "B"      ), 2, FirmwareTypes.SBBMI  ),
-        "\x02\x0b\x09"    : (("A" ,     "B"      ), 3, FirmwareTypes.SASCONN),
-        "\x03\xa0\x02"    : (("A0","A1","B0","B1"), 1, FirmwareTypes.APP    ),
-        "\x03\x0b\xff"    : (("A0","A1","B0","B1"), 1, FirmwareTypes.BOOT   ),
-        "\x03\x0b\x08"    : (("A0",              ), 2, FirmwareTypes.BB     ),
-        "\x03\x0b\x09"    : (("A0",              ), 3, FirmwareTypes.DAP    ),
+        "\x02\xa0\x02"     : (("A" ,     "B"      ), 1, FirmwareTypes.APP    ),
+        "\x02\x0b\xff"     : (("A" ,     "B"      ), 1, FirmwareTypes.BOOT   ),
+        "\x02\xa0\x08"     : (("A" ,     "B"      ), 2, FirmwareTypes.SBBMI  ),
+        "\x02\x0b\x09"     : (("A" ,     "B"      ), 3, FirmwareTypes.SASCONN),
+        "\x03\xa0\x02"     : (("A0","A1","B0","B1"), 1, FirmwareTypes.APP    ),
+        "\x03\x0b\xff"     : (("A0","A1","B0","B1"), 1, FirmwareTypes.BOOT   ),
+        "\x03\x0b\x08"     : (("A0",              ), 2, FirmwareTypes.BB     ),
+        "\x03\x0b\x09"     : (("A0",              ), 3, FirmwareTypes.DAP    ),
         
-        "\x05\x0b\x08"    : (("A0",              ), 0, FirmwareTypes.BB     ),  # wc_baseboard
-        "\x05\x0b\x09"    : (("A0",     "B0"     ), 0, FirmwareTypes.MI     ),  # wc_midplane
-        "\x05\x0b\x0a"    : (("A0",              ), 0, FirmwareTypes.SSM    ),  # wc_status
-        "\x05\xa0\x02"    : (("A0","A1","B0","B1"), 0, FirmwareTypes.APP    ),  # wolfcreek_fem_sas_update
+        "\x05\x0b\x08"     : (("A0",              ), 0, FirmwareTypes.BB     ),  # wc_baseboard
+        "\x05\x0b\x09"     : (("A0",     "B0"     ), 0, FirmwareTypes.MI     ),  # wc_midplane
+        "\x05\x0b\x0a"     : (("A0",              ), 0, FirmwareTypes.SSM    ),  # wc_status
+        "\x05\xa0\x02"     : (("A0","A1","B0","B1"), 0, FirmwareTypes.APP    ),  # wolfcreek_fem_sas_update
+        "\x05\x0b\xff"     : (("A0","A1","B0","B1"), 0, FirmwareTypes.BOOT   ),  # wolfcreek_fem_sas_update boot
         
-        FirmwareTypes.BIOS: (("A" ,     "B"      ), 0, FirmwareTypes.BIOS   ),
-        FirmwareTypes.U112: (("A" ,     "B"      ), 0, FirmwareTypes.U112   ),
-        FirmwareTypes.U187: (("A" ,     "B"      ), 0, FirmwareTypes.U187   ),
-        FirmwareTypes.U199: (("A" ,     "B"      ), 0, FirmwareTypes.U199   ),
-        FirmwareTypes.BMC : (("A" ,     "B"      ), 0, FirmwareTypes.BMC    ),
+        FirmwareTypes.BIOS : (("A" ,     "B"      ), 0, FirmwareTypes.BIOS   ),
+        FirmwareTypes.U112 : (("A" ,     "B"      ), 0, FirmwareTypes.U112   ),
+        FirmwareTypes.U187 : (("A" ,     "B"      ), 0, FirmwareTypes.U187   ),
+        FirmwareTypes.U199 : (("A" ,     "B"      ), 0, FirmwareTypes.U199   ),
+        FirmwareTypes.U1000: (("A" ,     "B"      ), 0, FirmwareTypes.U1000  ),
+        FirmwareTypes.U1001: (("A" ,     "B"      ), 0, FirmwareTypes.U1001  ),
+        FirmwareTypes.U1002: (("A" ,     "B"      ), 0, FirmwareTypes.U1002  ),
+        FirmwareTypes.U1003: (("A" ,     "B"      ), 0, FirmwareTypes.U1003  ),
+        FirmwareTypes.U1004: (("A" ,     "B"      ), 0, FirmwareTypes.U1004  ),
+        FirmwareTypes.U1005: (("A" ,     "B"      ), 0, FirmwareTypes.U1005  ),
+        FirmwareTypes.U1006: (("A" ,     "B"      ), 0, FirmwareTypes.U1006  ),
+        FirmwareTypes.BMC  : (("A" ,     "B"      ), 0, FirmwareTypes.BMC    ),
         }
 
     def __init__(self, name, verbosity=0):
@@ -196,6 +218,8 @@ class FirmwareFile():
         if prog:
             for entry in prog:
                 if entry[0] is 0x29c:
+                    typ = ((entry[2] >> 16) & 0xffff) % "%.4X"
+                    ver = ((entry[2] >>  0) & 0xffff) % "%.4X"
                     return entry[2]  #TODO: data needs to be parsed into version and type
             # It doesn't have the 0x29c register with version and type,
             # so guess type based on filename.  Version is hopeless.
