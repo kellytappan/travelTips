@@ -162,146 +162,150 @@ class FirmwareFem(FirmwareCli):
         """
         super(FirmwareFem, self).__init__(tty, filename, verbosity)
         self.expnum = expnum
-        self.ip = ip
-        
-        self.procssh = None
-        self.curr_ip = None
+#         self.ip = ip
+#         
+#         self.procssh = None
+#         self.curr_ip = None
     
-    def _get_ip(self, new_ip=None):
-        # Make sure we're logged in.
-        if self.curr_ip:
-            return self.curr_ip
-        
-        triesleft = 5
-        while True:
-            self.proc.sendline("")
-            match = self.proc.expect([
-                pexpect.TIMEOUT,
-                "login:",
-                "# ",
-                "@",
-                ])
-            if   match is 0:  # TIMEOUT
-                return None
-            elif match is 1:  # login:
-                self.proc.sendline("sysadmin")
-                self.proc.expect("assword:", timeout=5)
-                self.proc.sendline("sysadmin")
-                self.proc.expect("# ", timeout=5)
-            elif match is 2:
-                break  # Already logged in.
-            elif match is 3:  # UART MUX is switched to the wrong port.
-                self.proc.sendcontrol("^")
-                self.proc.send("a")
-            triesleft -= 1
-            if triesleft is 0:
-                return None
-        # Now logged in.
-        
-        # Optionally set IP, and get it.
-        if new_ip:
-            self.proc.sendline("ifconfig eth0 "+new_ip)
-            self.proc.expect("# ")
-        self.proc.sendline("ifconfig eth0")
-        match = self.proc.expect(["inet addr:", "# "])
-        if   match is 0:
-            self.proc.expect(" ")
-            curr_ip = self.proc.before
-        elif match is 1:
-            curr_ip = None
-        
-        # Log out.
-        self.proc.sendline("exit")
-        
-        self.curr_ip = curr_ip
-        return curr_ip
-    
-    def _ssh_start(self, ip):
-        """
-        Ensure the ssh process is logged in.
-        """
-        if self.procssh:
-            # We think it's already ready. Test it.
-            self.procssh.sendline("")
-            match = self.procssh.expect([pexpect.TIMEOUT, "# "])
-            if   match is 0:  # TIMEOUT, close and reopen
-                self._ssh_stop()
-            elif match is 1:  # Got prompt.
-                return True
-        while not self.procssh:
-            self.procssh = pexpect.spawn("ssh", ["-lsysadmin", "-oStrictHostKeyChecking=no", ip], logfile=sys.stdout)
-            while True:
-                match = self.procssh.expect([
-                    pexpect.TIMEOUT,
-                    "# ",
-                    "assword:",
-                    "continue connecting (yes/no)? ",
-                    'remove with: ssh-keygen -f "',
-                    ], timeout=5)
-                if   match is 0:  # TIMEOUT
-                    self._ssh_stop()
-                    return False
-                elif match is 1:  # We got a prompt.
-                    break
-                elif match is 2:  # assword:
-                    self.procssh.sendline("sysadmin")
-                elif match is 3:  # continue connecting
-                    self.procssh.sendline("yes")
-                elif match is 4:  # remove with:
-                    self.procssh.expect('"')
-                    subprocess.call(["ssh-keygen", "-f", self.procssh.before, "-R", ip])  # Remove old key.
-#                     self.procssh.expect("Permission denied (publickey,password).")
-                    self._ssh_stop()  # Causes restart of the ssh spawn above.
-                    break
-        return True
-    
-    def _ssh_stop(self):
-        self.procssh.close()
-        self.procssh = None
-        
-    def _ssh_cmd(self, cmd):
-        self.procssh.sendline(cmd)
-        self.procssh.expect("# ")
+#     def _get_ip(self, new_ip=None):
+#         # Make sure we're logged in.
+#         if self.curr_ip:
+#             return self.curr_ip
+#         
+#         triesleft = 5
+#         while True:
+#             self.proc.sendline("")
+#             match = self.proc.expect([
+#                 pexpect.TIMEOUT,
+#                 "login:",
+#                 "# ",
+#                 "@",
+#                 ])
+#             if   match is 0:  # TIMEOUT
+#                 return None
+#             elif match is 1:  # login:
+#                 self.proc.sendline("sysadmin")
+#                 self.proc.expect("assword:", timeout=5)
+#                 self.proc.sendline("sysadmin")
+#                 self.proc.expect("# ", timeout=5)
+#             elif match is 2:
+#                 break  # Already logged in.
+#             elif match is 3:  # UART MUX is switched to the wrong port.
+#                 self.proc.sendcontrol("^")
+#                 self.proc.send("a")
+#             triesleft -= 1
+#             if triesleft is 0:
+#                 return None
+#         # Now logged in.
+#         
+#         # Optionally set IP, and get it.
+#         if new_ip:
+#             self.proc.sendline("ifconfig eth0 "+new_ip)
+#             self.proc.expect("# ")
+#         self.proc.sendline("ifconfig eth0")
+#         match = self.proc.expect(["inet addr:", "# "])
+#         if   match is 0:
+#             self.proc.expect(" ")
+#             curr_ip = self.proc.before
+#         elif match is 1:
+#             curr_ip = None
+#         
+#         # Log out.
+#         self.proc.sendline("exit")
+#         
+#         self.curr_ip = curr_ip
+#         return curr_ip
+#     
+#     def _ssh_start(self, ip):
+#         """
+#         Ensure the ssh process is logged in.
+#         """
+#         if self.procssh:
+#             # We think it's already ready. Test it.
+#             self.procssh.sendline("")
+#             match = self.procssh.expect([pexpect.TIMEOUT, "# "])
+#             if   match is 0:  # TIMEOUT, close and reopen
+#                 self._ssh_stop()
+#             elif match is 1:  # Got prompt.
+#                 return True
+#         while not self.procssh:
+#             self.procssh = pexpect.spawn("ssh", ["-lsysadmin", "-oStrictHostKeyChecking=no", ip], logfile=sys.stdout)
+#             while True:
+#                 match = self.procssh.expect([
+#                     pexpect.TIMEOUT,
+#                     "# ",
+#                     "assword:",
+#                     "continue connecting (yes/no)? ",
+#                     'remove with: ssh-keygen -f "',
+#                     ], timeout=5)
+#                 if   match is 0:  # TIMEOUT
+#                     self._ssh_stop()
+#                     return False
+#                 elif match is 1:  # We got a prompt.
+#                     break
+#                 elif match is 2:  # assword:
+#                     self.procssh.sendline("sysadmin")
+#                 elif match is 3:  # continue connecting
+#                     self.procssh.sendline("yes")
+#                 elif match is 4:  # remove with:
+#                     self.procssh.expect('"')
+#                     subprocess.call(["ssh-keygen", "-f", self.procssh.before, "-R", ip])  # Remove old key.
+# #                     self.procssh.expect("Permission denied (publickey,password).")
+#                     self._ssh_stop()  # Causes restart of the ssh spawn above.
+#                     break
+#         return True
+#     
+#     def _ssh_stop(self):
+#         self.procssh.close()
+#         self.procssh = None
+#         
+#     def _ssh_cmd(self, cmd):
+#         self.procssh.sendline(cmd)
+#         self.procssh.expect("# ")
     
     def _mux_set(self, port, disable=1):
-        self._ssh_cmd("i2c-test -b 7 -s 64 -w -d a6 "+str(disable))  # Disable hotkey support.
-        self._ssh_cmd("i2c-test -b 7 -s 64 -w -d a5 "+str(port))     # Set the UART MUX to the desired port
+        dflag = 0x80 if disable else 0
+        returncode = subprocess.call(["ipmitool", "raw", "0x3c", "3", "0x%.2x" % (port+dflag)])
+        return returncode is 0
+#         self._ssh_cmd("i2c-test -b 7 -s 64 -w -d a6 "+str(disable))  # Disable hotkey support.
+#         self._ssh_cmd("i2c-test -b 7 -s 64 -w -d a5 "+str(port))     # Set the UART MUX to the desired port
     
     def _mux_restore(self):
-        self._mux_set(4, disable=0)
+        return self._mux_set(0,0)
+#         self._mux_set(4, disable=0)
     
-    def port_setup(self):
-        ip = self._get_ip()
-        print "ip =", ip
-        if not ip:
-            raise("cannot get IP address")
-            return False
-        if ip:
-            if not self._ssh_start(ip):
-                raise("cannot start ssh")
-                return False
-            self._mux_set(2+self.expnum)  # Switch the UART MUX to requested SAS expander.
-            return True
-        
-    def port_reset(self):
-        self._mux_restore()
-        self._ssh_stop()
+#     def port_setup(self):
+#         ip = self._get_ip()
+#         print "ip =", ip
+#         if not ip:
+#             raise("cannot get IP address")
+#             return False
+#         if ip:
+#             if not self._ssh_start(ip):
+#                 raise("cannot start ssh")
+#                 return False
+#             self._mux_set(2+self.expnum)  # Switch the UART MUX to requested SAS expander.
+#             return True
+#         
+#     def port_reset(self):
+#         self._mux_restore()
+#         self._ssh_stop()
         
     def update(self, filename):
         super(FirmwareFem, self).set_filename(filename)
-        if self.port_setup():
+        if self._mux_set(2+self.expnum):
             print "setup succeeded; updating"  #DEBUG
             super(FirmwareFem, self).update()
             print "update finished; resetting port"  #DEBUG
-            self.port_reset()
+            self._mux_restore()
             print "resetting port finished"  #DEBUG
     
     def version(self):
-        if self.port_setup():
+        if self._mux_set(2+self.expnum):
             print "setup succeeded; fetching version"  #DEBUG
             retval = super(FirmwareFem, self).identifydevice()
             print "version finished; resetting port"  #DEBUG
-            self.port_reset()
+            self._mux_restore()
             print "resetting port finished"  #DEBUG
             return retval
 
@@ -326,7 +330,7 @@ if __name__ == "__main__":
     fw.update_bmc(filename)
     sys.exit(0)
     
-    fw.port_setup()
+    #fw.port_setup()
 #     fid = fw.identifyfile()
 #     did = fw.identifydevice()
 #     if not fid:
@@ -345,5 +349,6 @@ if __name__ == "__main__":
     fw.update()
 #     fw.identifydevice()
     
-    if fw.procssh:
-        fw.port_reset()
+#     if fw.procssh:
+#         fw.port_reset()
+    fw._mux_restore()
