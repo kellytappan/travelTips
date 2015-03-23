@@ -42,18 +42,20 @@ Wolf Creek firmware
 x   Find PLX SDK 7.20.
   restructure code
   write wrapper
-    Where can each piece run?
+x   Where can each piece run?
     What other restrictions are there?
     What information and connections are needed for each piece?
-    Can everything be updated from a single point?
+x   Can everything be updated from a single point?
       a compute canister
-      both compute canisters
-      an external workstation
+x     both compute canisters
+-     an external workstation
     Determine how to discover if we're running on a computer canister.
 x   Determine how to discover correspondence between compute processor and its BMC.
+    Check that serial is connected to canister we're running on.
     Need to warn when pieces are requested but no firmware for them.
     Need to be able to specify "all" to update everything there's firmware for.
     Warnings could be interactive -- ask what to do.
     Need version management; handle multiple versions of same firmware.
   write manual
+  remove dead code
   package together for delivery
