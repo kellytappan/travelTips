@@ -287,14 +287,24 @@ class FirmwareFem(FirmwareCli):
         self._mux_restore()
         self._ssh_stop()
         
-    def update(self):
+    def update(self, filename):
+        super(FirmwareFem, self).set_filename(filename)
         if self.port_setup():
             print "setup succeeded; updating"  #DEBUG
             super(FirmwareFem, self).update()
             print "update finished; resetting port"  #DEBUG
             self.port_reset()
             print "resetting port finished"  #DEBUG
-            
+    
+    def version(self):
+        if self.port_setup():
+            print "setup succeeded; fetching version"  #DEBUG
+            retval = super(FirmwareFem, self).identifydevice()
+            print "version finished; resetting port"  #DEBUG
+            self.port_reset()
+            print "resetting port finished"  #DEBUG
+            return retval
+
 
 # if __name__ == "__main__":
 #     filename = "firmware/WC/wolfcreek_fem_sas_update_01_01.bin"
