@@ -209,6 +209,10 @@ class FirmwareCli(object):
                     '\tSASCONN CPLD FW Revision: ',
                     '\tCPLD \(0xd8\) FW Revision: ',
                     '\tDAP CPLD FW Revision: ',
+                    # WC types
+                    '\tBB CPLD 1 FW Revision: ',
+                    '\tMI CPLD FW Revision: ',
+                    '\tSSM CPLD FW Revision: ',
                     ])
                 typ = (
                     -1,
@@ -218,6 +222,10 @@ class FirmwareCli(object):
                     FirmwareTypes.SASCONN,
                     FirmwareTypes.BB,
                     FirmwareTypes.DAP,
+                    # WC types
+                    FirmwareTypes.BB,
+                    FirmwareTypes.MI,
+                    FirmwareTypes.SSM,
                     )[match]
                 if typ is -1:
                     break
