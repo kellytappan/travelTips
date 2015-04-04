@@ -187,7 +187,7 @@ class FirmwareCli(object):
         productid is currently unused.
         """
         try:
-            versions = {}
+            file_versions = {}
             if not self._ruthere():
                 self._log(0, 'Device does not respond: '+self.tty)
                 return None
@@ -223,21 +223,21 @@ class FirmwareCli(object):
                     FirmwareTypes.BB,
                     FirmwareTypes.DAP,
                     # WC types
-                    FirmwareTypes.BB,
-                    FirmwareTypes.MI,
-                    FirmwareTypes.SSM,
+                    FirmwareTypes.WCBB,
+                    FirmwareTypes.WCMI,
+                    FirmwareTypes.WCSSM,
                     )[match]
                 if typ is -1:
                     break
                 self.proc.expect([' ', '\r\n'])
-                versions[typ] = self.proc.before
-                self._log(2, typ+" = "+versions[typ])
+                file_versions[typ] = self.proc.before
+                self._log(2, typ+" = "+file_versions[typ])
         except:
-            versions  = None
+            file_versions  = None
             productid = ''
             prompt    = None
 
-        return (versions, prompt)
+        return (file_versions, prompt)
     
 
 

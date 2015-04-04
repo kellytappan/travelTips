@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-version = "0.0.1+"
+version = "0.1.0"
 
 # import serial
 # from xmodem import XMODEM
@@ -14,6 +14,8 @@ import re
 from firmwarecli import FirmwareCli
 from firmwarefile import FirmwareTypes
 
+installdir = "/usr/local/lib/wcdu/"
+
 class FirmwareBios:
     """
     Update and check version of BIOS.
@@ -23,7 +25,7 @@ class FirmwareBios:
         pass
 
     def update(self, filename):
-        subprocess.call(["utilities/flashrom", "-p", "internal", "-l", "utilities/layout.txt", "-i", "bios", "-f", "-w", filename])
+        subprocess.call([installdir+"utilities/flashrom", "-p", "internal", "-l", installdir+"utilities/layout.txt", "-i", "bios", "-f", "-w", filename])
     
     def version(self):
         version = subprocess.check_output(["dmidecode", "-s", "bios-version"])
@@ -40,7 +42,7 @@ class FirmwareBmc:
 
     def update(self, filename):
         # TODO error checking
-        self.procssh = pexpect.spawn("utilities/Yafuflash64", ["-full", "-cd", "-no-reboot", filename], logfile=sys.stdout)
+        self.procssh = pexpect.spawn(installdir+"utilities/Yafuflash64", ["-full", "-cd", "-no-reboot", filename], logfile=sys.stdout)
         match = self.procssh.expect([
             pexpect.TIMEOUT,
             pexpect.EOF,
@@ -90,15 +92,15 @@ class FirmwarePlx:
 
         # Load kernel modules.
         #TODO check for errors
-        subprocess.call("cd utilities/PlxSdk; lsmod | grep -q Plx8000_NT || Bin/Plx_load 8000n", shell=True)
-        subprocess.call("cd utilities/PlxSdk; lsmod | grep -q PlxSvc     || Bin/Plx_load Svc  ", shell=True)
+        subprocess.call("cd "+installdir+"utilities/PlxSdk; lsmod | grep -q Plx8000_NT || Bin/Plx_load 8000n", shell=True)
+        subprocess.call("cd "+installdir+"utilities/PlxSdk; lsmod | grep -q PlxSvc     || Bin/Plx_load Svc  ", shell=True)
 
     def update(self, filename):
         # TODO test after fixing EEPROMs
         # Find the bus number.
         line = subprocess.check_output("lspci -x -s "+self.s+" | grep ^10:", shell=True)
         bus = line.split()[10]
-        self.procssh = pexpect.spawn("utilities/PlxSdk/Samples/PlxEep/App/PlxEep", ["-l", filename, "-p", self.p, "-d", "0"], logfile=sys.stdout)
+        self.procssh = pexpect.spawn(installdir+"utilities/PlxSdk/Samples/PlxEep/App/PlxEep", ["-l", filename, "-p", self.p, "-d", "0"], logfile=sys.stdout)
         itemnumber = None
         while True:
             match = self.procssh.expect([
@@ -154,7 +156,7 @@ class FirmwareU112(FirmwarePlx):
 
 class FirmwareFem(FirmwareCli):
 
-    def __init__(self, tty, filename, expnum, ip=None, verbosity=0):
+    def __init__(self, tty, filename=None, expnum=0, ip=None, verbosity=0):
         """
         tty, filename, verbosity are the same as in FirmwareCli.__init__
         expnum is the FEM number to be affected, 0 or 1
@@ -166,6 +168,8 @@ class FirmwareFem(FirmwareCli):
 #         
 #         self.procssh = None
 #         self.curr_ip = None
+    def set_expnum(self, expnum):
+        self.expnum = expnum
     
 #     def _get_ip(self, new_ip=None):
 #         # Make sure we're logged in.
@@ -307,13 +311,17 @@ class FirmwareFem(FirmwareCli):
             print "version finished; resetting port"  #DEBUG
             self._mux_restore()
             print "resetting port finished"  #DEBUG
-            return retval
+            try:
+                return retval[0]["app"]  #TODO handle more than just app version in wcfw
+            except:
+                pass
+        return None
 
 
 # if __name__ == "__main__":
 #     filename = "firmware/WC/wolfcreek_fem_sas_update_01_01.bin"
-#     fw = FirmwareFem(tty="/dev/ttyUSB0", filename=filename, ip=None, verbosity=2)
-#     fw.update()
+#     bbfw = FirmwareFem(tty="/dev/ttyUSB0", filename=filename, ip=None, verbosity=2)
+#     bbfw.update()
 
 if __name__ == "__main__":
     # TODO Do we need the user to supply IP address?
@@ -330,9 +338,9 @@ if __name__ == "__main__":
     fw.update_bmc(filename)
     sys.exit(0)
     
-    #fw.port_setup()
-#     fid = fw.identifyfile()
-#     did = fw.identifydevice()
+    #bbfw.port_setup()
+#     fid = bbfw.identifyfile()
+#     did = bbfw.identifydevice()
 #     if not fid:
 #         print "Aborting; cannot get version string from file, '" + filename +"'."
 #         sys.exit(-1)
@@ -347,8 +355,8 @@ if __name__ == "__main__":
 #         print expanderid, "not in", expanders
 #         sys.exit(-1)
     fw.update()
-#     fw.identifydevice()
+#     bbfw.identifydevice()
     
-#     if fw.procssh:
-#         fw.port_reset()
+#     if bbfw.procssh:
+#         bbfw.port_reset()
     fw._mux_restore()

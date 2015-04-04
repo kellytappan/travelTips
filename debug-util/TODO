@@ -41,21 +41,34 @@ Wolf Creek firmware
     Do I need more information?  Internalize the PDF first, translate to command line.
 x   Find PLX SDK 7.20.
   restructure code
+x separate SAS firmware from SAS_ALL_IN_ONE
   write wrapper
 x   Where can each piece run?
     What other restrictions are there?
-    What information and connections are needed for each piece?
+x   What information and connections are needed for each piece?
 x   Can everything be updated from a single point?
-      a compute canister
+x     a compute canister
 x     both compute canisters
--     an external workstation
-    Determine how to discover if we're running on a computer canister.
+x     an external workstation
+    Determine how to discover if we're running on a compute canister.
 x   Determine how to discover correspondence between compute processor and its BMC.
     Check that serial is connected to canister we're running on.
-    Need to warn when pieces are requested but no firmware for them.
-    Need to be able to specify "all" to update everything there's firmware for.
+x   Need to warn when pieces are requested but no firmware for them.
+x   Need to be able to specify "all" to update everything there's firmware for.
     Warnings could be interactive -- ask what to do.
-    Need version management; handle multiple versions of same firmware.
+x   Need version management; handle multiple versions of same firmware.
+    determine which BIOS firmware is appropriate for current hardware
+x   what to do with all_in_one, short-term
+    what to do with all_in_one, long-term
+x   temporarily remove "latest" from version options
+    add "latest" to version options; need to know PLX type
+x   loop over instances
+    make a summary
   write manual
   remove dead code
-  package together for delivery
+1 package together for delivery
+1   how to find data files
+  allow SAS
+  create OS
+  add another structure to firmwarefile to simplify fwwc
+  add option to set power CPLD

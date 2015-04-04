@@ -1,0 +1,301 @@
+#!/usr/bin/env python
+
+version = "0.1.0"
+
+import sys
+import argparse
+
+from firmwarewc   import FirmwareFem, FirmwareBmc, FirmwareBios, FirmwareU199, FirmwareU187, FirmwareU112
+from firmwarefile import FirmwareTypes, FirmwareFile
+
+type_bmc   = "bmc"
+type_bios  = "bios"
+type_u112  = "u112"
+type_u187  = "u187"
+type_u199  = "u199"
+type_u1000 = "u1000"
+type_u1001 = "u1001"
+type_u1002 = "u1002"
+type_u1003 = "u1003"
+type_u1004 = "u1004"
+type_u1005 = "u1005"
+type_u1006 = "u1006"
+type_fem   = "fem"
+type_boot  = "boot"
+type_bb    = "bb"
+type_mi    = "mi"
+type_ssm   = "ssm"
+type_list  = [
+    type_bmc,
+    type_bios,
+#     type_u112,
+#     type_u187,
+#     type_u199,
+#     type_u1000,
+#     type_u1001,
+#     type_u1002,
+#     type_u1003,
+#     type_u1004,
+#     type_u1005,
+#     type_u1006,
+    type_fem,
+    type_boot,
+#     type_bb,
+#     type_mi,
+#     type_ssm,
+    ]
+type_map = {
+    type_bmc  : FirmwareTypes.WCBMC ,
+    type_bios : FirmwareTypes.WCBIOS,
+#     type_u112 : FirmwareTypes.U112  ,
+#     type_u187 : FirmwareTypes.U187  ,
+#     type_u199 : FirmwareTypes.U199  ,
+#     type_u1000: FirmwareTypes.U1000 ,
+#     type_u1001: FirmwareTypes.U1001 ,
+#     type_u1002: FirmwareTypes.U1002 ,
+#     type_u1003: FirmwareTypes.U1003 ,
+#     type_u1004: FirmwareTypes.U1004 ,
+#     type_u1005: FirmwareTypes.U1005 ,
+#     type_u1006: FirmwareTypes.U1006 ,
+#    type_fem  : FirmwareTypes.WCAPP ,
+    type_fem  : FirmwareTypes.WCALL ,
+    type_boot : FirmwareTypes.WCBOOT,
+#     type_bb   : FirmwareTypes.WCBB  ,
+#     type_mi   : FirmwareTypes.WCMI  ,
+#     type_ssm  : FirmwareTypes.WCSSM ,
+    }
+# Types that are satisified by firmware in a SAS_ALL_IN_ONE bundle
+SASexp_all_types = set([
+    type_fem ,
+    type_bb  ,
+    type_mi  ,
+    type_ssm ,
+    ])
+# Types that need a serial port.
+SASexp_types = SASexp_all_types | set([
+    type_boot,
+    ])
+
+def print_expander_version(label, vers):
+    if FirmwareTypes.APP    in vers: print label, "app :", vers[FirmwareTypes.APP   ]
+    if FirmwareTypes.BOOT   in vers: print label, "boot:", vers[FirmwareTypes.BOOT  ]
+    if FirmwareTypes.WCBB   in vers: print label, "bb  :", vers[FirmwareTypes.WCBB  ]
+    if FirmwareTypes.WCMI   in vers: print label, "mi  :", vers[FirmwareTypes.WCMI  ]
+    if FirmwareTypes.WCSSM  in vers: print label, "ssm :", vers[FirmwareTypes.WCSSM ]
+
+##### main
+epilog = """
+If --type is not given, it defaults to "all".
+The parameter to the --type switch may be a comma-separated list.
+Each element in the list may optionally have an equals sign ("=") and a version number appended, e.g. --type bmc=0009,bios=0205.
+The version number may be the string "latest" to allow the program to pick the version that sorts the highest.
+""" + "Program version: "+version
+parser = argparse.ArgumentParser(description="Jabil Firmware Update, Wolf Creek", epilog=epilog)
+parser.add_argument("--type"    , nargs=1, type=str,   help='types of things to update, or "help" or "all"')
+parser.add_argument("--firmware", nargs=1, type=str,   help="firmware file, directory, or archive (e.g. 7z or zip)")
+parser.add_argument("--instance", nargs=1, type=int,   help="instance 0 or 1 for FEM or CPLD")
+parser.add_argument("--serial"  , nargs=1, type=str,   help="serial port device file for FEM or CPLD")
+#parser.add_argument("--force"   , action="store_true", help="update even if version matches")
+parser.add_argument("--info"    , action="store_true", help="only print version information of files and hardware")
+parser.add_argument("--dryrun"  , action="store_true", help="do not attempt any operations on the hardware")
+# Need to know
+#   type of thing to program: all, bmc, bios, plx (u112, u187, u199), fem, cpld (baseboard, midplane, status)
+#   firmware file
+#   operation?  update, info, dryrun
+#   if SAS expander or SAS CPLD, then need serial port and can't run from compute node
+#   version number, if more than one firmware file for type (include in type specification)
+# Want to do
+#   print hw versions, bbfw versions, program, print hw versions
+#   print bbfw versions, including ambiguities
+#   print hw versions
+# info=False, dryrun=False: bbfw versions, hw versions, program, hw versions
+# info=False, dryrun=True : config OK or error
+# info=True , dryrun=False: bbfw versions, hw versions, what won't be programmed unless forced
+# info=True , dryrun=True : bbfw versions
+params, commands = parser.parse_known_args()
+#params = vars(params)
+
+if not params.instance:
+    params.instance = [1,0]
+fw_file = FirmwareFile(params.firmware[0]) if params.firmware else None
+# Decode parameter to --type switch.
+typ = ','.join(params.type) if params.type else "all"  # Make comma-separated list; default to all.
+type_do = typ.split(',')
+param_versions = {}
+for ix in range(len(type_do)):
+    typ = type_do[ix]
+    tv = typ.split('=')
+    if len(tv) > 1:
+        t,v = tv
+        param_versions[t] = v
+        type_do[ix] = t
+
+#TODO: allow abbreviations
+for typ in type_do:
+    if typ == "help" or typ not in ["all"] + type_list:
+        if typ != "help":
+            print 'Type "'+typ+'" is invalid.'
+        print 'Please choose a parameter to the "--type" switch from the following:'
+        for t in ["help", "all"] + type_list:
+            print "  "+t
+        sys.exit(2)
+    if typ == "all":
+        type_do = type_list
+        break
+
+# type_all = [
+#     FirmwareTypes.WCBMC ,
+#     FirmwareTypes.WCBIOS,
+# #     FirmwareTypes.U112 ,
+# #     FirmwareTypes.U187 ,
+# #     FirmwareTypes.U199 ,
+#     FirmwareTypes.WCAPP ,
+#     FirmwareTypes.WCBOOT,
+#     FirmwareTypes.WCBB  ,
+#     FirmwareTypes.WCMI  ,
+#     FirmwareTypes.WCSSM ,
+#     ]
+
+error = False
+
+# Find all available versions of the requested types.
+file_versions = {}
+if fw_file:
+    for tl in fw_file.get_filename().values():
+        for typm in tl:
+            if typm not in file_versions:
+                # Create an entry for this typm.
+                file_versions[typm] = set()
+            file_versions[typm] |= set(tl[typm])
+    # Check all specified types.
+    for typ in type_do:
+        typm = type_map[typ]
+        if typ in param_versions:
+            # Version was specified on command line.
+            if typm in file_versions and param_versions[typ] in file_versions[typm]:
+                file_versions[typm] = set([param_versions[typ]])
+            else:
+                print "Version", param_versions[typ], "requested for", typ, "but it wasn't found."
+                error = True
+        else:
+            # No version specified: must have exactly one to choose from.
+            if typm not in file_versions:
+                print "There is no version of firmware for", typ
+            else:
+                if len(file_versions[typm]) > 1:
+                    print "There is more than one version of", typ, "firmware:"
+                    for v in sorted(file_versions[typm]):
+                        print "    "+v
+                    error = True
+for typ in type_do:
+    if typ in SASexp_types:
+        if not params.serial:
+            print 'error: argument --serial is required when --type='+typ
+            error = True
+            
+# file_versions = {}
+# for typ in type_do:
+#     typm = type_map[typ]
+#     tv = set()
+#     for tl in  fw_file.get_filename().values():
+#         if typm in tl:
+#             tv |= set(tl[typm])
+#     file_versions[typ] = tv
+#     if len(tv) > 1:
+#         print "There is more than one version of", typ, "firmware:"
+#         for v in sorted(tv):
+#             print "    " + v
+
+if params.info:
+    print "Requested and available versions:"
+    for typ in type_do:
+        typm = type_map[typ]
+        pre = "%-5s: " % typ
+        if typm not in file_versions:
+            print pre + "----"
+        else:
+            for v in sorted(file_versions[typm]):
+                print pre + v
+                pre = "%7s" % ""
+
+if error:
+    print "There was an error; aborting."
+    sys.exit(3)
+
+summary = {}
+
+for typ in type_do:
+
+    typm = type_map[typ]
+
+    summary[typ] = {}
+    version = list(file_versions[typm])[0] if typm in file_versions else '----'
+    summary[typ]["file_version"] = version
+
+    loop_over_instance = False
+    instances = [0]
+
+    if   typ == type_bmc  : fw = FirmwareBmc ()
+    elif typ == type_bios : fw = FirmwareBios()
+    elif typ == type_u112 : fw = FirmwareU112()
+    elif typ == type_u187 : fw = FirmwareU187()
+    elif typ == type_u199 : fw = FirmwareU199()
+    elif typ in SASexp_types:
+        fw = FirmwareFem(params.serial[0], verbosity=2)
+        loop_over_instance = True
+        instances = params.instance
+        #print_expander_version("Current", bbfw.identifydevice())
+        #bbfw.update()
+        #print_expander_version("New    ", bbfw.identifydevice())
+        #sys.exit(0)
+    else:
+        pass  #TODO
+    
+    if not params.dryrun:
+        for instance in instances:
+            if loop_over_instance:
+                fw.set_expnum(instance)
+            summary[typ]["current_version"] = fw.version()  #TODO: instances
+            print "Current version:", summary[typ]["current_version"]
+            if not params.info:
+                #TODO get file name
+                for tl in fw_file.get_filename().values():
+                    if typm in tl:
+                        filename = tl[typm][version]
+                        break
+                else:
+                    filename = None
+                fw.update(filename)
+                summary[typ]["new_version"] = fw.version()
+                print "New version:    ", summary[typ]["new_version"]
+
+print
+print "Summary"
+print "======="
+typ = type_do[0]
+print "%-5s" % "Type",
+if "file_version" in summary[typ]:
+    print "%-4s" % "File",
+if "current_version" in summary[typ]:
+    print "%-4s" % "Curr",
+if "new_version" in summary[typ]:
+    print "%-4s" % "New",
+print
+print "%-5s" % "----",
+if "file_version" in summary[typ]:
+    print "%-4s" % "----",
+if "current_version" in summary[typ]:
+    print "%-4s" % "----",
+if "new_version" in summary[typ]:
+    print "%-4s" % "----",
+print
+
+for typ in type_do:
+    print "%-5s" % typ,
+    if "file_version" in summary[typ]:
+        print "%-4s" % summary[typ]["file_version"],
+    if "current_version" in summary[typ]:
+        print "%-4s" % summary[typ]["current_version"],
+    if "new_version" in summary[typ]:
+        print "%-4s" % summary[typ]["new_version"],
+    print

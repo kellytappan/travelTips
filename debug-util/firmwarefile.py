@@ -13,9 +13,13 @@ class FirmwareTypes:
     SASCONN = "cpld sasconn"
     BB      = "cpld baseboard"
     DAP     = "cpld dap"
-    MI      = "cpld mi"   # midplane
-    SSM     = "cpld ssm"  # status
-    BIOS    = "bios"
+    WCAPP   = "WC app"
+    WCBOOT  = "WC boot"
+    WCBB    = "WC cpld baseboard"
+    WCMI    = "WC cpld mi"   # midplane
+    WCSSM   = "WC cpld ssm"  # status
+    WCALL   = "WC all-in-one"  # WC app, bb, mi, ssm
+    WCBIOS  = "WC bios"
     U112    = "U112"  # PLX EEPROM 87xx
     U187    = "U187"  # PLX EEPROM 87xx
     U199    = "U199"  # PLX EEPROM 87xx
@@ -26,7 +30,7 @@ class FirmwareTypes:
     U1004   = "U1004" # PLX EEPROM 97xx
     U1005   = "U1005" # PLX EEPROM 97xx
     U1006   = "U1006" # PLX EEPROM 97xx
-    BMC     = "bmc"
+    WCBMC   = "WC bmc"
     cpld_set = set((SBBMI, SASCONN, BB, DAP))
     specials = set((BB, DAP))  # programming requires FEM-B to be down
     affect   = \
@@ -37,9 +41,13 @@ class FirmwareTypes:
      SASCONN: set(("A","B")),
      BB     : set(("A0")),
      DAP    : set(("A0")),
-     MI     : set(("A","B")),
-     SSM    : set(("A")),
-     BIOS   : set(("A","B")),
+     WCAPP  : set(("A0","A1","B0","B1")),
+     WCBOOT : set(("A0","A1","B0","B1")),
+     WCBB   : set(("A0")),
+     WCMI   : set(("A","B")),
+     WCSSM  : set(("A")),
+     WCALL  : set(("A0","A1","B0","B1")),
+     WCBIOS : set(("A","B")),
      U112   : set(("A","B")),
      U187   : set(("A","B")),
      U199   : set(("A","B")),
@@ -50,7 +58,7 @@ class FirmwareTypes:
      U1004  : set(("A","B")),
      U1005  : set(("A","B")),
      U1006  : set(("A","B")),
-     BMC    : set(("A","B")),
+     WCBMC  : set(("A","B")),
 
      "A" : set((APP,BOOT,SBBMI,SASCONN)),
      "B" : set((APP,BOOT,SBBMI,SASCONN)),
@@ -71,33 +79,33 @@ class FirmwareFile():
     # key is bytes 8, 9, 10 of file, i.e. product id, hardware rev, destination partition
     # value is tuple of expanders, firmware image id, firmware type
     keymap = {
-        "\x02\xa0\x02"     : (("A" ,     "B"      ), 1, FirmwareTypes.APP    ),
-        "\x02\x0b\xff"     : (("A" ,     "B"      ), 1, FirmwareTypes.BOOT   ),
-        "\x02\xa0\x08"     : (("A" ,     "B"      ), 2, FirmwareTypes.SBBMI  ),
-        "\x02\x0b\x09"     : (("A" ,     "B"      ), 3, FirmwareTypes.SASCONN),
-        "\x03\xa0\x02"     : (("A0","A1","B0","B1"), 1, FirmwareTypes.APP    ),
-        "\x03\x0b\xff"     : (("A0","A1","B0","B1"), 1, FirmwareTypes.BOOT   ),
-        "\x03\x0b\x08"     : (("A0",              ), 2, FirmwareTypes.BB     ),
-        "\x03\x0b\x09"     : (("A0",              ), 3, FirmwareTypes.DAP    ),
+        "\x02\xa0\x02"      : (("A" ,     "B"      ), 1, FirmwareTypes.APP    ),
+        "\x02\x0b\xff"      : (("A" ,     "B"      ), 1, FirmwareTypes.BOOT   ),
+        "\x02\xa0\x08"      : (("A" ,     "B"      ), 2, FirmwareTypes.SBBMI  ),
+        "\x02\x0b\x09"      : (("A" ,     "B"      ), 3, FirmwareTypes.SASCONN),
+        "\x03\xa0\x02"      : (("A0","A1","B0","B1"), 1, FirmwareTypes.APP    ),
+        "\x03\x0b\xff"      : (("A0","A1","B0","B1"), 1, FirmwareTypes.BOOT   ),
+        "\x03\x0b\x08"      : (("A0",              ), 2, FirmwareTypes.BB     ),
+        "\x03\x0b\x09"      : (("A0",              ), 3, FirmwareTypes.DAP    ),
         
-        "\x05\x0b\x08"     : (("A0",              ), 0, FirmwareTypes.BB     ),  # wc_baseboard
-        "\x05\x0b\x09"     : (("A0",     "B0"     ), 0, FirmwareTypes.MI     ),  # wc_midplane
-        "\x05\x0b\x0a"     : (("A0",              ), 0, FirmwareTypes.SSM    ),  # wc_status
-        "\x05\xa0\x02"     : (("A0","A1","B0","B1"), 0, FirmwareTypes.APP    ),  # wolfcreek_fem_sas_update
-        "\x05\x0b\xff"     : (("A0","A1","B0","B1"), 0, FirmwareTypes.BOOT   ),  # wolfcreek_fem_sas_update boot
+        "\x05\x0b\x08"      : (("A0",              ), 0, FirmwareTypes.WCBB   ),  # wc_baseboard
+        "\x05\x0b\x09"      : (("A0",     "B0"     ), 0, FirmwareTypes.WCMI   ),  # wc_midplane
+        "\x05\x0b\x0a"      : (("A0",              ), 0, FirmwareTypes.WCSSM  ),  # wc_status
+        "\x05\xa0\x02"      : (("A0","A1","B0","B1"), 0, FirmwareTypes.WCAPP  ),  # wolfcreek_fem_sas_update
+        "\x05\x0b\xff"      : (("A0","A1","B0","B1"), 0, FirmwareTypes.WCBOOT ),  # wolfcreek_fem_sas_update boot
         
-        FirmwareTypes.BIOS : (("A" ,     "B"      ), 0, FirmwareTypes.BIOS   ),
-        FirmwareTypes.U112 : (("A" ,     "B"      ), 0, FirmwareTypes.U112   ),
-        FirmwareTypes.U187 : (("A" ,     "B"      ), 0, FirmwareTypes.U187   ),
-        FirmwareTypes.U199 : (("A" ,     "B"      ), 0, FirmwareTypes.U199   ),
-        FirmwareTypes.U1000: (("A" ,     "B"      ), 0, FirmwareTypes.U1000  ),
-        FirmwareTypes.U1001: (("A" ,     "B"      ), 0, FirmwareTypes.U1001  ),
-        FirmwareTypes.U1002: (("A" ,     "B"      ), 0, FirmwareTypes.U1002  ),
-        FirmwareTypes.U1003: (("A" ,     "B"      ), 0, FirmwareTypes.U1003  ),
-        FirmwareTypes.U1004: (("A" ,     "B"      ), 0, FirmwareTypes.U1004  ),
-        FirmwareTypes.U1005: (("A" ,     "B"      ), 0, FirmwareTypes.U1005  ),
-        FirmwareTypes.U1006: (("A" ,     "B"      ), 0, FirmwareTypes.U1006  ),
-        FirmwareTypes.BMC  : (("A" ,     "B"      ), 0, FirmwareTypes.BMC    ),
+        FirmwareTypes.WCBIOS: (("A" ,     "B"      ), 0, FirmwareTypes.WCBIOS ),
+        0x0112              : (("A" ,     "B"      ), 0, FirmwareTypes.U112   ),
+        0x0187              : (("A" ,     "B"      ), 0, FirmwareTypes.U187   ),
+        0x0199              : (("A" ,     "B"      ), 0, FirmwareTypes.U199   ),
+        0x1000              : (("A" ,     "B"      ), 0, FirmwareTypes.U1000  ),
+        0x1001              : (("A" ,     "B"      ), 0, FirmwareTypes.U1001  ),
+        0x1002              : (("A" ,     "B"      ), 0, FirmwareTypes.U1002  ),
+        0x1003              : (("A" ,     "B"      ), 0, FirmwareTypes.U1003  ),
+        0x1004              : (("A" ,     "B"      ), 0, FirmwareTypes.U1004  ),
+        0x1005              : (("A" ,     "B"      ), 0, FirmwareTypes.U1005  ),
+        0x1006              : (("A" ,     "B"      ), 0, FirmwareTypes.U1006  ),
+        FirmwareTypes.WCBMC : (("A" ,     "B"      ), 0, FirmwareTypes.WCBMC  ),
         }
 
     def __init__(self, name, verbosity=0):
@@ -120,7 +128,7 @@ class FirmwareFile():
 #         self.fwlist = []
         
         if os.path.isfile(name):
-#             tmpdir = tempfile.mkdtemp("", "fw-")
+#             tmpdir = tempfile.mkdtemp("", "bbfw-")
 #             self.tmpdirs.append(tmpdir)
 #             result = subprocess.call(['7za','x','-o'+tmpdir,self.name], stdout=open("/dev/null","w"))
 #             #print "result =", result
@@ -148,7 +156,7 @@ class FirmwareFile():
         pass
 
     def identifyfile(self, filename):
-        """ Attempt to determine version and productid of a firmware file. """
+        """ Attempt to determine version and type of a firmware file. """
         """
         Return a tuple with
           the version string,
@@ -159,73 +167,79 @@ class FirmwareFile():
     
             f.seek(0x00)
             magic = f.read(8)
-            if "JBL" not in magic:
-                # Try some other types.
-                # Try BIOS: strings has '$BVDT' followed by version number.
-                p = subprocess.Popen(["strings", "--all", filename], stdout=subprocess.PIPE)
-                state = "looking"
-                for line in p.stdout:
-                    if state == "looking":
-                        if "$BVDT$" in line:
-                            state = "grabrev"
-                            continue
-                    if state == "grabrev":
-                        version = line[1:5]
-                        p.terminate()
-                        return (version, self.keymap[FirmwareTypes.BIOS])
-                # Try PLX EEPROMs.
-                retval = self.identifyfile_plx(filename)
-                if retval:
-                    return retval
-                # Try BMC.
-                m = re.search("JBL_WC_BMC_([0-9a-fA-F]*)\.bin", filename)
-                if m:
-                    version = m.group(1)
-                    return (version, self.keymap[FirmwareTypes.BMC])
-    #                 p = subprocess.call(["grep", "-q", "ifconfig", filename])
-    #                 if p is 0:
-    #                     return ("-", self.keymap[FirmwareTypes.BMC])
-                # unknown
-                self._log(2, "file is not recognizable firmware: "+filename)
-                return None
-            
-            f.seek(0x08)
-            key = f.read(3)  # product id, hardware rev, destination partition
-            self._log(3, "key = %.2x,%.2x,%.2x %s" % (ord(key[0]), ord(key[1]), ord(key[2]), filename))
-            mapped = self.keymap[key] if key in self.keymap else None
-    
-            f.seek(0x0c)
-            version = f.read(2)
-            version = (ord(version[0]) << 8) + (ord(version[1]) << 0)
-            version = "%04X" % version
-            self._log(2, "file version   = "+version)
-            if version == "0000":
-                f.seek(0x0e)
+            if "JBL" in magic:
+                f.seek(0x08)
+                key = f.read(3)  # product id, hardware rev, destination partition
+                self._log(3, "key = %.2x,%.2x,%.2x %s" % (ord(key[0]), ord(key[1]), ord(key[2]), filename))
+                mapped = self.keymap[key] if key in self.keymap else None
+                if mapped[2] is FirmwareTypes.WCAPP:
+                    if "ALL_IN_ONE" in filename:
+                        mapped = list(mapped)
+                        mapped[2] = FirmwareTypes.WCALL
+        
+                f.seek(0x0c)
                 version = f.read(2)
                 version = (ord(version[0]) << 8) + (ord(version[1]) << 0)
-                version = "0x%04x" % version
+                version = "%04X" % version
                 self._log(2, "file version   = "+version)
-    
-    #         f.seek(0x2b)
-    #         productid = f.read(16)
-    #         productid = mapped[4] if mapped else None
-    #         self._log(2, "file productid = "+productid)
+                if version == "0000":
+                    f.seek(0x0e)
+                    version = f.read(2)
+                    version = (ord(version[0]) << 8) + (ord(version[1]) << 0)
+                    version = "%04x" % version
+                    self._log(2, "file version   = "+version)
+                return (version, mapped)
 
-        return (version, mapped)
+            # Try some other types.
+            
+            # Try BIOS: strings has '$BVDT' followed by version number.
+            p = subprocess.Popen(["strings", "--all", filename], stdout=subprocess.PIPE)
+            state = "looking"
+            for line in p.stdout:
+                if state == "looking":
+                    if "$BVDT$" in line:
+                        state = "grabrev"
+                        continue
+                if state == "grabrev":
+                    version = line[1:5]
+                    p.terminate()
+                    return (version, self.keymap[FirmwareTypes.WCBIOS])
+            
+            # Try PLX EEPROMs.
+            retval = self.identifyfile_plx(filename)
+            if retval:
+                return retval
+            
+            # Try BMC.
+            m = re.search("JBL_WC_BMC_([0-9a-fA-F]*)\.bin", filename)
+            if m:
+                version = m.group(1)
+                return (version, self.keymap[FirmwareTypes.WCBMC])
+#                 p = subprocess.call(["grep", "-q", "ifconfig", filename])
+#                 if p is 0:
+#                     return ("-", self.keymap[FirmwareTypes.WCBMC])
+            
+            # unknown
+            self._log(2, "file is not recognizable firmware: "+filename)
+            return None
+            
     
     def identifyfile_plx(self, filename):
         prog = self.parse_plx(filename)
         if prog:
             for entry in prog:
                 if entry[0] is 0x29c:
-                    typ = ((entry[2] >> 16) & 0xffff) % "%.4X"
+                    typ = ((entry[2] >> 16) & 0xffff)
                     ver = ((entry[2] >>  0) & 0xffff) % "%.4X"
-                    return entry[2]  #TODO: data needs to be parsed into version and type
+                    mapped = self.keymap[typ] if typ in self.keymap else None
+                    return (ver, mapped)
             # It doesn't have the 0x29c register with version and type,
             # so guess type based on filename.  Version is hopeless.
-            if "U112" in filename: return ("", self.keymap[FirmwareTypes.U112])
-            if "U187" in filename: return ("", self.keymap[FirmwareTypes.U187])
-            if "U199" in filename: return ("", self.keymap[FirmwareTypes.U199])
+            if "U112" in filename: return ("", self.keymap[0x0112])
+            if "U187" in filename: return ("", self.keymap[0x0187])
+            if "U199" in filename: return ("", self.keymap[0x0199])
+            # All 97xx files should have 0x29c register.
+            return None  # Cannot determine PLX EEPROM file type nor version.
         else:
             return None  # If parse_plx fails, it's not a PLX EEPROM file.
 
@@ -234,7 +248,7 @@ class FirmwareFile():
             # Some Microsoft Office files can be unpacked with 7za, but we don't bother.
             self._populate_from_single_file(filename)
         else:
-            tmpdir = tempfile.mkdtemp("", "fw-")
+            tmpdir = tempfile.mkdtemp("", "bbfw-")
             self.tmpdirs.append(tmpdir)
             #TODO errorcheck
             result = subprocess.call(['7za','x','-o'+tmpdir,filename], stdout=open("/dev/null","w"))
@@ -259,12 +273,6 @@ class FirmwareFile():
                 if typ not in self.fwdict[expander]:
                     self.fwdict[expander][typ] = {}
                 self.fwdict[expander][typ][version] = filename
-#
-#             version, more = identity  # @UnusedVariable
-#             if version not in self.fwdict:
-#                 self.fwdict[version] = {}
-#             self.fwdict[version][productid] = filename
-#             self.fwlist.append((filename, version, more))
     
     def _populate_from_dir(self, dirname):
         for basename in os.listdir(dirname):
@@ -286,43 +294,6 @@ class FirmwareFile():
                 if version:
                     retval = retval[version] if version in retval else None
         return retval
-
-#     def get_filename(self, productid, version=None):
-#         if   len(self.fwdict) is 0:
-#             # We didn't find any firmware files.
-#             return None
-#         elif len(self.fwdict) is 1:
-#             if version and self.fwdict.keys()[0] != version:
-#                 # The requested version didn't match the version we found.
-#                 return None
-#             if not version:
-#                 # No specific version requested; use the one we found.
-#                 version = self.fwdict.keys()[0]
-#         else:
-#             # We found more than one version.
-#             if not version:
-#                 # Version not specified. Still OK if we have exactly one matching productid.
-#                 for v in self.fwdict:
-#                     if productid in self.fwdict[v]:
-#                         if version:
-#                             # Found more than one candidate version.
-#                             return None
-#                         else:
-#                             version = v
-#         if version not in self.fwdict:
-#             # We didn't find any files with that version.
-#             return None
-#         if productid not in self.fwdict[version]:
-#             # We found that version, but not that productid.
-#             return None
-#         # We have well-enough-specified version and productid, and a matching file exists.
-#         return self.fwdict[version][productid]
-
-#     def get_all(self):
-#         return self.fwdict
-    
-#     def get_list(self):
-#         return self.fwlist
 
     def parse_plx(self, filename):
         with open(filename, 'rb') as f:

@@ -16,7 +16,7 @@ build:	wcdu-guide.pdf
 	python setup.py sdist
 
 install:
-	pip install $(shell ls -tr dist/*)
+	pip install $(shell ls -t dist/*)
 
 uninstall:
 	pip uninstall wcdu

@@ -110,8 +110,8 @@ if __name__ == "__main__":
     print "program version =", version
     
     fw = FirmwareSes(devicename, int(expanderid), filename, verbosity=2)
-#     fid = fw.identifyfile()
-#     did = fw.identifydevice()
+#     fid = bbfw.identifyfile()
+#     did = bbfw.identifydevice()
 #     if not did:
 #         sys.exit(-1)
 #     if fid[1] != did[1]:
@@ -119,4 +119,4 @@ if __name__ == "__main__":
 #         print fid[1], "!=", did[1]
 #         sys.exit(-1)
     fw.update()
-#     fw.identifydevice()
+#     bbfw.identifydevice()
