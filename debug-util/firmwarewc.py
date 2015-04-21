@@ -64,9 +64,11 @@ class FirmwareBmc:
             self.procssh.sendline("y")
         self.procssh.expect(pexpect.EOF, timeout=60*12)
         self.procssh.close(); self.procssh = None
+    
+    def update_cpld(self):
         # For now we are supposed to follow the BMC update with this command to program power/controller/the CPLD, but it resets.
-        #subprocess.call(["ipmitool", "-H", self._get_ip(), "-U", "admin", "-P", "admin", "raw", "0x3c", "0x00", "0x01", "0x00"])
-        #subprocess.call(["poweroff"])  # Assuming we're running on the compute node.
+        subprocess.call(["ipmitool", "-H", self._get_ip(), "-U", "admin", "-P", "admin", "raw", "0x3c", "0x00", "0x01", "0x00"])
+        subprocess.call(["poweroff"])  # Assuming we're running on the compute node.
         
     def version(self):
         # To get revisions of BMC and power/controller/the CPLD:
@@ -154,7 +156,7 @@ class FirmwareU112(FirmwarePlx):
     
 
 
-class FirmwareFem(FirmwareCli):
+class FirmwareSas(FirmwareCli):
 
     def __init__(self, tty, filename=None, expnum=0, ip=None, verbosity=0):
         """
@@ -162,7 +164,7 @@ class FirmwareFem(FirmwareCli):
         expnum is the FEM number to be affected, 0 or 1
         ip is the desired IP address or None for no change
         """
-        super(FirmwareFem, self).__init__(tty, filename, verbosity)
+        super(FirmwareSas, self).__init__(tty, filename, verbosity)
         self.expnum = expnum
 #         self.ip = ip
 #         
@@ -296,10 +298,10 @@ class FirmwareFem(FirmwareCli):
 #         self._ssh_stop()
         
     def update(self, filename):
-        super(FirmwareFem, self).set_filename(filename)
+        super(FirmwareSas, self).set_filename(filename)
         if self._mux_set(2+self.expnum):
             print "setup succeeded; updating"  #DEBUG
-            super(FirmwareFem, self).update()
+            super(FirmwareSas, self).update()
             print "update finished; resetting port"  #DEBUG
             self._mux_restore()
             print "resetting port finished"  #DEBUG
@@ -307,7 +309,7 @@ class FirmwareFem(FirmwareCli):
     def version(self):
         if self._mux_set(2+self.expnum):
             print "setup succeeded; fetching version"  #DEBUG
-            retval = super(FirmwareFem, self).identifydevice()
+            retval = super(FirmwareSas, self).identifydevice()
             print "version finished; resetting port"  #DEBUG
             self._mux_restore()
             print "resetting port finished"  #DEBUG
@@ -320,7 +322,7 @@ class FirmwareFem(FirmwareCli):
 
 # if __name__ == "__main__":
 #     filename = "firmware/WC/wolfcreek_fem_sas_update_01_01.bin"
-#     bbfw = FirmwareFem(tty="/dev/ttyUSB0", filename=filename, ip=None, verbosity=2)
+#     bbfw = FirmwareSas(tty="/dev/ttyUSB0", filename=filename, ip=None, verbosity=2)
 #     bbfw.update()
 
 if __name__ == "__main__":
@@ -334,7 +336,7 @@ if __name__ == "__main__":
     
     print "program version =", version
     
-    fw = FirmwareFem(tty, filename, expnum, ip=None, verbosity=2)
+    fw = FirmwareSas(tty, filename, expnum, ip=None, verbosity=2)
     fw.update_bmc(filename)
     sys.exit(0)
     

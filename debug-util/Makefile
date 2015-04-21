@@ -23,7 +23,7 @@ uninstall:
 
 convdir = /tmp/LibO_Conversion-$$$$
 wcdu-guide.pdf :   wcdu-guide.odt
-	"$(soffice)" --writer -env:UserInstallation=file://$(convdir) --invisible --headless --convert-to pdf  wcdu-guide.odt
+	"$(soffice)" --writer -env:UserInstallation=file://$(convdir) --invisible --headless --convert-to pdf  $<
 	rm -rf $(convdir)
 
 clean:

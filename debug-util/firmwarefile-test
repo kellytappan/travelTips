@@ -25,3 +25,8 @@ for expander in sorted(filenames):
 # prog = ff.parse_plx(sys.argv[1])
 # for entry in prog:
 #     print "%3X:%2X %8X" % entry
+
+# ff = FirmwareFile(sys.argv[1], verbosity=3)
+# jbl = ff.parse_jbl(sys.argv[1])
+# for j in jbl:
+#     print "%.2x %.2x %.2x  %s" % (ord(j[0][0]), ord(j[0][1]), ord(j[0][2]), j[1])

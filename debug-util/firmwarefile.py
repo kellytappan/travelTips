@@ -13,6 +13,7 @@ class FirmwareTypes:
     SASCONN = "cpld sasconn"
     BB      = "cpld baseboard"
     DAP     = "cpld dap"
+    WCISTR  = "WC istr"
     WCAPP   = "WC app"
     WCBOOT  = "WC boot"
     WCBB    = "WC cpld baseboard"
@@ -41,6 +42,7 @@ class FirmwareTypes:
      SASCONN: set(("A","B")),
      BB     : set(("A0")),
      DAP    : set(("A0")),
+     WCISTR : set(("A0","A1","B0","B1")),
      WCAPP  : set(("A0","A1","B0","B1")),
      WCBOOT : set(("A0","A1","B0","B1")),
      WCBB   : set(("A0")),
@@ -88,11 +90,12 @@ class FirmwareFile():
         "\x03\x0b\x08"      : (("A0",              ), 2, FirmwareTypes.BB     ),
         "\x03\x0b\x09"      : (("A0",              ), 3, FirmwareTypes.DAP    ),
         
+        "\x05\xa0\x02"      : (("A0","A1","B0","B1"), 0, FirmwareTypes.WCISTR ),  # wolfcreek_fem_sas_update istr
+        "\x05\xa0\x05"      : (("A0","A1","B0","B1"), 0, FirmwareTypes.WCAPP  ),  # wolfcreek_fem_sas_update app
+        "\x05\x0b\xff"      : (("A0","A1","B0","B1"), 0, FirmwareTypes.WCBOOT ),  # wolfcreek_fem_sas_update boot
         "\x05\x0b\x08"      : (("A0",              ), 0, FirmwareTypes.WCBB   ),  # wc_baseboard
         "\x05\x0b\x09"      : (("A0",     "B0"     ), 0, FirmwareTypes.WCMI   ),  # wc_midplane
         "\x05\x0b\x0a"      : (("A0",              ), 0, FirmwareTypes.WCSSM  ),  # wc_status
-        "\x05\xa0\x02"      : (("A0","A1","B0","B1"), 0, FirmwareTypes.WCAPP  ),  # wolfcreek_fem_sas_update
-        "\x05\x0b\xff"      : (("A0","A1","B0","B1"), 0, FirmwareTypes.WCBOOT ),  # wolfcreek_fem_sas_update boot
         
         FirmwareTypes.WCBIOS: (("A" ,     "B"      ), 0, FirmwareTypes.WCBIOS ),
         0x0112              : (("A" ,     "B"      ), 0, FirmwareTypes.U112   ),
@@ -172,7 +175,7 @@ class FirmwareFile():
                 key = f.read(3)  # product id, hardware rev, destination partition
                 self._log(3, "key = %.2x,%.2x,%.2x %s" % (ord(key[0]), ord(key[1]), ord(key[2]), filename))
                 mapped = self.keymap[key] if key in self.keymap else None
-                if mapped[2] is FirmwareTypes.WCAPP:
+                if mapped[2] is FirmwareTypes.WCISTR:
                     if "ALL_IN_ONE" in filename:
                         mapped = list(mapped)
                         mapped[2] = FirmwareTypes.WCALL
@@ -256,7 +259,25 @@ class FirmwareFile():
             if   result is 0:
                 self._populate_from_dir(tmpdir)
             elif result is 2:
-                self._populate_from_single_file(filename)
+                # not an archive parsable by 7z
+                jbl_list = self.parse_jbl(filename)
+                if len(jbl_list) <= 1 or (len(jbl_list) is 2 and jbl_list[0][0] == "\x05\xa0\x02" and jbl_list[1][0] == "\x05\xa0\x05"):
+                    # It's either not a JBL file or it's either a single-element JBL file or an istr/app combo.
+                    self._populate_from_single_file(filename)
+                else:
+                    # It's a JBL file that needs to be split up.
+                    for jbl_item in jbl_list:
+                        fn = "%.2x%.2x%.2x" % tuple(ord(c) for c in jbl_item[0])
+                        with open(tmpdir+'/'+fn, 'wb') as f:
+                            f.write(jbl_item[2])
+                    if os.path.isfile(tmpdir+'/'+"05a002") and os.path.isfile(tmpdir+'/'+"05a005"):
+                        # We have both istr and app sections; combine them.
+                        with open(tmpdir+'/'+"05a002-05a005", "wb") as fw:
+                            for frname in ("05a002", "05a005"):
+                                with open(tmpdir+'/'+frname) as fr:
+                                    fw.write(fr.read())
+                                os.remove(tmpdir+'/'+frname)
+                    self._populate_from_dir(tmpdir)
             else:
                 print "7z error", result
 
@@ -305,7 +326,7 @@ class FirmwareFile():
                 return None
             flags = f.read(1)  # @UnusedVariable
 
-            # Retrieve and check data size.            
+            # Retrieve and check data size.
             filesize = os.fstat(f.fileno()).st_size
             datasize = struct.unpack("<H", f.read(2))[0]
             if filesize != 4+datasize+4:
@@ -325,4 +346,43 @@ class FirmwareFile():
             chk = struct.unpack("<I", f.read(4))[0]  # @UnusedVariable
             
             return program
+    
+    def parse_jbl(self, filename):
+        with open(filename, 'rb') as f:
+            
+            offset = 0  # Start at the beginning
+            filesize = os.fstat(f.fileno()).st_size
+            retval = []
+            while offset+0x1c < filesize:
+                # Check magic number.
+                f.seek(offset+0x00)
+                magic = f.read(3)
+                if magic != "JBL":
+                    self._log(3, "bad magic at 0x%x in %s" % (offset, filename))
+                    return retval
+                
+                f.seek(offset+0x08)
+                key = f.read(3)  # product id, hardware rev, destination partition
+                self._log(2, "key = %.2x,%.2x,%.2x %s" % (ord(key[0]), ord(key[1]), ord(key[2]), filename))
+    
+                f.seek(offset+0x0c)
+                version = f.read(2)
+                version = (ord(version[0]) << 8) + (ord(version[1]) << 0)
+                version = "%04X" % version
+                self._log(2, "file version   = "+version)
+                if version == "0000":
+                    f.seek(offset+0x0e)
+                    version = f.read(2)
+                    version = (ord(version[0]) << 8) + (ord(version[1]) << 0)
+                    version = "%04x" % version
+                    self._log(2, "file version   = "+version)
+    
+                f.seek(offset+0x10)
+                length = struct.unpack(">I", f.read(4))[0]  # big-endian 4-byte unsigned int
 
+                f.seek(offset+0x00)
+                retval.append((key, version, f.read(0x1c+length)))
+            
+                offset += 0x1c + length
+                
+            return retval

@@ -59,16 +59,23 @@ x   Need to be able to specify "all" to update everything there's firmware for.
 x   Need version management; handle multiple versions of same firmware.
     determine which BIOS firmware is appropriate for current hardware
 x   what to do with all_in_one, short-term
-    what to do with all_in_one, long-term
+x   what to do with all_in_one, long-term
 x   temporarily remove "latest" from version options
     add "latest" to version options; need to know PLX type
 x   loop over instances
-    make a summary
-  write manual
+x   make a summary
+    check versions and don't upgrade if same, unless forced
+    implement verbosity levels
+    normalize version numbers in input and output
+x write manual
   remove dead code
-1 package together for delivery
-1   how to find data files
-  allow SAS
-  create OS
-  add another structure to firmwarefile to simplify fwwc
-  add option to set power CPLD
+x package together for delivery
+x   how to find data files
+  allow SAS/SES
+x create OS
+  add another structure to firmwarefile to simplify wcfw
+x add option to set power CPLD
+
+  don't require single version for --info
+  fix hardware versions for expanders
+  properly display instances in summary
