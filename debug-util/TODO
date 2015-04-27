@@ -80,7 +80,7 @@ x Fix expander boot and CPLDs hardware versions in summary.
   Don't require single version for --info; print all versions in summary.
   Fix and document bbfw (Barbados FirmWare utility).
   Implement PLX 9700 EEPROMs.
-  Check for running as root.
+x Check for running as root.
   Check for running in compute canister.
   Check that serial is connected to canister we're running on.
   Check for compatibility of requested BIOS firmware and hardware.

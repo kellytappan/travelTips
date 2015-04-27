@@ -6,6 +6,7 @@ Wolf Creek FirmWare utility
 version = "0.2.0"
 
 import sys
+import os
 import argparse
 
 from firmwarewc   import FirmwareBmc, FirmwareBios
@@ -178,6 +179,11 @@ for typ in type_do:
 #     FirmwareTypes.WCMI  ,
 #     FirmwareTypes.WCSSM ,
 #     ]
+
+if os.geteuid() != 0 and not params.dryrun:
+    print "This program must be run as superuser,"
+    print "i.e. log in as root or prefix the command with sudo."
+    sys.exit(1)
 
 error = False
 
