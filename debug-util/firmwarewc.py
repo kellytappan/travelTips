@@ -158,7 +158,7 @@ class FirmwareU112(FirmwarePlx):
 
 class FirmwareExpander(FirmwareCli):
 
-    def __init__(self, tty=None, filename=None, expnum=0, verbosity=0):
+    def __init__(self, tty=None, filename=None, expnum=0, verbosity=2):
         """
         tty, filename, verbosity are the same as in FirmwareCli.__init__
         expnum is the FEM number to be affected, 0 or 1
@@ -191,31 +191,47 @@ class FirmwareExpander(FirmwareCli):
     def update(self, filename):
         super(FirmwareExpander, self).set_filename(filename)
         if self._mux_set(2+self.expnum):
-            print "setup succeeded; updating"  #DEBUG
+            self._log(3, "setup succeeded; updating")
             super(FirmwareExpander, self).update()
-            print "update finished; resetting port"  #DEBUG
+            self._log(3, "update finished; resetting port")
             self._mux_restore()
-            print "resetting port finished"  #DEBUG
+            self._log(3, "resetting port finished")
+            self.hw_versions = None
     
     def version(self, typ):
+        self._log(3, "FirmwareExpander:expnum = "+str(self.expnum))
         if self._mux_set(2+self.expnum):
             if not self.hw_versions:
-                print "setup succeeded; fetching version"  #DEBUG
+                self._log(3, "setup succeeded; fetching version")
                 self.hw_versions = super(FirmwareExpander, self).identifydevice()
-                print "version finished; resetting port"  #DEBUG
+                self._log(3, "version finished; resetting port")
                 self._mux_restore()
-                print "resetting port finished"  #DEBUG
+                self._log(3, "resetting port finished")
             try:
                 return self.hw_versions[0][typ]
             except:
                 pass
         return None
 
-class FirmwareSas  (FirmwareExpander):
-    def version(self): return super(FirmwareSas  , self).version(FirmwareTypes.APP  )
+class FirmwareSas0 (FirmwareExpander):
+    def __init__(self, tty=None, filename=None, verbosity=2):
+        super(FirmwareSas0, self).__init__(tty=tty, filename=filename, expnum=0, verbosity=verbosity)
+    def version(self): return super(FirmwareSas0 , self).version(FirmwareTypes.APP  )
 
-class FirmwareBoot (FirmwareExpander):
-    def version(self): return super(FirmwareBoot , self).version(FirmwareTypes.BOOT )
+class FirmwareSas1 (FirmwareExpander):
+    def __init__(self, tty=None, filename=None, verbosity=2):
+        super(FirmwareSas1, self).__init__(tty=tty, filename=filename, expnum=1, verbosity=verbosity)
+    def version(self): return super(FirmwareSas1 , self).version(FirmwareTypes.APP  )
+
+class FirmwareBoot0(FirmwareExpander):
+    def __init__(self, tty=None, filename=None, verbosity=2):
+        super(FirmwareBoot0, self).__init__(tty=tty, filename=filename, expnum=0, verbosity=verbosity)
+    def version(self): return super(FirmwareBoot0, self).version(FirmwareTypes.BOOT )
+
+class FirmwareBoot1(FirmwareExpander):
+    def __init__(self, tty=None, filename=None, verbosity=2):
+        super(FirmwareBoot1, self).__init__(tty=tty, filename=filename, expnum=1, verbosity=verbosity)
+    def version(self): return super(FirmwareBoot1, self).version(FirmwareTypes.BOOT )
 
 class FirmwareWcbb (FirmwareExpander):
     def version(self): return super(FirmwareWcbb , self).version(FirmwareTypes.WCBB )
@@ -243,7 +259,7 @@ if __name__ == "__main__":
     
     print "program version =", version
     
-    fw = FirmwareSas(tty, filename, expnum, ip=None, verbosity=2)
+    fw = FirmwareSas1(tty, filename, expnum, ip=None, verbosity=2)
     fw.update_bmc(filename)
     sys.exit(0)
     

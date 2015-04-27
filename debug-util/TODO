@@ -76,7 +76,7 @@ wcfw roadmap
 ============
 x Determine how to get my 87xx canister to boot again.
 x Fix expander boot and CPLDs hardware versions in summary.
-  Properly display instances in summary, i.e. SAS0 and SAS1.
+x Properly display instances in summary, i.e. SAS0 and SAS1. (got rid of --instance)
   Don't require single version for --info; print all versions in summary.
   Fix and document bbfw (Barbados FirmWare utility).
   Implement PLX 9700 EEPROMs.

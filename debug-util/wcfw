@@ -11,7 +11,7 @@ import argparse
 
 from firmwarewc   import FirmwareBmc, FirmwareBios
 from firmwarewc   import FirmwareU199, FirmwareU187, FirmwareU112
-from firmwarewc   import FirmwareSas, FirmwareBoot, FirmwareWcbb, FirmwareWcmi, FirmwareWcssm
+from firmwarewc   import FirmwareSas0, FirmwareSas1, FirmwareBoot0, FirmwareBoot1, FirmwareWcbb, FirmwareWcmi, FirmwareWcssm
 from firmwarefile import FirmwareTypes, FirmwareFile
 
 type_bmc   = "bmc"
@@ -26,8 +26,10 @@ type_u1003 = "u1003"
 type_u1004 = "u1004"
 type_u1005 = "u1005"
 type_u1006 = "u1006"
-type_sas   = "sas"
-type_boot  = "boot"
+type_sas0  = "sas0"
+type_sas1  = "sas1"
+type_boot0 = "boot0"
+type_boot1 = "boot1"
 type_bb    = "bb"
 type_mi    = "mi"
 type_ssm   = "ssm"
@@ -44,8 +46,10 @@ type_list  = [
 #     type_u1004,
 #     type_u1005,
 #     type_u1006,
-    type_sas,
-    type_boot,
+    type_sas1,
+    type_sas0,
+    type_boot1,
+    type_boot0,
     type_bb,
     type_mi,
     type_ssm,
@@ -64,22 +68,26 @@ type_map = {
 #     type_u1005: FirmwareTypes.U1005 ,
 #     type_u1006: FirmwareTypes.U1006 ,
 #    type_sas  : FirmwareTypes.WCISTR,
-    type_sas  : FirmwareTypes.WCISTR,
-    type_boot : FirmwareTypes.WCBOOT,
+    type_sas0 : FirmwareTypes.WCISTR,
+    type_sas1 : FirmwareTypes.WCISTR,
+    type_boot0: FirmwareTypes.WCBOOT,
+    type_boot1: FirmwareTypes.WCBOOT,
     type_bb   : FirmwareTypes.WCBB  ,
     type_mi   : FirmwareTypes.WCMI  ,
     type_ssm  : FirmwareTypes.WCSSM ,
     }
 # Types that are satisified by firmware in a SAS_ALL_IN_ONE bundle
 SASexp_all_types = set([
-    type_sas ,
+    type_sas0,
+    type_sas1,
     type_bb  ,
     type_mi  ,
     type_ssm ,
     ])
 # Types that need a serial port.
 SASexp_types = SASexp_all_types | set([
-    type_boot,
+    type_boot0,
+    type_boot1,
     ])
 
 def print_expander_version(label, vers):
@@ -100,7 +108,6 @@ Each element in the list may optionally have an equals sign ("=") and
 parser = argparse.ArgumentParser(description="Jabil Firmware Update, Wolf Creek", epilog=epilog, formatter_class=argparse.RawDescriptionHelpFormatter, )
 parser.add_argument("--type"    , nargs=1, type=str,   help='types of things to update, or "help" or "all"')
 parser.add_argument("--firmware", nargs=1, type=str,   help="firmware file, directory, or archive (e.g. 7z or zip)")
-parser.add_argument("--instance", nargs=1, type=int,   help="instance 0 or 1 for SAS or CPLD")
 parser.add_argument("--serial"  , nargs=1, type=str,   help="serial port device file for SAS or CPLD")
 #parser.add_argument("--force"   , action="store_true", help="update even if version matches")
 parser.add_argument("--info"    , action="store_true", help="only print version information of files and hardware")
@@ -119,7 +126,7 @@ progname = sys.argv[0].split('/')[-1]
 
 # Are we simply wanting to update the Power CPLD after updating BMC?
 if params.powercpld:
-    if params.type or params.firmware or params.instance or params.serial:
+    if params.type or params.firmware or params.serial:
         # It is most likely a mistake to include --powercpld with other parameters, except --dryrun.
         print "--powercpld is incompatible with most other switches. Run again by itself."
         sys.exit(4)
@@ -133,10 +140,6 @@ if params.powercpld:
     sys.exit(0)
     
 # params.firmware is handled later.
-
-if not params.instance:
-    # Default instances. It works better overall to update instance 1 before instance 0.
-    params.instance = [1,0]
 
 # Parse parameter to --type switch.
 typ = ','.join(params.type) if params.type else "all"  # Make comma-separated list; default to all.
@@ -257,47 +260,41 @@ for typ in type_do:
     version = list(file_versions[typm])[0] if typm in file_versions else '----'
     summary[typ]["file_version"] = version
 
-    loop_over_instance = False
-    instances = [0]
-
     if not params.dryrun:
         class_map = {
-            type_bmc : FirmwareBmc  ,
-            type_bios: FirmwareBios ,
-            type_u112: FirmwareU112 ,
-            type_u187: FirmwareU187 ,
-            type_u199: FirmwareU199 ,
-            type_sas : FirmwareSas  ,
-            type_boot: FirmwareBoot ,
-            type_bb  : FirmwareWcbb ,
-            type_mi  : FirmwareWcmi ,
-            type_ssm : FirmwareWcssm,
+            type_bmc  : FirmwareBmc  ,
+            type_bios : FirmwareBios ,
+            type_u112 : FirmwareU112 ,
+            type_u187 : FirmwareU187 ,
+            type_u199 : FirmwareU199 ,
+            type_sas0 : FirmwareSas0 ,
+            type_sas1 : FirmwareSas1 ,
+            type_boot0: FirmwareBoot0,
+            type_boot1: FirmwareBoot1,
+            type_bb   : FirmwareWcbb ,
+            type_mi   : FirmwareWcmi ,
+            type_ssm  : FirmwareWcssm,
             }
         fw = class_map[typ]()
         if typ in SASexp_types:
             fw.set_serial(params.serial[0])
-            loop_over_instance = True
-            instances = params.instance
     
-        for instance in instances:
-            if loop_over_instance:
-                fw.set_expnum(instance)
-            summary[typ]["current_version"] = fw.version()  #TODO: instances
-            print "Current version:", summary[typ]["current_version"]
-            if not params.info:
-                # Get file name.
-                if fw_file:
-                    for tl in fw_file.get_filename().values():
-                        if typm in tl:
-                            filename = tl[typm][version]
-                            break
-                    else:
-                        filename = None
+        summary[typ]["current_version"] = fw.version()
+        print "Current version:", summary[typ]["current_version"]
+        if not params.info:
+            # Get file name.
+            if fw_file:
+                for tl in fw_file.get_filename().values():
+                    if typm in tl:
+                        filename = tl[typm][version]
+                        break
                 else:
                     filename = None
-                fw.update(filename)
-                summary[typ]["new_version"] = fw.version()
-                print "New version:    ", summary[typ]["new_version"]
+            else:
+                filename = None
+            fw.update(filename)
+            summary[typ]["new_version"] = fw.version()
+            print "New version:    ", summary[typ]["new_version"]
 
 print
 print "Summary"
