@@ -131,7 +131,7 @@ class FirmwareFile():
 #         self.fwlist = []
         
         if os.path.isfile(name):
-#             tmpdir = tempfile.mkdtemp("", "bbfw-")
+#             tmpdir = tempfile.mkdtemp("", "wcfw-")
 #             self.tmpdirs.append(tmpdir)
 #             result = subprocess.call(['7za','x','-o'+tmpdir,self.name], stdout=open("/dev/null","w"))
 #             #print "result =", result
@@ -167,7 +167,8 @@ class FirmwareFile():
         """
         
         with open(filename, 'rb') as f:
-    
+
+            # Try JBL types.
             f.seek(0x00)
             magic = f.read(8)
             if "JBL" in magic:
@@ -193,8 +194,6 @@ class FirmwareFile():
                     self._log(2, "file version   = "+version)
                 return (version, mapped)
 
-            # Try some other types.
-            
             # Try BIOS: strings has '$BVDT' followed by version number.
             p = subprocess.Popen(["strings", "--all", filename], stdout=subprocess.PIPE)
             state = "looking"
@@ -247,11 +246,27 @@ class FirmwareFile():
             return None  # If parse_plx fails, it's not a PLX EEPROM file.
 
     def _populate_from_file(self, filename):
+        """
+        We have a file. If it's an archive, split it and populate the directory.
+        """
+
+        def combine_istr_app(tmpdir, f1, f2):
+            """
+            We have both ISTR and APP type files. Combine them into a single file.
+            """
+            if os.path.isfile(tmpdir+'/'+f1) and os.path.isfile(tmpdir+'/'+f2):
+                # We have both istr and app sections; combine them.
+                with open(tmpdir+'/'+f1+"-"+f2, "wb") as fw:
+                    for frname in (f1, f2):
+                        with open(tmpdir+'/'+frname) as fr:
+                            fw.write(fr.read())
+                        os.remove(tmpdir+'/'+frname)
+
         if filename.split('.')[-1] in ("xlsx","docx"):
             # Some Microsoft Office files can be unpacked with 7za, but we don't bother.
             self._populate_from_single_file(filename)
         else:
-            tmpdir = tempfile.mkdtemp("", "bbfw-")
+            tmpdir = tempfile.mkdtemp("", "wcfw-")
             self.tmpdirs.append(tmpdir)
             #TODO errorcheck
             result = subprocess.call(['7za','x','-o'+tmpdir,filename], stdout=open("/dev/null","w"))
@@ -261,7 +276,12 @@ class FirmwareFile():
             elif result is 2:
                 # not an archive parsable by 7z
                 jbl_list = self.parse_jbl(filename)
-                if len(jbl_list) <= 1 or (len(jbl_list) is 2 and jbl_list[0][0] == "\x05\xa0\x02" and jbl_list[1][0] == "\x05\xa0\x05"):
+                if len(jbl_list) <= 1 or \
+                    (len(jbl_list) is 2 and (
+                        (jbl_list[0][0] == "\x02\xa0\x02" and jbl_list[1][0] == "\x02\xa0\x05") or
+                        (jbl_list[0][0] == "\x03\xa0\x02" and jbl_list[1][0] == "\x03\xa0\x05") or
+                        (jbl_list[0][0] == "\x05\xa0\x02" and jbl_list[1][0] == "\x05\xa0\x05") or
+                        False)):
                     # It's either not a JBL file or it's either a single-element JBL file or an istr/app combo.
                     self._populate_from_single_file(filename)
                 else:
@@ -270,13 +290,9 @@ class FirmwareFile():
                         fn = "%.2x%.2x%.2x" % tuple(ord(c) for c in jbl_item[0])
                         with open(tmpdir+'/'+fn, 'wb') as f:
                             f.write(jbl_item[2])
-                    if os.path.isfile(tmpdir+'/'+"05a002") and os.path.isfile(tmpdir+'/'+"05a005"):
-                        # We have both istr and app sections; combine them.
-                        with open(tmpdir+'/'+"05a002-05a005", "wb") as fw:
-                            for frname in ("05a002", "05a005"):
-                                with open(tmpdir+'/'+frname) as fr:
-                                    fw.write(fr.read())
-                                os.remove(tmpdir+'/'+frname)
+                    combine_istr_app(tmpdir, "02a002","02a005")
+                    combine_istr_app(tmpdir, "03a002","03a005")
+                    combine_istr_app(tmpdir, "05a002","05a005")
                     self._populate_from_dir(tmpdir)
             else:
                 print "7z error", result

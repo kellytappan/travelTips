@@ -8,7 +8,9 @@ version = "0.2.0"
 import sys
 import argparse
 
-from firmwarewc   import FirmwareSas, FirmwareBmc, FirmwareBios, FirmwareU199, FirmwareU187, FirmwareU112
+from firmwarewc   import FirmwareBmc, FirmwareBios
+from firmwarewc   import FirmwareU199, FirmwareU187, FirmwareU112
+from firmwarewc   import FirmwareSas, FirmwareBoot, FirmwareWcbb, FirmwareWcmi, FirmwareWcssm
 from firmwarefile import FirmwareTypes, FirmwareFile
 
 type_bmc   = "bmc"
@@ -253,21 +255,23 @@ for typ in type_do:
     instances = [0]
 
     if not params.dryrun:
-        if   typ == type_bmc  : fw = FirmwareBmc ()
-        elif typ == type_bios : fw = FirmwareBios()
-        elif typ == type_u112 : fw = FirmwareU112()
-        elif typ == type_u187 : fw = FirmwareU187()
-        elif typ == type_u199 : fw = FirmwareU199()
-        elif typ in SASexp_types:
-            fw = FirmwareSas(params.serial[0], verbosity=2)
+        class_map = {
+            type_bmc : FirmwareBmc  ,
+            type_bios: FirmwareBios ,
+            type_u112: FirmwareU112 ,
+            type_u187: FirmwareU187 ,
+            type_u199: FirmwareU199 ,
+            type_sas : FirmwareSas  ,
+            type_boot: FirmwareBoot ,
+            type_bb  : FirmwareWcbb ,
+            type_mi  : FirmwareWcmi ,
+            type_ssm : FirmwareWcssm,
+            }
+        fw = class_map[typ]()
+        if typ in SASexp_types:
+            fw.set_serial(params.serial[0])
             loop_over_instance = True
             instances = params.instance
-            #print_expander_version("Current", fw.identifydevice())
-            #fw.update()
-            #print_expander_version("New    ", fw.identifydevice())
-            #sys.exit(0)
-        else:
-            pass  #TODO
     
         for instance in instances:
             if loop_over_instance:

@@ -210,9 +210,9 @@ class FirmwareCli(object):
                     '\tCPLD \(0xd8\) FW Revision: ',
                     '\tDAP CPLD FW Revision: ',
                     # WC types
-                    '\tBB CPLD 1 FW Revision: ',
-                    '\tMI CPLD FW Revision: ',
-                    '\tSSM CPLD FW Revision: ',
+                    '\tBB CPLD 1 FW Revision: 0x',
+                    '\tMI CPLD FW Revision: 0x',
+                    '\tSSM CPLD FW Revision: 0x',
                     ])
                 typ = (
                     -1,
