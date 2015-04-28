@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-version = "0.1.0"
+version = "0.1.1"
 
 # import serial
 # from xmodem import XMODEM
@@ -67,7 +67,7 @@ class FirmwareBmc:
     
     def update_cpld(self):
         # For now we are supposed to follow the BMC update with this command to program power/controller/the CPLD, but it resets.
-        subprocess.call(["ipmitool", "-H", self._get_ip(), "-U", "admin", "-P", "admin", "raw", "0x3c", "0x00", "0x01", "0x00"])
+        subprocess.call(["ipmitool", "raw", "0x3c", "0x00", "0x01", "0x00"])
         subprocess.call(["poweroff"])  # Assuming we're running on the compute node.
         
     def version(self):

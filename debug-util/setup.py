@@ -2,7 +2,7 @@ from distutils.core import setup
 d = '/usr/local/lib/wcdu'
 setup(
     name='wcdu',
-    version='0.3.1',
+    version='0.3.2',
     py_modules=[
         'configuration', 'discovery', 'Menu',
         'CliCmd', 'CliCmdSerial', 'CliCmdTelnet', 'CliCmdSas',
