@@ -3,7 +3,7 @@
 """
 Wolf Creek FirmWare utility
 """
-version = "0.2.1"
+version = "0.2.1+"
 
 import sys
 import os
@@ -112,7 +112,8 @@ parser.add_argument("--serial"  , nargs=1, type=str,   help="serial port device 
 #parser.add_argument("--force"   , action="store_true", help="update even if version matches")
 parser.add_argument("--info"    , action="store_true", help="only print version information of files and hardware")
 parser.add_argument("--dryrun"  , action="store_true", help="do not attempt any operations on the hardware")
-parser.add_argument("--powercpld", action="store_true", help="After updating the BMC, run this command to finish updating the power CPLD. NOTE: The canister will reset in two minutes. Linux will be shutdown immediately.")
+parser.add_argument("--activatecpld", action="store_true", help="After updating the BMC, run this command to finish updating the power CPLD. NOTE: The canister will reset in two minutes. Linux will be shutdown immediately.")
+parser.add_argument("--activatepsoc", action="store_true", help="After updating the BMC, run this command to finish updating the PSoC.")
 # info=False, dryrun=False: fw versions, hw versions, program, hw versions
 # info=False, dryrun=True : config OK or error
 # info=True , dryrun=False: fw versions, hw versions, what won't be programmed unless forced
@@ -124,17 +125,29 @@ if len(sys.argv) == 1:
 params = parser.parse_args()
 progname = sys.argv[0].split('/')[-1]
 
-# Are we simply wanting to update the Power CPLD after updating BMC?
-if params.powercpld:
+# Are we simply wanting to activate the PSoC firmware after updating BMC?
+if params.activatepsoc:
     if params.type or params.firmware or params.serial:
-        # It is most likely a mistake to include --powercpld with other parameters, except --dryrun.
-        print "--powercpld is incompatible with most other switches. Run again by itself."
+        # It is most likely a mistake to include --activatepsoc with other parameters, except --dryrun.
+        print "--activatepsoc is incompatible with most other switches. Run again by itself."
         sys.exit(4)
-    print "--powercpld will reset the canister in 2 minutes and shutdown Linux immediately."
+    if not params.dryrun:
+        try:
+            FirmwareBmc().activate_psoc()
+        except:
+            pass
+    
+# Are we simply wanting to activate the Power CPLD firmware after updating BMC?
+if params.activatecpld:
+    if params.type or params.firmware or params.serial:
+        # It is most likely a mistake to include --activatecpld with other parameters, except --dryrun.
+        print "--activatecpld is incompatible with most other switches. Run again by itself."
+        sys.exit(4)
+    print "--activatecpld will reset the canister in 2 minutes and shutdown Linux immediately."
     if not params.dryrun:
         try:
             raw_input("Are you sure you want to do this? Hit <ctrl>-C to abort or <enter> to continue.")
-            FirmwareBmc().update_cpld()
+            FirmwareBmc().activate_cpld()
         except:
             pass
     sys.exit(0)

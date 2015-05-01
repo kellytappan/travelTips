@@ -89,3 +89,5 @@ x Check for running as root.
   Implement verbosity levels; reduce chaff.
   Normalize version numbers in input and output.
   Allow use of SAS/SES to update expanders.
+  Add group names, e.g. sas=(sas1,sas0), boot, plx, expander=(sas,bb,mi,ssm)
+x Add function to activate PSoC.

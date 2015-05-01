@@ -65,10 +65,15 @@ class FirmwareBmc:
         self.procssh.expect(pexpect.EOF, timeout=60*12)
         self.procssh.close(); self.procssh = None
     
-    def update_cpld(self):
+    def activate_cpld(self):
         # For now we are supposed to follow the BMC update with this command to program power/controller/the CPLD, but it resets.
         subprocess.call(["ipmitool", "raw", "0x3c", "0x00", "0x01", "0x00"])
         subprocess.call(["poweroff"])  # Assuming we're running on the compute node.
+        
+    def activate_psoc(self):
+        # For now we are supposed to follow the BMC update with this command to program PSoC.
+        # Behavior is unknown as it only works on DVT hardware.
+        subprocess.call(["ipmitool", "raw", "0x3c", "0x00", "0x01", "0x01"])
         
     def version(self):
         # To get revisions of BMC and power/controller/the CPLD:
