@@ -87,7 +87,7 @@ x Check for running as root.
   Restore "latest" as a version option; depends on determining PLX type.
   Compare file and hardware versions and don't upgrade if same unless forced.
   Implement verbosity levels; reduce chaff.
-  Normalize version numbers in input and output.
+x Normalize version numbers in input and output.
   Allow use of SAS/SES to update expanders.
   Add group names, e.g. sas=(sas1,sas0), boot, plx, expander=(sas,bb,mi,ssm)
 x Add function to activate PSoC.

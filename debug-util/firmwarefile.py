@@ -6,6 +6,7 @@ import shutil
 import re
 import struct
 
+
 class FirmwareTypes:
     APP     = "app"
     BOOT    = "boot"
@@ -72,6 +73,48 @@ class FirmwareTypes:
     iom_set = set(("A","B"))
     fem_set = set(("A0","A1","B0","B1"))
     all_set = iom_set | fem_set
+
+
+class FirmwareUtils:
+    @staticmethod
+    def normalize_version(version):
+        """
+        Regularize version string.
+        """
+        method = 1
+
+        if not version:
+            return version
+
+        if method is 1:
+            # 4 characters, no dot
+            majmin = version.split('.')
+            if len(majmin) is 2:
+                while len(majmin[1]) < 2:
+                    majmin[1] = "0" + majmin[1]
+                version = majmin[0] + majmin[1]
+            while len(version) < 4:
+                version = "0" + version
+
+        if method is 2:
+            # 5 characters, space-filled major, dot, 0-filled minor
+            majmin = version.split('.')
+            if len(majmin) < 2:
+                if len(version) is not 4:
+                    # Don't know what this is.
+                    return 'xx.xx'
+                majmin[0] =   version[0:2]
+                majmin.append(version[2:4])
+            while len(majmin[1]) < 2:
+                majmin[1] = "0" + majmin[1]
+            while len(majmin[0]) < 2:
+                majmin[0] = " " + majmin[0]
+            if majmin[0][0] == "0":
+                majmin[0] = " "+majmin[0][1:]
+            version = majmin[0] + '.' + majmin[1]
+
+        return version
+
 
 class FirmwareFile():
     """
@@ -192,7 +235,7 @@ class FirmwareFile():
                     version = (ord(version[0]) << 8) + (ord(version[1]) << 0)
                     version = "%04x" % version
                     self._log(2, "file version   = "+version)
-                return (version, mapped)
+                return (FirmwareUtils.normalize_version(version), mapped)
 
             # Try BIOS: strings has '$BVDT' followed by version number.
             p = subprocess.Popen(["strings", "--all", filename], stdout=subprocess.PIPE)
@@ -205,7 +248,7 @@ class FirmwareFile():
                 if state == "grabrev":
                     version = line[1:5]
                     p.terminate()
-                    return (version, self.keymap[FirmwareTypes.WCBIOS])
+                    return (FirmwareUtils.normalize_version(version), self.keymap[FirmwareTypes.WCBIOS])
             
             # Try PLX EEPROMs.
             retval = self.identifyfile_plx(filename)
@@ -216,7 +259,7 @@ class FirmwareFile():
             m = re.search("JBL_WC_BMC_([0-9a-fA-F]*)\.bin", filename)
             if m:
                 version = m.group(1)
-                return (version, self.keymap[FirmwareTypes.WCBMC])
+                return (FirmwareUtils.normalize_version(version), self.keymap[FirmwareTypes.WCBMC])
 #                 p = subprocess.call(["grep", "-q", "ifconfig", filename])
 #                 if p is 0:
 #                     return ("-", self.keymap[FirmwareTypes.WCBMC])
@@ -234,7 +277,7 @@ class FirmwareFile():
                     typ = ((entry[2] >> 16) & 0xffff)
                     ver = ((entry[2] >>  0) & 0xffff) % "%.4X"
                     mapped = self.keymap[typ] if typ in self.keymap else None
-                    return (ver, mapped)
+                    return (FirmwareUtils.normalize_version(ver), mapped)
             # It doesn't have the 0x29c register with version and type,
             # so guess type based on filename.  Version is hopeless.
             if "U112" in filename: return ("", self.keymap[0x0112])

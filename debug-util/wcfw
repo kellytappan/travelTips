@@ -12,7 +12,7 @@ import argparse
 from firmwarewc   import FirmwareBmc, FirmwareBios
 from firmwarewc   import FirmwareU199, FirmwareU187, FirmwareU112
 from firmwarewc   import FirmwareSas0, FirmwareSas1, FirmwareBoot0, FirmwareBoot1, FirmwareWcbb, FirmwareWcmi, FirmwareWcssm
-from firmwarefile import FirmwareTypes, FirmwareFile
+from firmwarefile import FirmwareTypes, FirmwareUtils, FirmwareFile
 
 type_bmc   = "bmc"
 type_bios  = "bios"
@@ -165,7 +165,7 @@ for ix in range(len(type_do)):
     if len(tv) > 1:
         # Version was specified.
         t,v = tv    # type and version
-        param_versions[t] = v
+        param_versions[t] = FirmwareUtils.normalize_version(v)
         type_do[ix] = t  # Replace type=version in list with just type. 
 
 #TODO: allow abbreviations

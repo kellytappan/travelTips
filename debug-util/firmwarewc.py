@@ -11,8 +11,8 @@ import sys
 import subprocess
 import re
 
-from firmwarecli import FirmwareCli
-from firmwarefile import FirmwareTypes
+from firmwarecli  import FirmwareCli
+from firmwarefile import FirmwareTypes, FirmwareUtils
 
 installdir = "/usr/local/lib/wcdu/"
 
@@ -30,7 +30,7 @@ class FirmwareBios:
     def version(self):
         version = subprocess.check_output(["dmidecode", "-s", "bios-version"])
         version = version.strip()
-        return version
+        return FirmwareUtils.normalize_version(version)
     
 class FirmwareBmc:
     """
@@ -82,7 +82,7 @@ class FirmwareBmc:
         # Instead do: ipmitool bmc info
         version = subprocess.check_output("ipmitool bmc info | grep 'Firmware Revision' | cut -d: -f2 | tr -d ' '", shell=True)
         version = version.strip()
-        return version
+        return FirmwareUtils.normalize_version(version)
         # TODO test
         
 class FirmwarePlx:
@@ -213,7 +213,7 @@ class FirmwareExpander(FirmwareCli):
                 self._mux_restore()
                 self._log(3, "resetting port finished")
             try:
-                return self.hw_versions[0][typ]
+                return FirmwareUtils.normalize_version(self.hw_versions[0][typ])
             except:
                 pass
         return None
