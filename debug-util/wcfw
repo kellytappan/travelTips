@@ -3,7 +3,7 @@
 """
 Wolf Creek FirmWare utility
 """
-version = "0.2.1+"
+version = "0.2.2"
 
 import sys
 import os
@@ -112,6 +112,7 @@ parser.add_argument("--serial"  , nargs=1, type=str,   help="serial port device 
 #parser.add_argument("--force"   , action="store_true", help="update even if version matches")
 parser.add_argument("--info"    , action="store_true", help="only print version information of files and hardware")
 parser.add_argument("--dryrun"  , action="store_true", help="do not attempt any operations on the hardware")
+parser.add_argument("--verbosity", nargs=1, type=int,  help="How noisy should the output be? (0, 1, 2; default 1)", default=[1])
 parser.add_argument("--activatecpld", action="store_true", help="After updating the BMC, run this command to finish updating the power CPLD. NOTE: The canister will reset in two minutes. Linux will be shutdown immediately.")
 parser.add_argument("--activatepsoc", action="store_true", help="After updating the BMC, run this command to finish updating the PSoC.")
 # info=False, dryrun=False: fw versions, hw versions, program, hw versions
@@ -263,6 +264,8 @@ if error:
     print "There was an error; aborting."
     sys.exit(3)
 
+# Perform the operation.
+
 summary = {}
 
 for typ in type_do:
@@ -273,7 +276,7 @@ for typ in type_do:
     versions = sorted(list(file_versions[typm])) if typm in file_versions else ['----']
     summary[typ]["file_version"] = versions
 
-    if not params.dryrun:
+    if not params.dryrun:  # We are allowed to touch the hardware.
         class_map = {
             type_bmc  : FirmwareBmc  ,
             type_bios : FirmwareBios ,
@@ -291,10 +294,12 @@ for typ in type_do:
         fw = class_map[typ]()
         if typ in SASexp_types:
             fw.set_serial(params.serial[0])
+        fw.set_verbosity(params.verbosity[0])
     
         summary[typ]["current_version"] = fw.version()
-        print "Current version:", summary[typ]["current_version"]
-        if not params.info:
+        if params.verbosity[0] >= 1:
+            print "Current version:", summary[typ]["current_version"]
+        if not params.info:  # Not just info; actually program firmware.
             # Get file name.
             if fw_file:
                 for tl in fw_file.get_filename().values():
@@ -305,42 +310,44 @@ for typ in type_do:
                     filename = None
             else:
                 filename = None
-            fw.update(filename)
+            fw.update(filename)  # Program firmware into this part.
             summary[typ]["new_version"] = fw.version()
-            print "New version:    ", summary[typ]["new_version"]
+            if params.verbosity[0] >= 1:
+                print "New version:    ", summary[typ]["new_version"]
 
-print
-print "Summary"
-print "======="
-typ = type_do[0]
-print "%-5s" % "Type",
-if "file_version" in summary[typ]:
-    print "%-4s" % "File",
-if "current_version" in summary[typ]:
-    print "%-4s" % "Curr",
-if "new_version" in summary[typ]:
-    print "%-4s" % "New",
-print
-print "%-5s" % "----",
-if "file_version" in summary[typ]:
-    print "%-4s" % "----",
-if "current_version" in summary[typ]:
-    print "%-4s" % "----",
-if "new_version" in summary[typ]:
-    print "%-4s" % "----",
-print
-
-for typ in type_do:
-    print "%-5s" % typ,
-    if "file_version" in summary[typ]:
-        print "%-4s" % summary[typ]["file_version"][0],
-    if "current_version" in summary[typ]:
-        print "%-4s" % summary[typ]["current_version"],
-    if "new_version" in summary[typ]:
-        print "%-4s" % summary[typ]["new_version"],
+if params.verbosity[0] >= 0:
     print
+    print "Summary"
+    print "======="
+    typ = type_do[0]
+    print "%-5s" % "Type",
     if "file_version" in summary[typ]:
-        for v in summary[typ]["file_version"][1:]:
-            print "%-5s" % "",
-            print "%-4s" % v,
-            print
+        print "%-4s" % "File",
+    if "current_version" in summary[typ]:
+        print "%-4s" % "Curr",
+    if "new_version" in summary[typ]:
+        print "%-4s" % "New",
+    print
+    print "%-5s" % "----",
+    if "file_version" in summary[typ]:
+        print "%-4s" % "----",
+    if "current_version" in summary[typ]:
+        print "%-4s" % "----",
+    if "new_version" in summary[typ]:
+        print "%-4s" % "----",
+    print
+    
+    for typ in type_do:
+        print "%-5s" % typ,
+        if "file_version" in summary[typ]:
+            print "%-4s" % summary[typ]["file_version"][0],
+        if "current_version" in summary[typ]:
+            print "%-4s" % summary[typ]["current_version"],
+        if "new_version" in summary[typ]:
+            print "%-4s" % summary[typ]["new_version"],
+        print
+        if "file_version" in summary[typ]:
+            for v in summary[typ]["file_version"][1:]:
+                print "%-5s" % "",
+                print "%-4s" % v,
+                print

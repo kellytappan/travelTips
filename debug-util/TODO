@@ -86,7 +86,7 @@ x Check for running as root.
   Check for compatibility of requested BIOS firmware and hardware.
   Restore "latest" as a version option; depends on determining PLX type.
   Compare file and hardware versions and don't upgrade if same unless forced.
-  Implement verbosity levels; reduce chaff.
+x Implement verbosity levels; reduce chaff.
 x Normalize version numbers in input and output.
   Allow use of SAS/SES to update expanders.
   Add group names, e.g. sas=(sas1,sas0), boot, plx, expander=(sas,bb,mi,ssm)

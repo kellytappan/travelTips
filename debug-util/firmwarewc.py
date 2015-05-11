@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-
-version = "0.1.1"
+version = "0.1.2"
 
 # import serial
 # from xmodem import XMODEM
@@ -22,7 +21,11 @@ class FirmwareBios:
     Must run on the compute node.
     """
     def __init__(self):
+        self.verbosity = 1
         pass
+
+    def set_verbosity(self, verbosity):
+        self.verbosity = verbosity
 
     def update(self, filename):
         subprocess.call([installdir+"utilities/flashrom", "-p", "internal", "-l", installdir+"utilities/layout.txt", "-i", "bios", "-f", "-w", filename])
@@ -38,11 +41,16 @@ class FirmwareBmc:
     Must run on the compute node.
     """
     def __init__(self):
+        self.verbosity = 1
         pass
+
+    def set_verbosity(self, verbosity):
+        self.verbosity = verbosity
 
     def update(self, filename):
         # TODO error checking
-        self.procssh = pexpect.spawn(installdir+"utilities/Yafuflash64", ["-full", "-cd", "-no-reboot", filename], logfile=sys.stdout)
+        logfile = sys.stdout if self.verbosity >= 1 else None
+        self.procssh = pexpect.spawn(installdir+"utilities/Yafuflash64", ["-full", "-cd", "-no-reboot", filename], logfile=logfile)
         match = self.procssh.expect([
             pexpect.TIMEOUT,
             pexpect.EOF,
@@ -83,7 +91,6 @@ class FirmwareBmc:
         version = subprocess.check_output("ipmitool bmc info | grep 'Firmware Revision' | cut -d: -f2 | tr -d ' '", shell=True)
         version = version.strip()
         return FirmwareUtils.normalize_version(version)
-        # TODO test
         
 class FirmwarePlx:
     """
@@ -91,6 +98,7 @@ class FirmwarePlx:
     Must run on the compute node.
     """
     def __init__(self, typ):
+        self.verbosity = 1
         self.typ = typ
         if   typ == FirmwareTypes.U199: self.s = "00:01.0"; self.p = "8750,AB"
         elif typ == FirmwareTypes.U187: self.s = "00:02.0"; self.p = "8796,AB"
@@ -102,12 +110,16 @@ class FirmwarePlx:
         subprocess.call("cd "+installdir+"utilities/PlxSdk; lsmod | grep -q Plx8000_NT || Bin/Plx_load 8000n", shell=True)
         subprocess.call("cd "+installdir+"utilities/PlxSdk; lsmod | grep -q PlxSvc     || Bin/Plx_load Svc  ", shell=True)
 
+    def set_verbosity(self, verbosity):
+        self.verbosity = verbosity
+
     def update(self, filename):
         # TODO test after fixing EEPROMs
         # Find the bus number.
         line = subprocess.check_output("lspci -x -s "+self.s+" | grep ^10:", shell=True)
         bus = line.split()[10]
-        self.procssh = pexpect.spawn(installdir+"utilities/PlxSdk/Samples/PlxEep/App/PlxEep", ["-l", filename, "-p", self.p, "-d", "0"], logfile=sys.stdout)
+        logfile = sys.stdout if self.verbosity >= 1 else None
+        self.procssh = pexpect.spawn(installdir+"utilities/PlxSdk/Samples/PlxEep/App/PlxEep", ["-l", filename, "-p", self.p, "-d", "0"], logfile=logfile)
         itemnumber = None
         while True:
             match = self.procssh.expect([
@@ -185,6 +197,9 @@ class FirmwareExpander(FirmwareCli):
     def set_expnum(self, expnum):
         self.expnum = expnum
     
+    def set_verbosity(self, verbosity):
+        self.verbosity = verbosity
+
     def _mux_set(self, port, disable=1):
         dflag = 0x80 if disable else 0
         returncode = subprocess.call(["ipmitool", "raw", "0x3c", "3", "0x%.2x" % (port+dflag)])
