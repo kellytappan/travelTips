@@ -273,9 +273,9 @@ class FirmwareFile():
         prog = self.parse_plx(filename)
         if prog:
             for entry in prog:
-                if entry[0] is 0x29c:
-                    typ = ((entry[2] >> 16) & 0xffff)
-                    ver = ((entry[2] >>  0) & 0xffff) % "%.4X"
+                if entry[0] == 0x029c:
+                    typ =          ((entry[2] >> 16) & 0xffff)
+                    ver = "%.4X" % ((entry[2] >>  0) & 0xffff)
                     mapped = self.keymap[typ] if typ in self.keymap else None
                     return (FirmwareUtils.normalize_version(ver), mapped)
             # It doesn't have the 0x29c register with version and type,

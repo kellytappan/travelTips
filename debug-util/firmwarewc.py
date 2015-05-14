@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-version = "0.1.2"
+version = "0.1.3"
 
 # import serial
 # from xmodem import XMODEM
@@ -97,9 +97,10 @@ class FirmwarePlx:
     Update and check version of 87xx PLX EEPROMs.
     Must run on the compute node.
     """
-    def __init__(self, typ):
+    def __init__(self, typ, d=None):
         self.verbosity = 1
         self.typ = typ
+        self.d = d    # -d parameter to PlxEep
         if   typ == FirmwareTypes.U199: self.s = "00:01.0"; self.p = "8750,AB"
         elif typ == FirmwareTypes.U187: self.s = "00:02.0"; self.p = "8796,AB"
         elif typ == FirmwareTypes.U112: self.s = "00:03.0"; self.p = "8796,AB"
@@ -107,47 +108,51 @@ class FirmwarePlx:
 
         # Load kernel modules.
         #TODO check for errors
-        subprocess.call("cd "+installdir+"utilities/PlxSdk; lsmod | grep -q Plx8000_NT || Bin/Plx_load 8000n", shell=True)
+        #subprocess.call("cd "+installdir+"utilities/PlxSdk; lsmod | grep -q Plx8000_NT || Bin/Plx_load 8000n", shell=True)
         subprocess.call("cd "+installdir+"utilities/PlxSdk; lsmod | grep -q PlxSvc     || Bin/Plx_load Svc  ", shell=True)
 
     def set_verbosity(self, verbosity):
         self.verbosity = verbosity
 
     def update(self, filename):
-        # TODO test after fixing EEPROMs
-        # Find the bus number.
-        line = subprocess.check_output("lspci -x -s "+self.s+" | grep ^10:", shell=True)
-        bus = line.split()[10]
         logfile = sys.stdout if self.verbosity >= 1 else None
-        self.procssh = pexpect.spawn(installdir+"utilities/PlxSdk/Samples/PlxEep/App/PlxEep", ["-l", filename, "-p", self.p, "-d", "0"], logfile=logfile)
-        itemnumber = None
-        while True:
-            match = self.procssh.expect([
-                pexpect.TIMEOUT,
-                " +[0-9]+\.",
-                "b:"+bus,
-                "Device selection --> ",
-                ], timeout=5)
-            if match is 0:
-                # timeout
-                # indicate a failure
-                return False
-            elif match is 1:
-                # menu item number
-                m = re.match(" +([0-9]+)\.", match.after)
-                if not m:
+        if self.d:
+            # We were handed the menu item number, i.e. the parameter to the -d switch.
+            self.procssh = pexpect.spawn(installdir+"utilities/PlxSdk/Samples/PlxEep/App/PlxEep", ["-l", filename, "-d", self.d], logfile=logfile)
+        else:
+            # Find the bus number.
+            line = subprocess.check_output("lspci -x -s "+self.s+" | grep ^10:", shell=True)
+            bus = line.split()[10]
+    
+            self.procssh = pexpect.spawn(installdir+"utilities/PlxSdk/Samples/PlxEep/App/PlxEep", ["-l", filename, "-p", self.p, "-d", "0"], logfile=logfile)
+            itemnumber = None
+            while True:
+                match = self.procssh.expect([
+                    pexpect.TIMEOUT,
+                    " +[0-9]+\.",
+                    "b:"+bus,
+                    "Device selection --> ",
+                    ], timeout=5)
+                if match is 0:
+                    # timeout
+                    # indicate a failure
                     return False
-                recentitemnumber = m.group(1)
-            elif match is 2:
-                # bus number
-                itemnumber = recentitemnumber
-            elif match is 3:
-                # Device selection prompt
-                self.procssh.sendline(itemnumber)
-                break
-        self.procssh.expect(pexpect.EOF, timeout=None)  # Wait for the program to terminate.
-        self.procssh.close()
-        self.procssh = None
+                elif match is 1:
+                    # menu item number
+                    m = re.match(" +([0-9]+)\.", match.after)
+                    if not m:
+                        return False
+                    recentitemnumber = m.group(1)
+                elif match is 2:
+                    # bus number
+                    itemnumber = recentitemnumber
+                elif match is 3:
+                    # Device selection prompt
+                    self.procssh.sendline(itemnumber)
+                    break
+            self.procssh.expect(pexpect.EOF, timeout=None)  # Wait for the program to terminate.
+            self.procssh.close()
+            self.procssh = None
     
     def version(self):
         # plxcm to read, mmr 29c
@@ -170,6 +175,48 @@ class FirmwareU112(FirmwarePlx):
         pass
     def update(self, filename): FirmwarePlx(FirmwareTypes.U112).update(filename)
     def version(self):   return FirmwarePlx(FirmwareTypes.U112).version()
+    
+class FirmwareU1000(FirmwarePlx):  # U112
+    def __init__(self, d=5):
+        pass
+    def update(self, filename): FirmwarePlx(FirmwareTypes.U1000).update(filename)
+    def version(self):   return FirmwarePlx(FirmwareTypes.U1000).version()
+    
+class FirmwareU1001(FirmwarePlx):  # U187
+    def __init__(self, d=9):
+        pass
+    def update(self, filename): FirmwarePlx(FirmwareTypes.U1001).update(filename)
+    def version(self):   return FirmwarePlx(FirmwareTypes.U1001).version()
+    
+class FirmwareU1002(FirmwarePlx):  # U116
+    def __init__(self, d=13):
+        pass
+    def update(self, filename): FirmwarePlx(FirmwareTypes.U1002).update(filename)
+    def version(self):   return FirmwarePlx(FirmwareTypes.U1002).version()
+    
+class FirmwareU1003(FirmwarePlx):  # U119
+    def __init__(self, d=3):
+        pass
+    def update(self, filename): FirmwarePlx(FirmwareTypes.U1003).update(filename)
+    def version(self):   return FirmwarePlx(FirmwareTypes.U1003).version()
+    
+class FirmwareU1004(FirmwarePlx):  # U120
+    def __init__(self, d=7):
+        pass
+    def update(self, filename): FirmwarePlx(FirmwareTypes.U1004).update(filename)
+    def version(self):   return FirmwarePlx(FirmwareTypes.U1004).version()
+    
+class FirmwareU1005(FirmwarePlx):  # U121
+    def __init__(self, d=11):
+        pass
+    def update(self, filename): FirmwarePlx(FirmwareTypes.U1005).update(filename)
+    def version(self):   return FirmwarePlx(FirmwareTypes.U1005).version()
+    
+class FirmwareU1006(FirmwarePlx):  # U199
+    def __init__(self, d=15):
+        pass
+    def update(self, filename): FirmwarePlx(FirmwareTypes.U1006).update(filename)
+    def version(self):   return FirmwarePlx(FirmwareTypes.U1006).version()
     
 
 

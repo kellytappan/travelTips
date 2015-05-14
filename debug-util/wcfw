@@ -3,7 +3,7 @@
 """
 Wolf Creek FirmWare utility
 """
-version = "0.2.2"
+version = "0.2.3"
 
 import sys
 import os
@@ -11,6 +11,7 @@ import argparse
 
 from firmwarewc   import FirmwareBmc, FirmwareBios
 from firmwarewc   import FirmwareU199, FirmwareU187, FirmwareU112
+from firmwarewc   import FirmwareU1000, FirmwareU1001, FirmwareU1002, FirmwareU1003, FirmwareU1004, FirmwareU1005, FirmwareU1006
 from firmwarewc   import FirmwareSas0, FirmwareSas1, FirmwareBoot0, FirmwareBoot1, FirmwareWcbb, FirmwareWcmi, FirmwareWcssm
 from firmwarefile import FirmwareTypes, FirmwareUtils, FirmwareFile
 
@@ -39,13 +40,13 @@ type_list  = [
 #     type_u112,
 #     type_u187,
 #     type_u199,
-#     type_u1000,
-#     type_u1001,
-#     type_u1002,
-#     type_u1003,
-#     type_u1004,
-#     type_u1005,
-#     type_u1006,
+    type_u1000,
+    type_u1001,
+    type_u1002,
+    type_u1003,
+    type_u1004,
+    type_u1005,
+    type_u1006,
     type_sas1,
     type_sas0,
     type_boot1,
@@ -60,14 +61,13 @@ type_map = {
 #     type_u112 : FirmwareTypes.U112  ,
 #     type_u187 : FirmwareTypes.U187  ,
 #     type_u199 : FirmwareTypes.U199  ,
-#     type_u1000: FirmwareTypes.U1000 ,
-#     type_u1001: FirmwareTypes.U1001 ,
-#     type_u1002: FirmwareTypes.U1002 ,
-#     type_u1003: FirmwareTypes.U1003 ,
-#     type_u1004: FirmwareTypes.U1004 ,
-#     type_u1005: FirmwareTypes.U1005 ,
-#     type_u1006: FirmwareTypes.U1006 ,
-#    type_sas  : FirmwareTypes.WCISTR,
+    type_u1000: FirmwareTypes.U1000 ,
+    type_u1001: FirmwareTypes.U1001 ,
+    type_u1002: FirmwareTypes.U1002 ,
+    type_u1003: FirmwareTypes.U1003 ,
+    type_u1004: FirmwareTypes.U1004 ,
+    type_u1005: FirmwareTypes.U1005 ,
+    type_u1006: FirmwareTypes.U1006 ,
     type_sas0 : FirmwareTypes.WCISTR,
     type_sas1 : FirmwareTypes.WCISTR,
     type_boot0: FirmwareTypes.WCBOOT,
@@ -283,6 +283,13 @@ for typ in type_do:
             type_u112 : FirmwareU112 ,
             type_u187 : FirmwareU187 ,
             type_u199 : FirmwareU199 ,
+            type_u1000: FirmwareU1000,
+            type_u1001: FirmwareU1001,
+            type_u1002: FirmwareU1002,
+            type_u1003: FirmwareU1003,
+            type_u1004: FirmwareU1004,
+            type_u1005: FirmwareU1005,
+            type_u1006: FirmwareU1006,
             type_sas0 : FirmwareSas0 ,
             type_sas1 : FirmwareSas1 ,
             type_boot0: FirmwareBoot0,
