@@ -118,7 +118,17 @@ class FirmwarePlx:
         logfile = sys.stdout if self.verbosity >= 1 else None
         if self.d:
             # We were handed the menu item number, i.e. the parameter to the -d switch.
-            self.procssh = pexpect.spawn(installdir+"utilities/PlxSdk/Samples/PlxEep/App/PlxEep", ["-l", filename, "-d", self.d], logfile=logfile)
+            if filename[0] == "/":
+                # PlxEep treats anything starting with / or - as a switch.
+                # Prepend many ../ combinations to eventually get to the top.
+                filename = "../" * 40 + ".." + filename
+            p = [
+                installdir+"utilities/PlxSdk/Samples/PlxEep/App/PlxEep",
+                "-l", filename,
+                "-d", str(self.d),
+                ]
+            if self.verbosity >= 1: print p
+            subprocess.call(p)
         else:
             # Find the bus number.
             line = subprocess.check_output("lspci -x -s "+self.s+" | grep ^10:", shell=True)
@@ -179,44 +189,44 @@ class FirmwareU112(FirmwarePlx):
 class FirmwareU1000(FirmwarePlx):  # U112
     def __init__(self, d=5):
         pass
-    def update(self, filename): FirmwarePlx(FirmwareTypes.U1000).update(filename)
-    def version(self):   return FirmwarePlx(FirmwareTypes.U1000).version()
+    def update(self, filename): FirmwarePlx(FirmwareTypes.U1000, d=5).update(filename)
+    def version(self):   return FirmwarePlx(FirmwareTypes.U1000, d=5).version()
     
 class FirmwareU1001(FirmwarePlx):  # U187
     def __init__(self, d=9):
         pass
-    def update(self, filename): FirmwarePlx(FirmwareTypes.U1001).update(filename)
-    def version(self):   return FirmwarePlx(FirmwareTypes.U1001).version()
+    def update(self, filename): FirmwarePlx(FirmwareTypes.U1001, d=9).update(filename)
+    def version(self):   return FirmwarePlx(FirmwareTypes.U1001, d=9).version()
     
 class FirmwareU1002(FirmwarePlx):  # U116
     def __init__(self, d=13):
         pass
-    def update(self, filename): FirmwarePlx(FirmwareTypes.U1002).update(filename)
-    def version(self):   return FirmwarePlx(FirmwareTypes.U1002).version()
+    def update(self, filename): FirmwarePlx(FirmwareTypes.U1002, d=13).update(filename)
+    def version(self):   return FirmwarePlx(FirmwareTypes.U1002, d=13).version()
     
 class FirmwareU1003(FirmwarePlx):  # U119
     def __init__(self, d=3):
         pass
-    def update(self, filename): FirmwarePlx(FirmwareTypes.U1003).update(filename)
-    def version(self):   return FirmwarePlx(FirmwareTypes.U1003).version()
+    def update(self, filename): FirmwarePlx(FirmwareTypes.U1003, d=3).update(filename)
+    def version(self):   return FirmwarePlx(FirmwareTypes.U1003, d=3).version()
     
 class FirmwareU1004(FirmwarePlx):  # U120
     def __init__(self, d=7):
         pass
-    def update(self, filename): FirmwarePlx(FirmwareTypes.U1004).update(filename)
-    def version(self):   return FirmwarePlx(FirmwareTypes.U1004).version()
+    def update(self, filename): FirmwarePlx(FirmwareTypes.U1004, d=7).update(filename)
+    def version(self):   return FirmwarePlx(FirmwareTypes.U1004, d=7).version()
     
 class FirmwareU1005(FirmwarePlx):  # U121
     def __init__(self, d=11):
         pass
-    def update(self, filename): FirmwarePlx(FirmwareTypes.U1005).update(filename)
-    def version(self):   return FirmwarePlx(FirmwareTypes.U1005).version()
+    def update(self, filename): FirmwarePlx(FirmwareTypes.U1005, d=11).update(filename)
+    def version(self):   return FirmwarePlx(FirmwareTypes.U1005, d=11).version()
     
 class FirmwareU1006(FirmwarePlx):  # U199
     def __init__(self, d=15):
         pass
-    def update(self, filename): FirmwarePlx(FirmwareTypes.U1006).update(filename)
-    def version(self):   return FirmwarePlx(FirmwareTypes.U1006).version()
+    def update(self, filename): FirmwarePlx(FirmwareTypes.U1006, d=15).update(filename)
+    def version(self):   return FirmwarePlx(FirmwareTypes.U1006, d=15).version()
     
 
 

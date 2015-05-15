@@ -311,7 +311,7 @@ for typ in type_do:
             if fw_file:
                 for tl in fw_file.get_filename().values():
                     if typm in tl:
-                        filename = tl[typm][version]
+                        filename = tl[typm][versions[0]]
                         break
                 else:
                     filename = None
