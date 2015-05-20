@@ -78,8 +78,10 @@ x Determine how to get my 87xx canister to boot again.
 x Fix expander boot and CPLDs hardware versions in summary.
 x Properly display instances in summary, i.e. SAS0 and SAS1. (got rid of --instance)
 x Don't require single version for --info; print all versions in summary.
-  Fix and document bbfw (Barbados FirmWare utility).
-  Implement PLX 9700 EEPROMs.
+x Fix bbfw (Barbados FirmWare utility).
+  Document bbfw (Barbados FirmWare utility).
+x Implement PLX 9700 EEPROMs programming.
+  Implement PLX 9700 EEPROMs version reading.
 x Check for running as root.
   Check for running in compute canister.
   Check that serial is connected to canister we're running on.
