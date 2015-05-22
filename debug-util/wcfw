@@ -3,7 +3,7 @@
 """
 Wolf Creek FirmWare utility
 """
-version = "0.2.3"
+version = "0.2.4"
 
 import sys
 import os
@@ -137,6 +137,7 @@ if params.activatepsoc:
             FirmwareBmc().activate_psoc()
         except:
             pass
+    sys.exit(0)
     
 # Are we simply wanting to activate the Power CPLD firmware after updating BMC?
 if params.activatecpld:

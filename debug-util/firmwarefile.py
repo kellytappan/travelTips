@@ -256,7 +256,7 @@ class FirmwareFile():
                 return retval
             
             # Try BMC.
-            m = re.search("JBL_WC_BMC_([0-9a-fA-F]*)\.bin", filename)
+            m = re.search(".*WC_BMC_([0-9a-fA-F]*)\.bin", filename)
             if m:
                 version = m.group(1)
                 return (FirmwareUtils.normalize_version(version), self.keymap[FirmwareTypes.WCBMC])
